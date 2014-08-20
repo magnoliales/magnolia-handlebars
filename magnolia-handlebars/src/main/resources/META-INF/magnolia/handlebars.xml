@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd" >
+<module>
+    <name>handlebars</name>
+    <displayName>Magnolia Handlebars</displayName>
+    <description>Handlebars integration for Magnolia</description>
+    <class>com.magnoliales.handlebars.setup.HandlebarsModule</class>
+    <versionHandler>com.magnoliales.handlebars.setup.HandlebarsVersionHandler</versionHandler>
+    <version>1.0.0</version>
+    <components>
+        <id>main</id>
+        <component>
+            <type>com.magnoliales.handlebars.setup.ApplicationContextAdapter</type>
+            <implementation>com.magnoliales.handlebars.setup.ApplicationContextAdapter</implementation>
+            <scope>singleton</scope>
+        </component>
+    </components>
+    <dependencies>
+        <dependency>
+            <name>blossom</name>
+        </dependency>
+        <dependency>
+            <name>pages</name>
+        </dependency>
+    </dependencies>
+</module>
