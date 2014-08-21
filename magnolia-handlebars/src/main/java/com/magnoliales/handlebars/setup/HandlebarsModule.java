@@ -14,7 +14,7 @@ public class HandlebarsModule extends BlossomModuleSupport implements ModuleLife
         initBlossomDispatcherServlet(SERVLET_NAME, "classpath:/handlebars-context.xml");
         for (DispatcherServlet servlet : getDispatcherServlets()) {
             if (servlet.getServletName().equals(SERVLET_NAME)) {
-                ApplicationContextAdapter container = Components.getComponent(ApplicationContextAdapter.class);
+                ApplicationContextContainer container = Components.getComponent(ApplicationContextContainer.class);
                 container.setContext(servlet.getWebApplicationContext());
             }
         }

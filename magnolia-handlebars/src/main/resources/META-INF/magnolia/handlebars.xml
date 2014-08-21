@@ -10,8 +10,8 @@
     <components>
         <id>main</id>
         <component>
-            <type>com.magnoliales.handlebars.setup.ApplicationContextAdapter</type>
-            <implementation>com.magnoliales.handlebars.setup.ApplicationContextAdapter</implementation>
+            <type>com.magnoliales.handlebars.setup.ApplicationContextContainer</type>
+            <implementation>com.magnoliales.handlebars.setup.ApplicationContextContainer</implementation>
             <scope>singleton</scope>
         </component>
     </components>

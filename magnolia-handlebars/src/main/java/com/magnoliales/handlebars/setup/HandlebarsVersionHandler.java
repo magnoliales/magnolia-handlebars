@@ -1,9 +1,8 @@
 package com.magnoliales.handlebars.setup;
 
-import com.magnoliales.handlebars.fields.TemplatePairSelectorFieldDefinition;
+import com.magnoliales.handlebars.fields.TemplateSelectorDefinition;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.repository.RepositoryConstants;
@@ -18,7 +17,7 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
         List<Task> tasks = new ArrayList<Task>();
         tasks.add(new SetPropertyTask("Add template pair selector", RepositoryConstants.CONFIG,
                 "/modules/pages/dialogs/createPage/form/tabs/tabPage/fields/template", "class",
-                TemplatePairSelectorFieldDefinition.class.getName()));
+                TemplateSelectorDefinition.class.getName()));
         return tasks;
     }
 }
