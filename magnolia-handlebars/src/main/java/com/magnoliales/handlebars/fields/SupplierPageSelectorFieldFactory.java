@@ -64,6 +64,7 @@ public class SupplierPageSelectorFieldFactory extends SelectFieldFactory<Supplie
                             supplierPageComboBox.setRequired(true);
                             supplierPageComboBox.setVisible(true);
                         } else {
+                            supplierPageComboBox.setValue(null);
                             supplierPageComboBox.setRequired(false);
                             supplierPageComboBox.setVisible(false);
                         }
