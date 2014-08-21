@@ -24,6 +24,8 @@ public class TemplateSelectorFieldFactory extends SelectFieldFactory<TemplateSel
 
     @Override
     public List<SelectFieldOptionDefinition> getSelectFieldOptionDefinition() {
+        // @todo, check singleton templates and remove them from selection completely or add a validator, not sure
+
         List<SelectFieldOptionDefinition> selectFieldOptionDefinitions = new ArrayList<SelectFieldOptionDefinition>();
         ApplicationContext context = applicationContextContainer.getContext();
         for (String beanDefinitionName : context.getBeanDefinitionNames()) {
