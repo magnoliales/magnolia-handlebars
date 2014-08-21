@@ -15,9 +15,12 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         List<Task> tasks = new ArrayList<Task>();
-        tasks.add(new SetPropertyTask("Add template pair selector", RepositoryConstants.CONFIG,
-                "/modules/pages/dialogs/createPage/form/tabs/tabPage/fields/template", "class",
-                TemplateSelectorDefinition.class.getName()));
+        tasks.add(new SetPropertyTask("Replace template selector in pages:createPage dialog",
+                RepositoryConstants.CONFIG, "/modules/pages/dialogs/createPage/form/tabs/tabPage/fields/template",
+                "class", TemplateSelectorDefinition.class.getName()));
+        tasks.add(new SetPropertyTask("Replace template selector in pages:editTemplate dialog",
+                RepositoryConstants.CONFIG, "/modules/pages/dialogs/editTemplate/form/tabs/tabTemplate/fields/template",
+                "class", TemplateSelectorDefinition.class.getName()));
         return tasks;
     }
 }
