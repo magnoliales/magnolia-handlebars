@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sv:node sv:name="fieldTypes" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:content</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>cc678928-eada-4e08-b690-a8195c49d1a7</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:createdBy" sv:type="String">
-    <sv:value>admin</sv:value>
-  </sv:property>
-  <sv:property sv:name="mgnl:created" sv:type="Date">
-    <sv:value>2014-08-21T10:32:59.822+01:00</sv:value>
-  </sv:property>
-  <sv:property sv:name="mgnl:createdBy" sv:type="String">
-    <sv:value>superuser</sv:value>
-  </sv:property>
-  <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-    <sv:value>2014-08-21T12:23:11.865+01:00</sv:value>
-  </sv:property>
-  <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
-    <sv:value>superuser</sv:value>
-  </sv:property>
-  <sv:node sv:name="templateSelector">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:content</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>62bc0969-c47f-48d9-9a31-e63b61f1fd4e</sv:value>
-    </sv:property>
-    <sv:property sv:name="definitionClass" sv:type="String">
-      <sv:value>com.magnoliales.handlebars.fields.TemplateSelectorDefinition</sv:value>
-    </sv:property>
-    <sv:property sv:name="factoryClass" sv:type="String">
-      <sv:value>com.magnoliales.handlebars.fields.TemplateSelectorFieldFactory</sv:value>
+        <sv:value>cc678928-eada-4e08-b690-a8195c49d1a7</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
-      <sv:value>admin</sv:value>
+        <sv:value>admin</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:created" sv:type="Date">
-      <sv:value>2014-08-21T10:33:12.021+01:00</sv:value>
+        <sv:value>2014-08-21T10:32:59.822+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:createdBy" sv:type="String">
-      <sv:value>superuser</sv:value>
+        <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-      <sv:value>2014-08-21T12:23:34.662+01:00</sv:value>
+        <sv:value>2014-08-21T12:23:11.865+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
-      <sv:value>superuser</sv:value>
+        <sv:value>superuser</sv:value>
     </sv:property>
-  </sv:node>
-  <sv:node sv:name="supplierPageSelector">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>ea56898b-9141-4e34-ace5-a051c3ed796a</sv:value>
-    </sv:property>
-    <sv:property sv:name="definitionClass" sv:type="String">
-      <sv:value>com.magnoliales.handlebars.fields.SupplierPageLinkDefinition</sv:value>
-    </sv:property>
-    <sv:property sv:name="factoryClass" sv:type="String">
-      <sv:value>com.magnoliales.handlebars.fields.SupplierPageLinkFieldFactory</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:createdBy" sv:type="String">
-      <sv:value>admin</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:created" sv:type="Date">
-      <sv:value>2014-08-21T12:23:11.867+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:createdBy" sv:type="String">
-      <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-      <sv:value>2014-08-21T12:23:57.842+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
-      <sv:value>superuser</sv:value>
-    </sv:property>
-  </sv:node>
+    <sv:node sv:name="templateSelector">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>62bc0969-c47f-48d9-9a31-e63b61f1fd4e</sv:value>
+        </sv:property>
+        <sv:property sv:name="definitionClass" sv:type="String">
+            <sv:value>com.magnoliales.handlebars.fields.TemplateSelectorDefinition</sv:value>
+        </sv:property>
+        <sv:property sv:name="factoryClass" sv:type="String">
+            <sv:value>com.magnoliales.handlebars.fields.TemplateSelectorFieldFactory</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:created" sv:type="Date">
+            <sv:value>2014-08-21T10:33:12.021+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:createdBy" sv:type="String">
+            <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+            <sv:value>2014-08-21T12:23:34.662+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+            <sv:value>superuser</sv:value>
+        </sv:property>
+    </sv:node>
+    <sv:node sv:name="supplierPageSelector">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>ea56898b-9141-4e34-ace5-a051c3ed796a</sv:value>
+        </sv:property>
+        <sv:property sv:name="definitionClass" sv:type="String">
+            <sv:value>com.magnoliales.handlebars.fields.SupplierPageLinkDefinition</sv:value>
+        </sv:property>
+        <sv:property sv:name="factoryClass" sv:type="String">
+            <sv:value>com.magnoliales.handlebars.fields.SupplierPageLinkFieldFactory</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:created" sv:type="Date">
+            <sv:value>2014-08-21T12:23:11.867+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:createdBy" sv:type="String">
+            <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+            <sv:value>2014-08-21T12:23:57.842+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+            <sv:value>superuser</sv:value>
+        </sv:property>
+    </sv:node>
 </sv:node>
