@@ -58,10 +58,10 @@
             <sv:value>ea56898b-9141-4e34-ace5-a051c3ed796a</sv:value>
         </sv:property>
         <sv:property sv:name="definitionClass" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.fields.SupplierPageLinkDefinition</sv:value>
+            <sv:value>com.magnoliales.handlebars.fields.SupplierPageSelectorDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="factoryClass" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.fields.SupplierPageLinkFieldFactory</sv:value>
+            <sv:value>com.magnoliales.handlebars.fields.SupplierPageSelectorFieldFactory</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
