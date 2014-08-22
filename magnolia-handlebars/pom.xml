@@ -55,6 +55,10 @@
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
+        <dependency>
+            <groupId>info.magnolia.ui</groupId>
+            <artifactId>magnolia-ui-vaadin-integration</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
