@@ -28,6 +28,7 @@
         <version.jcr>2.0</version.jcr>
         <version.servet>2.5</version.servet>
         <version.springframework>4.0.6.RELEASE</version.springframework>
+        <version.findbugs>3.0.0</version.findbugs>
     </properties>
 
     <modules>
@@ -99,6 +100,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
                 <version>${version.springframework}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${version.findbugs}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
