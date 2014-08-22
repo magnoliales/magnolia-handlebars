@@ -5,6 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 import info.magnolia.ui.form.FormTab;
 import info.magnolia.ui.form.field.factory.SelectFieldFactory;
 import info.magnolia.ui.vaadin.form.FormSection;
@@ -28,7 +29,6 @@ public class SupplierPageSelectorFieldFactory extends SelectFieldFactory<Supplie
     protected AbstractSelect createFieldComponent() {
 
         final AbstractSelect supplierPageSelect = super.createFieldComponent();
-        supplierPageSelect.setVisible(false);
         supplierPageSelect.setItemCaptionMode(AbstractSelect.ItemCaptionMode.EXPLICIT_DEFAULTS_ID);
 
         final AbstractSelect templateSelect = findTemplateSelect();
@@ -37,7 +37,9 @@ public class SupplierPageSelectorFieldFactory extends SelectFieldFactory<Supplie
         }
         Property.ValueChangeListener listener = getValueChangeListener(templateSelect, supplierPageSelect);
         templateSelect.addValueChangeListener(listener);
+        listener.valueChange(new Field.ValueChangeEvent(templateSelect));
 
+        supplierPageSelect.setVisible(utils.requiresParentTemplate((String) templateSelect.getValue()));
         return supplierPageSelect;
     }
 

@@ -56,6 +56,10 @@ public class TemplateUtils {
         return parentTemplates;
     }
 
+    boolean requiresParentTemplate(String templateId) {
+        return parentTemplates.containsKey(templateId);
+    }
+
     Map<String, String> findPagesUsingTemplate(String templateId) {
         Map<String, String> pages = new TreeMap<String, String>();
         String expression = "SELECT * FROM [mgnl:page] WHERE [mgnl:template] = '" + templateId + "'";
