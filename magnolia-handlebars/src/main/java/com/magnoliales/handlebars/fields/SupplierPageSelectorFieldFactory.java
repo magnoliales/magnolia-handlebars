@@ -8,7 +8,6 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.module.blossom.annotation.Template;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.form.FormTab;
