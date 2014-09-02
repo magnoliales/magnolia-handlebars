@@ -120,10 +120,6 @@
             <url>http://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases</url>
         </repository>
         <repository>
-            <id>magnolia.enterprise.releases</id>
-            <url>http://nexus.magnolia-cms.com/content/repositories/magnolia.enterprise.releases</url>
-        </repository>
-        <repository>
             <id>thirdparty</id>
             <url>http://nexus.magnolia-cms.com/content/repositories/thirdparty</url>
         </repository>
