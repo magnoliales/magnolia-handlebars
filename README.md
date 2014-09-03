@@ -9,3 +9,4 @@ Templating
 ----------
 
 Node content is available through `content` variable. You can navigate up the supplier chain with `content.supplier`.
+
