@@ -100,19 +100,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
                 combinedContext.destroy();
             }
         } catch (Exception e) {
-            log.error("Cannot collect context", e);
+            log.error("Cannot render template", e);
         }
-    }
-
-    private Context.Builder addNodeContentContext(Context.Builder builder, Node node) {
-        try {
-            if (node.hasProperty("mgnl:supplierPage")) {
-
-            }
-            builder.combine("content", new ContentMap(node));
-        } catch (RepositoryException e) {
-            log.error("Cannot fetch supplierPage data", e);
-        }
-        return builder;
     }
 }

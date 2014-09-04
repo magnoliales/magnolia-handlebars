@@ -16,7 +16,7 @@ public class CmsAreaTemplateHelper extends AbstractTemplateHelper<AreaElement> {
     public CharSequence apply(Object context, Options options) throws IOException {
 
         final AreaElement templatingElement = createTemplatingElement();
-        initContentElement(options,templatingElement);
+        initContentElement(options, templatingElement);
 
         AreaDefinition area = options.hash("area");
         String name = options.hash("name");

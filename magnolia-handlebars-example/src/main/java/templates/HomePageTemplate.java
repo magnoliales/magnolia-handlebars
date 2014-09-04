@@ -1,6 +1,7 @@
 package templates;
 
 import com.magnoliales.handlebars.annotations.SingletonTemplate;
+import info.magnolia.module.blossom.annotation.Area;
 import info.magnolia.module.blossom.annotation.Template;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,5 +18,15 @@ public class HomePageTemplate {
     public String render(Model model) {
         model.addAttribute("name", "World");
         return "home-page";
+    }
+
+    @Area("footer")
+    @Controller
+    public static class FooterArea {
+
+        @RequestMapping("/home-page/footer")
+        public String render() {
+            return "areas/footer";
+        }
     }
 }
