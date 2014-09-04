@@ -2,10 +2,7 @@ package templates;
 
 import com.magnoliales.handlebars.annotations.SingletonTemplate;
 import components.TextComponent;
-import info.magnolia.module.blossom.annotation.Area;
-import info.magnolia.module.blossom.annotation.AvailableComponentClasses;
-import info.magnolia.module.blossom.annotation.AvailableComponents;
-import info.magnolia.module.blossom.annotation.Template;
+import info.magnolia.module.blossom.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +18,17 @@ public class HomePageTemplate {
     public String render(Model model) {
         model.addAttribute("name", "World");
         return "home-page";
+    }
+
+    @Area("menu")
+    @Controller
+    @AvailableComponentClasses({TextComponent.class})
+    public static class MenuArea {
+
+        @RequestMapping("/home-page/menu")
+        public String render() {
+            return "areas/menu";
+        }
     }
 
     @Area("footer")
