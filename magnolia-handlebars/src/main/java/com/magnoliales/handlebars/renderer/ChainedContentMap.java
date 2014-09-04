@@ -11,14 +11,14 @@ public class ChainedContentMap extends ContentMap {
 
     private static final Logger log = LoggerFactory.getLogger(ChainedContentMap.class);
 
-    private ChainedContentMap superMap;
+    private ChainedContentMap supplierMap;
 
     public ChainedContentMap(Node node) {
         super(node);
         try {
             if (node.hasProperty("mgnl:supplierPage")) {
                 String id = node.getProperty("mgnl:supplierPage").getString();
-                superMap = new ChainedContentMap(node.getSession().getNodeByIdentifier(id));
+                supplierMap = new ChainedContentMap(node.getSession().getNodeByIdentifier(id));
             }
         } catch (RepositoryException e) {
             log.error("Cannot fetch supplier page data");
@@ -28,11 +28,11 @@ public class ChainedContentMap extends ContentMap {
     @Override
     public Object get(Object key) {
         if (key.equals("supplier")) {
-            return superMap;
+            return supplierMap;
         } else if (containsKey(key)) {
             return super.get(key);
         } else {
-            return superMap.get(key);
+            return supplierMap.get(key);
         }
     }
 }

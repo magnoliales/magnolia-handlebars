@@ -1,7 +1,10 @@
 package templates;
 
 import com.magnoliales.handlebars.annotations.SingletonTemplate;
+import components.TextComponent;
 import info.magnolia.module.blossom.annotation.Area;
+import info.magnolia.module.blossom.annotation.AvailableComponentClasses;
+import info.magnolia.module.blossom.annotation.AvailableComponents;
 import info.magnolia.module.blossom.annotation.Template;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +25,7 @@ public class HomePageTemplate {
 
     @Area("footer")
     @Controller
+    @AvailableComponentClasses({TextComponent.class})
     public static class FooterArea {
 
         @RequestMapping("/home-page/footer")

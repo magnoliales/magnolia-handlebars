@@ -7,16 +7,21 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.blossom.annotation.Template;
 import info.magnolia.repository.RepositoryConstants;
 import org.apache.jackrabbit.commons.JcrUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import javax.jcr.LoginException;
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.query.*;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+import javax.jcr.query.Row;
 import java.util.*;
 
 public class TemplateUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(TemplateUtils.class);
 
     final private Map<String, String> parentTemplates;
     final private List<String> singletonTemplates;
@@ -72,12 +77,8 @@ public class TemplateUtils {
                 Node node = row.getNode();
                 pages.put(node.getPath(), node.getIdentifier());
             }
-        } catch (LoginException e) {
-            e.printStackTrace();
-        } catch (InvalidQueryException e) {
-            e.printStackTrace();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Cannot get pages using template", e);
         }
         return pages;
     }

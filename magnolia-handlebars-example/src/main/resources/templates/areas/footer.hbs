@@ -1,1 +1,8 @@
-Footer area
+<div>
+    Footer area
+    <ul>
+        {{#each components}}
+            {{{cms-component content=this}}}
+        {{/each}}
+    </ul>
+</div>
