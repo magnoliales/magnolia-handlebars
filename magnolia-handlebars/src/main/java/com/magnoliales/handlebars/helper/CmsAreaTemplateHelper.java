@@ -1,18 +1,13 @@
 package com.magnoliales.handlebars.helper;
 
 import com.github.jknack.handlebars.Options;
-import com.magnoliales.handlebars.annotations.ParentTemplate;
-import info.magnolia.module.blossom.annotation.Template;
-import info.magnolia.module.blossom.template.BlossomTemplateDefinition;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.templating.elements.AreaElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -22,9 +17,6 @@ public class CmsAreaTemplateHelper extends AbstractTemplateHelper<AreaElement> {
 
     public CharSequence apply(Object context, Options options) throws IOException {
 
-        final AreaElement templatingElement = createTemplatingElement();
-        initContentElement(options, templatingElement);
-
         String name = options.hash("name");
         String availableComponents = options.hash("components");
         String dialog = options.hash("dialog");
@@ -32,14 +24,31 @@ public class CmsAreaTemplateHelper extends AbstractTemplateHelper<AreaElement> {
         String label = options.hash("label");
         String description = options.hash("description");
         Boolean editable = options.hash("editable");
-        Map<String,Object> contextAttributes = options.hash("contextAttributes");
+        Map<String, Object> contextAttributes = options.hash("contextAttributes");
 
+        RenderingModel model = (RenderingModel) ((Map) context).get("model");
+        AreaState areaState = createAreaState(name, model.getNode());
+        Node node = areaState.getNode();
 
-        BlossomTemplateDefinition templateDefinition = (BlossomTemplateDefinition) ((Map) context).get("def");
-        Class<?> templateClass = templateDefinition.getHandler().getClass();
-        AreaDefinition area = getAreaDefinition(name, templateClass);
+        String workspace = null;
+        String nodeIdentifier = null;
+        String path = null;
+        try {
+            workspace = node.getSession().getWorkspace().getName();
+            nodeIdentifier = node.getIdentifier();
+            path = node.getPath();
+        } catch (RepositoryException e) {
+            log.error("Cannot read properties from the node", e);
+        }
 
-        templatingElement.setArea(area);
+        final AreaElement templatingElement = createTemplatingElement();
+
+        templatingElement.setContent(node);
+        templatingElement.setWorkspace(workspace);
+        templatingElement.setNodeIdentifier(nodeIdentifier);
+        templatingElement.setPath(path);
+        templatingElement.setArea(areaState.getAreaDefinition());
+
         templatingElement.setName(name);
         templatingElement.setAvailableComponents(availableComponents);
         templatingElement.setDialog(dialog);
@@ -47,26 +56,9 @@ public class CmsAreaTemplateHelper extends AbstractTemplateHelper<AreaElement> {
         templatingElement.setLabel(label);
         templatingElement.setDescription(description);
         templatingElement.setEditable(editable);
-
         templatingElement.setContextAttributes(contextAttributes);
 
         return render(templatingElement);
     }
 
-    private AreaDefinition getAreaDefinition(String name, Class<?> templateClass) {
-        TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
-        String templateId = templateClass.getAnnotation(Template.class).id();
-        TemplateDefinition templateDefinition;
-        try {
-            templateDefinition = registry.getTemplateDefinition(templateId);
-        } catch (RegistrationException e) {
-            log.error("Cannot fetch template definition from registry", e);
-            return null;
-        }
-        if (templateDefinition.getAreas().containsKey(name)) {
-            return templateDefinition.getAreas().get(name);
-        }
-        Class<?> parentTemplateClass = templateClass.getAnnotation(ParentTemplate.class).value();
-        return getAreaDefinition(name, parentTemplateClass);
-    }
 }
