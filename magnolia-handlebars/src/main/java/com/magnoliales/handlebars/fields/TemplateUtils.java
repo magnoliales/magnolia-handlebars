@@ -1,5 +1,6 @@
 package com.magnoliales.handlebars.fields;
 
+import com.magnoliales.handlebars.annotations.TemplateComponent;
 import com.magnoliales.handlebars.annotations.ParentTemplate;
 import com.magnoliales.handlebars.annotations.SingletonTemplate;
 import com.magnoliales.handlebars.setup.ApplicationContextContainer;
@@ -34,6 +35,9 @@ public class TemplateUtils {
         ApplicationContext context = applicationContextContainer.getContext();
         for (String beanDefinitionName : context.getBeanDefinitionNames()) {
             Class<?> beanClass = context.getBean(beanDefinitionName).getClass();
+            if (beanClass.isAnnotationPresent(TemplateComponent.class)) {
+                continue;
+            }
             if (beanClass.isAnnotationPresent(Template.class)) {
                 Template template = beanClass.getAnnotation(Template.class);
                 templates.put(template.id(), template.title());
