@@ -1,7 +1,9 @@
-{{#partial "body"}}
-    <p>
-        This is detailed content
-    </p>
-{{/partial}}
+{{#block "body"}}
+    {{#partial "body"}}
+        <p>
+            This is detailed content
+        </p>
+    {{/partial}}
+{{/block}}
 
 {{> home-page}}
