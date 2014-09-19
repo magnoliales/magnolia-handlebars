@@ -2,13 +2,14 @@ package templates;
 
 import com.magnoliales.handlebars.annotations.SingletonTemplate;
 import components.TextComponent;
+import dialogs.HomePageDialog;
 import info.magnolia.module.blossom.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@Template(id = HomePageTemplate.ID, title = "Home Page")
+@Template(id = HomePageTemplate.ID, title = "Home Page", dialog = HomePageDialog.ID)
 @SingletonTemplate
 public class HomePageTemplate {
 
