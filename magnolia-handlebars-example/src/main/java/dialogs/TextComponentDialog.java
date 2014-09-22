@@ -15,7 +15,7 @@ public class TextComponentDialog {
     @TabFactory("Properties")
     public void propertiesTab(UiConfig uiConfig, TabBuilder tabBuilder) {
         tabBuilder.fields(
-                uiConfig.fields.text("text").required()
+                uiConfig.fields.text("text").required().i18n()
         );
     }
 }

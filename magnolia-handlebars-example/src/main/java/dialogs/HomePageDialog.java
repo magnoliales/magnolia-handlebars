@@ -15,7 +15,7 @@ public class HomePageDialog {
     @TabFactory("Properties")
     public void propertiesTab(UiConfig uiConfig, TabBuilder tabBuilder) {
         tabBuilder.fields(
-                uiConfig.fields.text("title").required()
+                uiConfig.fields.text("title").required().i18n()
         );
     }
 }

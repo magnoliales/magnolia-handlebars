@@ -38,6 +38,7 @@ import javax.jcr.Session;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class HandlebarsRenderer extends AbstractRenderer {
@@ -89,9 +90,11 @@ public class HandlebarsRenderer extends AbstractRenderer {
         final AppendableWriter out;
         try {
             out = renderingContext.getAppendable();
-            Node node = ((AggregationState) context.get("state")).getCurrentContentNode();
+            AggregationState aggregationState = (AggregationState) context.get("state");
+            Node node = aggregationState.getCurrentContentNode();
+            Locale locale = aggregationState.getLocale();
             Context combinedContext = Context.newBuilder(context)
-                    .combine("content", new ChainedContentMap(node))
+                    .combine("content", new ChainedContentMap(node, locale.toString()))
                     .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();
             try {
