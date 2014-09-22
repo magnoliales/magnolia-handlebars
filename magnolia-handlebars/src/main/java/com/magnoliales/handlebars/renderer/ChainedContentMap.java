@@ -37,8 +37,10 @@ public class ChainedContentMap extends ContentMap {
             return super.get(localKeyName);
         } else if (containsKey(keyName)) {
             return super.get(keyName);
-        } else {
+        } else if (supplierMap != null) {
             return supplierMap.get(key);
+        } else {
+            return null;
         }
     }
 }
