@@ -95,6 +95,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
             Locale locale = aggregationState.getLocale();
             Context combinedContext = Context.newBuilder(context)
                     .combine("content", new ChainedContentMap(node, locale.toString()))
+                    .combine("state", aggregationState)
                     .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();
             try {
