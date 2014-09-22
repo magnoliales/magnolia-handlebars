@@ -2,6 +2,7 @@ package templates;
 
 import com.magnoliales.handlebars.annotations.SingletonTemplate;
 import components.TextComponent;
+import dialogs.HeaderAreaDialog;
 import dialogs.HomePageDialog;
 import info.magnolia.module.blossom.annotation.*;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class HomePageTemplate {
         return "home-page";
     }
 
-    @Area("menu")
+    @Area(value = "menu", dialog = HeaderAreaDialog.ID)
     @Controller
     @AvailableComponentClasses({TextComponent.class})
     public static class MenuArea {
