@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import javax.jcr.Node;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,10 +46,6 @@ public class HandlebarsRenderer extends AbstractRenderer {
         );
         handlebars = new Handlebars(loader);
         handlebars.with(new ConcurrentMapTemplateCache());
-
-        // handlebars.registerHelper("cms-init", new CmsInitTemplateHelper());
-        // handlebars.registerHelper("cms-area", new CmsAreaTemplateHelper());
-        // handlebars.registerHelper("cms-component", new CmsComponentTemplateHelper());
     }
 
     public void setHelpers(Map<String, Class<? extends Helper>> helpers) {
