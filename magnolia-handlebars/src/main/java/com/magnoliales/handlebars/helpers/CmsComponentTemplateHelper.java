@@ -1,9 +1,7 @@
-package com.magnoliales.handlebars.helper;
+package com.magnoliales.handlebars.helpers;
 
 import com.github.jknack.handlebars.Options;
 import info.magnolia.jcr.util.ContentMap;
-import info.magnolia.rendering.model.RenderingModel;
-import info.magnolia.templating.elements.AreaElement;
 import info.magnolia.templating.elements.ComponentElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

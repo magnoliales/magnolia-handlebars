@@ -1,10 +1,8 @@
 package com.magnoliales.handlebars.renderer;
 
-import com.magnoliales.handlebars.helper.CmsAreaTemplateHelper;
-import com.magnoliales.handlebars.helper.CmsComponentTemplateHelper;
-import com.magnoliales.handlebars.helper.CmsInitTemplateHelper;
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.cache.ConcurrentMapTemplateCache;
 import com.github.jknack.handlebars.context.FieldValueResolver;
@@ -14,10 +12,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import com.magnoliales.handlebars.setup.ApplicationContextContainer;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.module.blossom.render.RenderContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
@@ -26,18 +21,14 @@ import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.renderer.AbstractRenderer;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.util.AppendableWriter;
-import info.magnolia.repository.RepositoryConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.jcr.LoginException;
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -56,9 +47,22 @@ public class HandlebarsRenderer extends AbstractRenderer {
         );
         handlebars = new Handlebars(loader);
         handlebars.with(new ConcurrentMapTemplateCache());
-        handlebars.registerHelper("cms-init", new CmsInitTemplateHelper());
-        handlebars.registerHelper("cms-area", new CmsAreaTemplateHelper());
-        handlebars.registerHelper("cms-component", new CmsComponentTemplateHelper());
+
+        // handlebars.registerHelper("cms-init", new CmsInitTemplateHelper());
+        // handlebars.registerHelper("cms-area", new CmsAreaTemplateHelper());
+        // handlebars.registerHelper("cms-component", new CmsComponentTemplateHelper());
+    }
+
+    public void setHelpers(Map<String, Class<? extends Helper>> helpers) {
+        for (String helperName : helpers.keySet()) {
+            Class<? extends Helper> helperClass = helpers.get(helperName);
+            try {
+                Helper helper = helperClass.newInstance();
+                handlebars.registerHelper(helperName, helper);
+            } catch (Exception e) {
+                log.error("Cannot instantiate helpers", e);
+            }
+        }
     }
 
     @Override
