@@ -41,31 +41,109 @@
             <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>6ed29475-8237-435e-a319-951b6bc06064</sv:value>
-        </sv:property>
-        <sv:property sv:name="cms-area" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.helpers.CmsAreaTemplateHelper</sv:value>
-        </sv:property>
-        <sv:property sv:name="cms-component" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.helpers.CmsComponentTemplateHelper</sv:value>
-        </sv:property>
-        <sv:property sv:name="cms-init" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.helpers.CmsInitTemplateHelper</sv:value>
+            <sv:value>b314fe41-9137-477c-b31d-9cb525aa365b</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:created" sv:type="Date">
-            <sv:value>2014-09-23T11:52:44.608+01:00</sv:value>
+            <sv:value>2014-09-23T12:41:17.921+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:createdBy" sv:type="String">
             <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-            <sv:value>2014-09-23T11:53:54.809+01:00</sv:value>
+            <sv:value>2014-09-23T12:50:19.628+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
             <sv:value>superuser</sv:value>
         </sv:property>
+        <sv:node sv:name="cms-init">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>mgnl:contentNode</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+                <sv:value>32479016-9e7c-4def-8d54-8314659697f4</sv:value>
+            </sv:property>
+            <sv:property sv:name="class" sv:type="String">
+                <sv:value>com.magnoliales.handlebars.helpers.CmsInitTemplateHelper</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+                <sv:value>admin</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:created" sv:type="Date">
+                <sv:value>2014-09-23T12:48:51.376+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:createdBy" sv:type="String">
+                <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+                <sv:value>2014-09-23T12:50:51.995+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+                <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="name" sv:type="String">
+                <sv:value>cms-init</sv:value>
+            </sv:property>
+        </sv:node>
+        <sv:node sv:name="cms-area">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>mgnl:contentNode</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+                <sv:value>5c41af18-3673-4037-b784-91a3e8ff3f30</sv:value>
+            </sv:property>
+            <sv:property sv:name="class" sv:type="String">
+                <sv:value>com.magnoliales.handlebars.helpers.CmsAreaTemplateHelper</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+                <sv:value>admin</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:created" sv:type="Date">
+                <sv:value>2014-09-23T12:50:08.335+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:createdBy" sv:type="String">
+                <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+                <sv:value>2014-09-23T12:50:56.537+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+                <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="name" sv:type="String">
+                <sv:value>cms-area</sv:value>
+            </sv:property>
+        </sv:node>
+        <sv:node sv:name="cms-component">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>mgnl:contentNode</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+                <sv:value>1c4cff43-52cf-4c13-a69d-04cf741c99d7</sv:value>
+            </sv:property>
+            <sv:property sv:name="class" sv:type="String">
+                <sv:value>com.magnoliales.handlebars.helpers.CmsComponentTemplateHelper</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+                <sv:value>admin</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:created" sv:type="Date">
+                <sv:value>2014-09-23T12:50:19.628+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:createdBy" sv:type="String">
+                <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+                <sv:value>2014-09-23T12:51:05.192+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+                <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="name" sv:type="String">
+                <sv:value>cms-component</sv:value>
+            </sv:property>
+        </sv:node>
     </sv:node>
 </sv:node>
