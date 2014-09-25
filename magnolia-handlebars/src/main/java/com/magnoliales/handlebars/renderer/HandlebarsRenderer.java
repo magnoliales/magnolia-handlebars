@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.Session;
 import java.io.File;
 import java.util.HashMap;
@@ -102,9 +101,8 @@ public class HandlebarsRenderer extends AbstractRenderer {
             AggregationState aggregationState = (AggregationState) context.get("state");
             Node node = aggregationState.getCurrentContentNode();
             Locale locale = aggregationState.getLocale();
+            context.put("content", new ChainedContentMap(node, locale));
             Context combinedContext = Context.newBuilder(context)
-                    .combine("content", new ChainedContentMap(node, locale.toString()))
-                    .combine("state", aggregationState)
                     .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();
             try {

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import java.util.Locale;
 
 public class ChainedContentMap extends ContentMap {
 
@@ -14,13 +15,13 @@ public class ChainedContentMap extends ContentMap {
     private ChainedContentMap supplierMap;
     private String localeName;
 
-    public ChainedContentMap(Node node, String localeName) {
+    public ChainedContentMap(Node node, Locale locale) {
         super(node);
-        this.localeName = localeName;
+        this.localeName = locale.toString();
         try {
             if (node.hasProperty("mgnl:supplierPage")) {
                 String id = node.getProperty("mgnl:supplierPage").getString();
-                supplierMap = new ChainedContentMap(node.getSession().getNodeByIdentifier(id), localeName);
+                supplierMap = new ChainedContentMap(node.getSession().getNodeByIdentifier(id), locale);
             }
         } catch (RepositoryException e) {
             log.error("Cannot fetch supplier page data");
