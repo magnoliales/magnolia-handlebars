@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.blossom;
 
 import com.magnoliales.handlebars.renderer.HandlebarsRenderer;
+import com.magnoliales.handlebars.security.MagnoliaAuthenticationManager;
 import info.magnolia.module.blossom.preexecution.BlossomHandlerMapping;
 import info.magnolia.module.blossom.view.TemplateViewResolver;
 import info.magnolia.module.blossom.view.UuidRedirectViewResolver;
@@ -9,6 +10,10 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.engine.RenderingEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
@@ -17,7 +22,9 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
 import org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping;
 
 @Configuration
-public class BlossomConfiguration {
+@EnableWebMvcSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
+public class BlossomConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SimpleControllerHandlerAdapter simpleControllerHandlerAdapter() {
@@ -79,6 +86,11 @@ public class BlossomConfiguration {
         resolver.setOrder(2);
         resolver.setViewRenderer(handlebarsRenderer());
         return resolver;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return new MagnoliaAuthenticationManager();
     }
 }
 

@@ -28,6 +28,7 @@
         <version.jcr>2.0</version.jcr>
         <version.servet>2.5</version.servet>
         <version.springframework>4.0.6.RELEASE</version.springframework>
+        <version.springframework.security>3.2.5.RELEASE</version.springframework.security>
         <version.findbugs>3.0.0</version.findbugs>
     </properties>
 
@@ -100,6 +101,21 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
                 <version>${version.springframework}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${version.springframework.security}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${version.springframework.security}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${version.springframework.security}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
