@@ -2,6 +2,7 @@ package com.magnoliales.handlebars.blossom;
 
 import com.magnoliales.handlebars.renderer.HandlebarsRenderer;
 import com.magnoliales.handlebars.security.MagnoliaAuthenticationManager;
+import com.magnoliales.handlebars.security.MagnoliaUserDetailsService;
 import info.magnolia.module.blossom.preexecution.BlossomHandlerMapping;
 import info.magnolia.module.blossom.view.TemplateViewResolver;
 import info.magnolia.module.blossom.view.UuidRedirectViewResolver;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
@@ -89,8 +91,15 @@ public class BlossomConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return new MagnoliaAuthenticationManager();
+    }
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsServiceBean() throws Exception {
+        return new MagnoliaUserDetailsService();
     }
 }
 
