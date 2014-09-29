@@ -61,12 +61,8 @@
         <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-empty-webapp</artifactId>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia</groupId>
-            <artifactId>magnolia-empty-webapp</artifactId>
             <type>pom</type>
+            <scope>import</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.dam</groupId>

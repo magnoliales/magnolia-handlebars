@@ -1,9 +1,8 @@
 package com.magnoliales.handlebars.security;
 
 import info.magnolia.cms.security.User;
-import org.springframework.security.authentication.DisabledException;
+import info.magnolia.context.MgnlContext;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -13,12 +12,9 @@ import java.util.List;
 
 public class MagnoliaAuthentication implements Authentication {
 
-    private User user;
+    final private User user;
 
-    public MagnoliaAuthentication(User user) throws AuthenticationException {
-        if (!user.isEnabled()) {
-            throw new DisabledException("User account is disabled");
-        }
+    public MagnoliaAuthentication(User user) {
         this.user = user;
     }
 
@@ -38,7 +34,7 @@ public class MagnoliaAuthentication implements Authentication {
 
     @Override
     public Object getDetails() {
-        return null;
+        return user.getName();
     }
 
     @Override
@@ -53,7 +49,7 @@ public class MagnoliaAuthentication implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Cannot set value");
     }
 
     @Override
