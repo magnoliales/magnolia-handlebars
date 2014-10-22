@@ -1,21 +1,14 @@
 package com.magnoliales.handlebars.blossom;
 
 import com.magnoliales.handlebars.renderer.HandlebarsRenderer;
-import com.magnoliales.handlebars.security.MagnoliaAuthenticationProvider;
 import info.magnolia.module.blossom.preexecution.BlossomHandlerMapping;
 import info.magnolia.module.blossom.view.TemplateViewResolver;
 import info.magnolia.module.blossom.view.UuidRedirectViewResolver;
 import info.magnolia.module.blossom.web.BlossomWebArgumentResolver;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.engine.RenderingEngine;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
@@ -24,12 +17,7 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
 import org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping;
 
 @Configuration
-@EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
-public class BlossomConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private MagnoliaAuthenticationProvider magnoliaAuthenticationProvider;
+public class BlossomConfiguration {
 
     @Bean
     public SimpleControllerHandlerAdapter simpleControllerHandlerAdapter() {
@@ -91,17 +79,6 @@ public class BlossomConfiguration extends WebSecurityConfigurerAdapter {
         resolver.setOrder(2);
         resolver.setViewRenderer(handlebarsRenderer());
         return resolver;
-    }
-
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(magnoliaAuthenticationProvider);
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 }
 

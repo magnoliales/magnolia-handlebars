@@ -17,7 +17,6 @@ public class HomePageTemplate {
 
     public static final String ID = "handlebars-example:pages/home-page";
 
-    @Secured("superuser")
     @RequestMapping("/home-page")
     public String render(Model model) {
         model.addAttribute("name", "World");
