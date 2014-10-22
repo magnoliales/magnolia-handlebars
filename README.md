@@ -16,7 +16,6 @@ To enable scanning of your templates, dialogs and components use the following `
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="classpath:/base-handlebars-context.xml" />
     <context:component-scan base-package="templates,components,dialogs"/>
 
 </beans>
