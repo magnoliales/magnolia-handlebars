@@ -9,10 +9,35 @@
     <packaging>pom</packaging>
     <version>0.1.1-SNAPSHOT</version>
 
+    <contributors>
+        <contributor>
+            <name>Vasily Kartashov</name>
+            <email>vasily@kartashov.com</email>
+        </contributor>
+        <contributor>
+            <name>Danny Marsland</name>
+            <email>danny.marsland@gmail.com</email>
+        </contributor>
+    </contributors>
+
     <modules>
         <module>magnolia-handlebars</module>
         <module>magnolia-handlebars-example</module>
     </modules>
+
+    <properties>
+        <version.magnolia>5.3.5</version.magnolia>
+        <version.magnolia.dam>2.0.5</version.magnolia.dam>
+        <version.magnolia.blossom>3.0.4</version.magnolia.blossom>
+        <version.handlebars>1.3.1</version.handlebars>
+        <version.jcr>2.0</version.jcr>
+        <version.servet>2.5</version.servet>
+        <version.springframework>4.0.6.RELEASE</version.springframework>
+        <version.springframework.security>3.2.5.RELEASE</version.springframework.security>
+        <version.findbugs>3.0.0</version.findbugs>
+        <version.nexus-staging>1.6.2</version.nexus-staging>
+        <version.maven-deploy>2.8.2</version.maven-deploy>
+    </properties>
 
     <profiles>
         <profile>
@@ -22,7 +47,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.2</version>
+                        <version>${version.nexus-staging}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -49,29 +74,6 @@
             </distributionManagement>
         </profile>
     </profiles>
-
-    <contributors>
-        <contributor>
-            <name>Vasily Kartashov</name>
-            <email>vasily@kartashov.com</email>
-        </contributor>
-        <contributor>
-            <name>Danny Marsland</name>
-            <email>danny.marsland@gmail.com</email>
-        </contributor>
-    </contributors>
-
-    <properties>
-        <version.magnolia>5.3.5</version.magnolia>
-        <version.magnolia.dam>2.0.5</version.magnolia.dam>
-        <version.magnolia.blossom>3.0.4</version.magnolia.blossom>
-        <version.handlebars>1.3.1</version.handlebars>
-        <version.jcr>2.0</version.jcr>
-        <version.servet>2.5</version.servet>
-        <version.springframework>4.0.6.RELEASE</version.springframework>
-        <version.springframework.security>3.2.5.RELEASE</version.springframework.security>
-        <version.findbugs>3.0.0</version.findbugs>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
