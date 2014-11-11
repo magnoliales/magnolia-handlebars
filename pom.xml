@@ -20,11 +20,6 @@
         </contributor>
     </contributors>
 
-    <modules>
-        <module>magnolia-handlebars</module>
-        <module>magnolia-handlebars-example</module>
-    </modules>
-
     <properties>
         <version.magnolia>5.3.5</version.magnolia>
         <version.magnolia.dam>2.0.5</version.magnolia.dam>
@@ -40,6 +35,16 @@
     </properties>
 
     <profiles>
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>magnolia-handlebars</module>
+                <module>magnolia-handlebars-example</module>
+            </modules>
+        </profile>
         <profile>
             <id>sonatype</id>
             <build>
@@ -66,6 +71,9 @@
                     </plugin>
                 </plugins>
             </build>
+            <modules>
+                <module>magnolia-handlebars</module>
+            </modules>
             <distributionManagement>
                 <snapshotRepository>
                     <id>ossrh</id>
