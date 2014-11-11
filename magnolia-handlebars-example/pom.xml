@@ -4,17 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>magnolia-handlebars-example</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
     <parent>
         <groupId>com.magnoliales</groupId>
         <artifactId>magnolia-handlebars-parent</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
+    <artifactId>magnolia-handlebars-example</artifactId>
+    <packaging>war</packaging>
+    <version>0.1.1-SNAPSHOT</version>
 
     <build>
-        <finalName>magnolia-handlebars-test</finalName>
+        <finalName>magnolia-handlebars-example</finalName>
         <plugins>
             <!-- delete repository on clean -->
             <plugin>
@@ -59,19 +59,32 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.magnoliales</groupId>
+            <artifactId>magnolia-handlebars</artifactId>
+            <version>0.1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-empty-webapp</artifactId>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
         <dependency>
+            <groupId>info.magnolia</groupId>
+            <artifactId>magnolia-empty-webapp</artifactId>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>info.magnolia.dam</groupId>
             <artifactId>magnolia-dam-compatibility</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <scope>provided</scope>
+            <groupId>info.magnolia.blossom</groupId>
+            <artifactId>magnolia-module-blossom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.ui</groupId>
+            <artifactId>magnolia-ui-vaadin-integration</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -80,23 +93,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.magnoliales</groupId>
-            <artifactId>magnolia-handlebars</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

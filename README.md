@@ -3,6 +3,41 @@ magnolia-handlebars
 
 Handlebars rendering for Magnolia CMS
 
+For the compilation add the following repositories to your a profile in `settings.xml`
+```xml
+<settings>
+    ...
+    <profiles>
+        <profile>
+            <id>magnolia</id>
+            <repositories>
+                <repository>
+                    <id>magnolia.public.releases</id>
+                    <url>https://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases</url>
+                </repository>
+                <repository>
+                    <id>thirdparty</id>
+                    <url>https://nexus.magnolia-cms.com/content/repositories/thirdparty</url>
+                </repository>
+                <repository>
+                    <id>thirdparty.customized</id>
+                    <url>https://nexus.magnolia-cms.com/content/repositories/thirdparty.customized</url>
+                </repository>
+                <repository>
+                    <id>vaadin-addons</id>
+                    <url>http://maven.vaadin.com/vaadin-addons</url>
+                </repository>
+                <repository>
+                    <id>maven.central</id>
+                    <url>http://repo1.maven.org/maven2</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+    ...
+</settings>
+```
+
 Handlebars templates need to be in `classpath:/templates`
  
 To enable scanning of your templates, dialogs and components use the following `classpath:/handlebars-context.xml`

@@ -7,7 +7,48 @@
     <groupId>com.magnoliales</groupId>
     <artifactId>magnolia-handlebars-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
+
+    <modules>
+        <module>magnolia-handlebars</module>
+        <module>magnolia-handlebars-example</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>sonatype</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.2</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <debug>false</debug>
+                            <debuglevel>none</debuglevel>
+                            <optimize>true</optimize>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
     <contributors>
         <contributor>
@@ -21,9 +62,9 @@
     </contributors>
 
     <properties>
-        <version.magnolia>5.3.3</version.magnolia>
-        <version.magnolia.dam>2.0.3</version.magnolia.dam>
-        <version.magnolia.blossom>3.0.3</version.magnolia.blossom>
+        <version.magnolia>5.3.5</version.magnolia>
+        <version.magnolia.dam>2.0.5</version.magnolia.dam>
+        <version.magnolia.blossom>3.0.4</version.magnolia.blossom>
         <version.handlebars>1.3.1</version.handlebars>
         <version.jcr>2.0</version.jcr>
         <version.servet>2.5</version.servet>
@@ -31,11 +72,6 @@
         <version.springframework.security>3.2.5.RELEASE</version.springframework.security>
         <version.findbugs>3.0.0</version.findbugs>
     </properties>
-
-    <modules>
-        <module>magnolia-handlebars</module>
-        <module>magnolia-handlebars-example</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -127,30 +163,12 @@
                 <artifactId>magnolia-ui-vaadin-integration</artifactId>
                 <version>${version.magnolia}</version>
             </dependency>
+            <dependency>
+                <groupId>info.magnolia.ui</groupId>
+                <artifactId>magnolia-ui-admincentral</artifactId>
+                <version>${version.magnolia}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>magnolia.public.releases</id>
-            <url>https://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases</url>
-        </repository>
-        <repository>
-            <id>thirdparty</id>
-            <url>https://nexus.magnolia-cms.com/content/repositories/thirdparty</url>
-        </repository>
-        <repository>
-            <id>thirdparty.customized</id>
-            <url>https://nexus.magnolia-cms.com/content/repositories/thirdparty.customized</url>
-        </repository>
-        <repository>
-            <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
-        </repository>
-        <repository>
-            <id>maven.central</id>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-    </repositories>
 
 </project>
