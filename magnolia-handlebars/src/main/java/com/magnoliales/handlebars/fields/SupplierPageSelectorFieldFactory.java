@@ -68,8 +68,8 @@ public class SupplierPageSelectorFieldFactory extends SelectFieldFactory<Supplie
                     String parentTemplateId = parentTemplates.get(templateId);
                     final Map<String, String> pages = utils.findPagesUsingTemplate(parentTemplateId);
                     for (Map.Entry<String, String> entry : pages.entrySet()) {
-                        supplierPageSelect.addItem(entry.getKey());
-                        supplierPageSelect.setItemCaption(entry.getKey(), entry.getValue());
+                        supplierPageSelect.addItem(entry.getValue());
+                        supplierPageSelect.setItemCaption(entry.getValue(), entry.getKey());
                     }
                     supplierPageSelect.setRequired(true);
                     supplierPageSelect.setVisible(true);
