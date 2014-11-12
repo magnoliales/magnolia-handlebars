@@ -18,6 +18,7 @@ import javax.jcr.RepositoryException;
 public class SupplierPageColumnFormatter extends AbstractColumnFormatter<AbstractColumnDefinition> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SupplierPageColumnFormatter.class);
+    private static final long serialVersionUID = 9765635846L;
 
     @Inject
     public SupplierPageColumnFormatter(AbstractColumnDefinition definition) {

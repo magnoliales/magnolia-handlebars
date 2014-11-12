@@ -27,12 +27,12 @@ import java.lang.reflect.ParameterizedType;
 
 public abstract class AbstractTemplateHelper<C extends TemplatingElement> implements Helper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
-
     public static final String PATH_ATTRIBUTE = "path";
     public static final String UUID_ATTRIBUTE = "uuid";
     public static final String WORKSPACE_ATTRIBUTE = "workspace";
     public static final String CONTENT_ATTRIBUTE = "content";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
 
     protected C createTemplatingElement() {
         // FIXME use scope instead of fetching the RenderingContext for passing it as an argument

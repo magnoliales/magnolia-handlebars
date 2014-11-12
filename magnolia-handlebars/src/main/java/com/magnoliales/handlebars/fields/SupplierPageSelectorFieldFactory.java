@@ -67,10 +67,9 @@ public class SupplierPageSelectorFieldFactory extends SelectFieldFactory<Supplie
                     supplierPageSelect.removeAllItems();
                     String parentTemplateId = parentTemplates.get(templateId);
                     final Map<String, String> pages = utils.findPagesUsingTemplate(parentTemplateId);
-                    for (String pagePath : pages.keySet()) {
-                        String pageId = pages.get(pagePath);
-                        supplierPageSelect.addItem(pageId);
-                        supplierPageSelect.setItemCaption(pageId, pagePath);
+                    for (Map.Entry<String, String> entry : pages.entrySet()) {
+                        supplierPageSelect.addItem(entry.getKey());
+                        supplierPageSelect.setItemCaption(entry.getKey(), entry.getValue());
                     }
                     supplierPageSelect.setRequired(true);
                     supplierPageSelect.setVisible(true);

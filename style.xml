@@ -81,5 +81,24 @@
         -->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
+
+        <module name="MissingOverride"/>
+        <module name="InnerTypeLast"/>
+        <module name="CovariantEquals"/>
+        <module name="ModifiedControlVariable"/>
+        <module name="StringLiteralEquality"/>
+        <module name="IllegalCatch"/>
+        <module name="PackageDeclaration"/>
+        <module name="DeclarationOrder"/>
+        <module name="ParameterAssignment"/>
+        <module name="ExplicitInitialization"/>
+        <module name="DefaultComesLast"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="OneStatementPerLine"/>
+
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+
+
     </module>
 </module>

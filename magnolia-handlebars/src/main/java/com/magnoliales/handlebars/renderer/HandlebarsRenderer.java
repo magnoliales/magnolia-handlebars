@@ -29,9 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.jcr.Node;
-import javax.jcr.Session;
+import javax.jcr.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -64,7 +64,17 @@ public class HandlebarsRenderer extends AbstractRenderer {
                 Helper helper = (Helper) helperClass.newInstance();
                 handlebars.registerHelper(helperName, helper);
             }
-        } catch (Exception e) {
+        } catch (IllegalAccessException e) {
+            LOGGER.error("Cannot read helpers information", e);
+        } catch (InstantiationException e) {
+            LOGGER.error("Cannot read helpers information", e);
+        } catch (LoginException e) {
+            LOGGER.error("Cannot read helpers information", e);
+        } catch (PathNotFoundException e) {
+            LOGGER.error("Cannot read helpers information", e);
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("Cannot read helpers information", e);
+        } catch (RepositoryException e) {
             LOGGER.error("Cannot read helpers information", e);
         }
     }
@@ -92,9 +102,6 @@ public class HandlebarsRenderer extends AbstractRenderer {
     protected void onRender(Node content, RenderableDefinition definition, RenderingContext renderingContext,
                             Map<String, Object> context, String templateScript) throws RenderException {
 
-        // @todo add localized node resolve
-        // final Locale locale = MgnlContext.getAggregationState().getLocale();
-
         final AppendableWriter out;
         try {
             out = renderingContext.getAppendable();
@@ -111,7 +118,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
             } finally {
                 combinedContext.destroy();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOGGER.error("Cannot render template", e);
         }
     }

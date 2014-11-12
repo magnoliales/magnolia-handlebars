@@ -12,12 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+import javax.jcr.LoginException;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.QueryResult;
-import javax.jcr.query.Row;
+import javax.jcr.query.*;
 import java.util.*;
 
 public class TemplateUtils {
@@ -81,7 +80,11 @@ public class TemplateUtils {
                 Node node = row.getNode();
                 pages.put(node.getPath(), node.getIdentifier());
             }
-        } catch (Exception e) {
+        } catch (LoginException e) {
+            LOGGER.error("Cannot get pages using template", e);
+        } catch (InvalidQueryException e) {
+            LOGGER.error("Cannot get pages using template", e);
+        } catch (RepositoryException e) {
             LOGGER.error("Cannot get pages using template", e);
         }
         return pages;

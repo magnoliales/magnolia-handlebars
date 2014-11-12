@@ -25,11 +25,11 @@ public class TemplateSelectorFieldFactory extends SelectFieldFactory<TemplateSel
     public List<SelectFieldOptionDefinition> getSelectFieldOptionDefinition() {
         List<SelectFieldOptionDefinition> selectFieldOptionDefinitions = new ArrayList<SelectFieldOptionDefinition>();
         Map<String, String> templates = utils.getTemplates();
-        for (String templateId : templates.keySet()) {
-            if (utils.isTemplateAvailable(templateId)) {
+        for (Map.Entry<String, String> entry : templates.entrySet()) {
+            if (utils.isTemplateAvailable(entry.getKey())) {
                 SelectFieldOptionDefinition selectFieldOptionDefinition = new SelectFieldOptionDefinition();
-                selectFieldOptionDefinition.setValue(templateId);
-                selectFieldOptionDefinition.setLabel(templates.get(templateId));
+                selectFieldOptionDefinition.setValue(entry.getKey());
+                selectFieldOptionDefinition.setLabel(entry.getValue());
                 selectFieldOptionDefinitions.add(selectFieldOptionDefinition);
             }
         }
