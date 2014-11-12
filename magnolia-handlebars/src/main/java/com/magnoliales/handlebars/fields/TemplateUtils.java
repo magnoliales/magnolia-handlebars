@@ -22,11 +22,11 @@ import java.util.*;
 
 public class TemplateUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(TemplateUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TemplateUtils.class);
 
-    final private Map<String, String> parentTemplates;
-    final private List<String> singletonTemplates;
-    final private Map<String, String> templates;
+    private final Map<String, String> parentTemplates;
+    private final List<String> singletonTemplates;
+    private final Map<String, String> templates;
 
     TemplateUtils(ApplicationContextContainer applicationContextContainer) {
         parentTemplates = new HashMap<String, String>();
@@ -82,7 +82,7 @@ public class TemplateUtils {
                 pages.put(node.getPath(), node.getIdentifier());
             }
         } catch (Exception e) {
-            log.error("Cannot get pages using template", e);
+            LOGGER.error("Cannot get pages using template", e);
         }
         return pages;
     }

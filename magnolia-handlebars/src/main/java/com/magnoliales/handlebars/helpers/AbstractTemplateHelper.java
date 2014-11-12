@@ -27,7 +27,7 @@ import java.lang.reflect.ParameterizedType;
 
 public abstract class AbstractTemplateHelper<C extends TemplatingElement> implements Helper {
 
-    private static final Logger log = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
 
     public static final String PATH_ATTRIBUTE = "path";
     public static final String UUID_ATTRIBUTE = "uuid";
@@ -50,7 +50,7 @@ public abstract class AbstractTemplateHelper<C extends TemplatingElement> implem
     protected void initContentElement(Options options, AbstractContentTemplatingElement component)  {
         // @todo The freemarker code ensured that options could be cast to the correct type - here I am just assuming
         ContentMap contentMap = options.hash(CONTENT_ATTRIBUTE);
-        Node contentNode = contentMap != null ? contentMap.getJCRNode(): null;
+        Node contentNode = contentMap != null ? contentMap.getJCRNode() : null;
         String workspace = options.hash(WORKSPACE_ATTRIBUTE);
         String nodeIdentifier = options.hash(UUID_ATTRIBUTE);
         String path = options.hash(PATH_ATTRIBUTE);
@@ -68,10 +68,10 @@ public abstract class AbstractTemplateHelper<C extends TemplatingElement> implem
             templatingElement.end(buffer);
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("IO Error rendering:",e);
+            LOGGER.error("IO Error rendering:", e);
         } catch (RenderException e) {
             e.printStackTrace();
-            log.warn("Render Error rendering:t",e);
+            LOGGER.warn("Render Error rendering:t", e);
         }
         return buffer;
     }
@@ -83,7 +83,7 @@ public abstract class AbstractTemplateHelper<C extends TemplatingElement> implem
         try {
             templateDefinition = registry.getTemplateDefinition(templateId);
         } catch (RegistrationException e) {
-            log.error("Cannot fetch template definition from registry", e);
+            LOGGER.error("Cannot fetch template definition from registry", e);
             return null;
         }
         if (templateDefinition.getAreas().containsKey(name)) {
@@ -93,7 +93,7 @@ public abstract class AbstractTemplateHelper<C extends TemplatingElement> implem
                 areaNode = NodeUtil.createPath(node, name, NodeTypes.Area.NAME);
                 session.save();
             } catch (RepositoryException e) {
-                log.error("Cannot create area node", e);
+                LOGGER.error("Cannot create area node", e);
                 return null;
             }
             return new AreaState(templateDefinition.getAreas().get(name), areaNode);
@@ -103,7 +103,7 @@ public abstract class AbstractTemplateHelper<C extends TemplatingElement> implem
             try {
                 supplier = node.getSession().getNodeByIdentifier(supplierPageId);
             } catch (RepositoryException e) {
-                log.error("Cannot find supplier page", e);
+                LOGGER.error("Cannot find supplier page", e);
                 return null;
             }
             return createAreaState(name, supplier);
@@ -111,7 +111,7 @@ public abstract class AbstractTemplateHelper<C extends TemplatingElement> implem
 
     }
 
-    public static class AreaState {
+    public static final class AreaState {
 
         private AreaDefinition areaDefinition;
         private Node node;

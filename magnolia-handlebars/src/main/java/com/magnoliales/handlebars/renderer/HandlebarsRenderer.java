@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class HandlebarsRenderer extends AbstractRenderer {
 
-    private static final Logger log = LoggerFactory.getLogger(HandlebarsRenderer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HandlebarsRenderer.class);
 
     private Handlebars handlebars;
 
@@ -59,13 +59,13 @@ public class HandlebarsRenderer extends AbstractRenderer {
             for (Node helperNode : JcrUtils.getChildNodes(helpersNode)) {
                 String helperName = PropertyUtil.getString(helperNode, "name");
                 String helperClassName = PropertyUtil.getString(helperNode, "class");
-                log.info("Adding handlebars helper {}: {}", helperName, helperClassName);
+                LOGGER.info("Adding handlebars helper {}: {}", helperName, helperClassName);
                 Class<?> helperClass = Class.forName(helperClassName);
                 Helper helper = (Helper) helperClass.newInstance();
                 handlebars.registerHelper(helperName, helper);
             }
         } catch (Exception e) {
-            log.error("Cannot read helpers information", e);
+            LOGGER.error("Cannot read helpers information", e);
         }
     }
 
@@ -112,7 +112,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
                 combinedContext.destroy();
             }
         } catch (Exception e) {
-            log.error("Cannot render template", e);
+            LOGGER.error("Cannot render template", e);
         }
     }
 }

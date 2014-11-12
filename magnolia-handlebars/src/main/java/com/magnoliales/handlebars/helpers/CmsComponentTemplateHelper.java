@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class CmsComponentTemplateHelper extends AbstractTemplateHelper<ComponentElement> {
 
-    private static final Logger log = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
 
     public CharSequence apply(Object context, Options options) throws IOException {
 
@@ -27,7 +27,7 @@ public class CmsComponentTemplateHelper extends AbstractTemplateHelper<Component
             nodeIdentifier = node.getIdentifier();
             path = node.getPath();
         } catch (RepositoryException e) {
-            log.error("Cannot read properties from the node", e);
+            LOGGER.error("Cannot read properties from the node", e);
         }
 
         final ComponentElement templatingElement = createTemplatingElement();
@@ -39,7 +39,7 @@ public class CmsComponentTemplateHelper extends AbstractTemplateHelper<Component
 
         String dialog = options.hash("dialog");
         Boolean editable = options.hash("editable");
-        Map<String,Object> contextAttributes = options.hash("contextAttributes");
+        Map<String, Object> contextAttributes = options.hash("contextAttributes");
 
         templatingElement.setDialog(dialog);
         templatingElement.setContextAttributes(contextAttributes);

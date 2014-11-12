@@ -14,7 +14,7 @@ import javax.jcr.query.QueryResult;
 
 public class IsNotSupplierPageRule extends AbstractAvailabilityRule {
 
-    private static final Logger log = LoggerFactory.getLogger(IsNotSupplierPageRule.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IsNotSupplierPageRule.class);
 
     @Override
     protected boolean isAvailableForItem(Object itemId) {
@@ -25,7 +25,7 @@ public class IsNotSupplierPageRule extends AbstractAvailabilityRule {
                     return !dependentPagesAvailable(jcrItemId.getUuid());
                 } catch (RepositoryException e) {
                     e.printStackTrace();
-                    log.error("Cannot apply rule", e);
+                    LOGGER.error("Cannot apply rule", e);
                 }
             }
         }

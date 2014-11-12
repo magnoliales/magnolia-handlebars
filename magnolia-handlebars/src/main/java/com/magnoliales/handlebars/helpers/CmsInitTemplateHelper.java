@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class CmsInitTemplateHelper extends AbstractTemplateHelper<InitElement> {
 
-    private static final Logger log = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
 
     public CharSequence apply(Object context, Options options) throws IOException {
         final InitElement templatingElement = createTemplatingElement();

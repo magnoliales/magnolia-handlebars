@@ -17,7 +17,7 @@ import javax.jcr.RepositoryException;
 
 public class SupplierPageColumnFormatter extends AbstractColumnFormatter<AbstractColumnDefinition> {
 
-    private static final Logger log = LoggerFactory.getLogger(SupplierPageColumnFormatter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SupplierPageColumnFormatter.class);
 
     @Inject
     public SupplierPageColumnFormatter(AbstractColumnDefinition definition) {
@@ -34,7 +34,7 @@ public class SupplierPageColumnFormatter extends AbstractColumnFormatter<Abstrac
             try {
                 supplierPage = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getNodeByIdentifier(property.toString());
             } catch (RepositoryException e) {
-                log.error("Cannot fetch supplier page", e);
+                LOGGER.error("Cannot fetch supplier page", e);
             }
             return PropertyUtil.getString(supplierPage, "title");
         }

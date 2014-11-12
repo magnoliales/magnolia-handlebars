@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class SupplierPageSelectorFieldFactory extends SelectFieldFactory<SupplierPageSelectorDefinition> {
 
-    final private TemplateUtils utils;
+    private final TemplateUtils utils;
 
     @Inject
     public SupplierPageSelectorFieldFactory(SupplierPageSelectorDefinition definition, Item relatedFieldItem,

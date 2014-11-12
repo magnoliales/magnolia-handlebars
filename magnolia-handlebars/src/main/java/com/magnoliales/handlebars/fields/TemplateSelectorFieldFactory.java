@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class TemplateSelectorFieldFactory extends SelectFieldFactory<TemplateSelectorDefinition> {
 
-    final private TemplateUtils utils;
+    private final TemplateUtils utils;
 
     @Inject
     public TemplateSelectorFieldFactory(TemplateSelectorDefinition definition, Item relatedFieldItem,

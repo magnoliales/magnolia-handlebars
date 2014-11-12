@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class ChainedContentMap extends ContentMap {
 
-    private static final Logger log = LoggerFactory.getLogger(ChainedContentMap.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChainedContentMap.class);
 
     private ChainedContentMap supplierMap;
     private String localeName;
@@ -24,7 +24,7 @@ public class ChainedContentMap extends ContentMap {
                 supplierMap = new ChainedContentMap(node.getSession().getNodeByIdentifier(id), locale);
             }
         } catch (RepositoryException e) {
-            log.error("Cannot fetch supplier page data");
+            LOGGER.error("Cannot fetch supplier page data");
         }
     }
 

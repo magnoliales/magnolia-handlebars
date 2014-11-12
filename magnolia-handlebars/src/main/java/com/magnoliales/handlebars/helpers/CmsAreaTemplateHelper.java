@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class CmsAreaTemplateHelper extends AbstractTemplateHelper<AreaElement> {
 
-    private static final Logger log = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInitTemplateHelper.class);
 
     public CharSequence apply(Object context, Options options) throws IOException {
 
@@ -38,7 +38,7 @@ public class CmsAreaTemplateHelper extends AbstractTemplateHelper<AreaElement> {
             nodeIdentifier = node.getIdentifier();
             path = node.getPath();
         } catch (RepositoryException e) {
-            log.error("Cannot read properties from the node", e);
+            LOGGER.error("Cannot read properties from the node", e);
         }
 
         final AreaElement templatingElement = createTemplatingElement();
