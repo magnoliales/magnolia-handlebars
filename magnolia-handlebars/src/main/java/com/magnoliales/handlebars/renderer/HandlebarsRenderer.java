@@ -45,10 +45,17 @@ public class HandlebarsRenderer extends AbstractRenderer {
     @Inject
     public HandlebarsRenderer(RenderingEngine renderingEngine) {
         super(renderingEngine);
-        TemplateLoader loader = new CompositeTemplateLoader(
-                new FileTemplateLoader(new File("src/main/resources/templates")),
-                new ClassPathTemplateLoader("/templates")
-        );
+        File templateDirectory  = new File("src/main/resources/templates");
+        TemplateLoader loader;
+        if (templateDirectory.exists()) {
+            loader = new CompositeTemplateLoader(
+                    new FileTemplateLoader(templateDirectory),
+                    new ClassPathTemplateLoader("/templates")
+            );
+        } else {
+            loader = new ClassPathTemplateLoader("/templates");
+        }
+
         handlebars = new Handlebars(loader);
         handlebars.with(new ConcurrentMapTemplateCache());
 
