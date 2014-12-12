@@ -122,6 +122,12 @@
                 </snapshotRepository>
             </distributionManagement>
         </profile>
+        <profile>
+        <id>magnolia</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
     </profiles>
 
     <dependencyManagement>
