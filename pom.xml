@@ -55,7 +55,7 @@
             <id>etectureogilvy</id>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>artifactory.eo</id>
+                    <id>artifactory.eo.snapshots</id>
                     <url>http://artifactory.eo.intern.etecture.de/artifactory/libs-snapshot-local</url>
                 </snapshotRepository>
             </distributionManagement>
