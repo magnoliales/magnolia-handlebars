@@ -46,6 +46,21 @@
             </modules>
         </profile>
         <profile>
+            <id>magnolia</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>etectureogilvy</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>artifactory.eo</id>
+                    <url>http://artifactory.eo.intern.etecture.de/artifactory/libs-snapshot-local</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
             <id>sonatype</id>
             <build>
                 <plugins>
@@ -121,12 +136,6 @@
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
             </distributionManagement>
-        </profile>
-        <profile>
-        <id>magnolia</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
     </profiles>
 
