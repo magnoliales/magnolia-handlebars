@@ -21,10 +21,6 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(new SetPropertyTask("Replace template selector in pages:editTemplate dialog",
                 RepositoryConstants.CONFIG, "/modules/pages/dialogs/editTemplate/form/tabs/tabTemplate/fields/template",
                 "class", TemplateSelectorDefinition.class.getName()));
-        tasks.add(new SetPropertyTask("Disable default subscription",
-                RepositoryConstants.CONFIG, "server/activation/subscribers/magnoliaPublic8080",
-                "active", Boolean.FALSE));
-
         return tasks;
     }
 }
