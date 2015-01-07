@@ -64,6 +64,11 @@
             <version>0.1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.magnoliales</groupId>
+            <artifactId>magnolia-handlebars-helpers</artifactId>
+            <version>0.1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-empty-webapp</artifactId>
             <type>pom</type>
@@ -93,6 +98,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.dam</groupId>
+            <artifactId>magnolia-dam</artifactId>
         </dependency>
     </dependencies>
 

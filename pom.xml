@@ -32,6 +32,7 @@
         <version.findbugs>3.0.0</version.findbugs>
         <version.nexus-staging>1.6.2</version.nexus-staging>
         <version.maven-deploy>2.8.2</version.maven-deploy>
+        <version.magnolia.dam>2.0.1</version.magnolia.dam>
     </properties>
 
     <profiles>
@@ -43,6 +44,7 @@
             <modules>
                 <module>magnolia-handlebars</module>
                 <module>magnolia-handlebars-example</module>
+                <module>magnolia-handlebars-helpers</module>
             </modules>
         </profile>
         <profile>
@@ -129,6 +131,7 @@
             </build>
             <modules>
                 <module>magnolia-handlebars</module>
+                <module>magnolia-handlebars-helpers</module>
             </modules>
             <distributionManagement>
                 <snapshotRepository>
@@ -233,6 +236,25 @@
                 <groupId>info.magnolia.ui</groupId>
                 <artifactId>magnolia-ui-admincentral</artifactId>
                 <version>${version.magnolia}</version>
+            </dependency>
+            <dependency>
+                <groupId>info.magnolia.dam</groupId>
+                <artifactId>magnolia-dam</artifactId>
+                <version>${version.magnolia.dam}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>info.magnolia.ui</groupId>
+                        <artifactId>magnolia-ui-contentapp</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>info.magnolia.ui</groupId>
+                        <artifactId>magnolia-ui-form</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>info.magnolia.ui</groupId>
+                        <artifactId>magnolia-ui-framework</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
