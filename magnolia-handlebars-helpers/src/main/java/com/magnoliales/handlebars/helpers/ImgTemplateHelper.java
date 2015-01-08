@@ -8,6 +8,8 @@ import info.magnolia.objectfactory.Components;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImgTemplateHelper implements Helper<String> {
 
@@ -23,19 +25,34 @@ public class ImgTemplateHelper implements Helper<String> {
     @Override
     public CharSequence apply(String context, Options options) throws IOException {
 
-        String src = "";
-        String id = options.hash("id");
-        String alt = "";
-        String className = options.hash("class");
+
+        String attributes = "";
+        Map<String, String> attributeMap = new HashMap<String,String>();
         Asset asset = this.damTemplatingFunctions.getAsset(context);
         if( asset != null) {
-            src = asset.getLink();
-            alt = asset.getCaption();
+            String src = asset.getLink();
+            String alt = asset.getCaption();
+            attributeMap.put("src", src);
+            attributeMap.put("alt", alt);
         } else {
-            log.error("Could not get asset with itemKey " + id );
+            log.error("Could not get asset with itemKey " + context );
         }
 
-        return String.format("<img src=\"%s\" id=\"%s\" class=\"%s\"/ alt=\"%s\">", src, id, className, alt);
+        for (Map.Entry<String, Object> entry : options.hash.entrySet())
+        {
+            if (entry.getValue() != null) {
+                attributeMap.put(entry.getKey(), entry.getValue().toString());
+            }
+        }
+
+        for (Map.Entry<String, String> entry : attributeMap.entrySet())
+        {
+            if (entry.getValue() != null) {
+                attributes += String.format("%s=\"%s\" ", entry.getKey(), entry.getValue());
+            }
+        }
+
+        return String.format("<img %s/>", attributes);
 
     }
 }
