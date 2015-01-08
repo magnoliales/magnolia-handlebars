@@ -256,6 +256,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>info.magnolia.pages</groupId>
+                <artifactId>magnolia-pages</artifactId>
+                <version>${version.magnolia}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

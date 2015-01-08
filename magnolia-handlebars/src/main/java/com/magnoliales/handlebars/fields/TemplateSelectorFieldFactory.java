@@ -2,6 +2,7 @@ package com.magnoliales.handlebars.fields;
 
 import com.magnoliales.handlebars.setup.ApplicationContextContainer;
 import com.vaadin.data.Item;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.ui.form.field.definition.SelectFieldOptionDefinition;
 import info.magnolia.ui.form.field.factory.SelectFieldFactory;
 
@@ -10,29 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TemplateSelectorFieldFactory extends SelectFieldFactory<TemplateSelectorDefinition> {
+public class TemplateSelectorFieldFactory extends info.magnolia.pages.app.field.TemplateSelectorFieldFactory {
 
     private final TemplateUtils utils;
 
     @Inject
     public TemplateSelectorFieldFactory(TemplateSelectorDefinition definition, Item relatedFieldItem,
+                                        TemplateDefinitionAssignment templateDefinitionAssignment,
                                         ApplicationContextContainer applicationContextContainer) {
         super(definition, relatedFieldItem);
+        //super(definition, relatedFieldItem, templateDefinitionAssignment);
         utils = new TemplateUtils(applicationContextContainer);
     }
 
     @Override
     public List<SelectFieldOptionDefinition> getSelectFieldOptionDefinition() {
-        List<SelectFieldOptionDefinition> selectFieldOptionDefinitions = new ArrayList<SelectFieldOptionDefinition>();
-        Map<String, String> templates = utils.getTemplates();
-        for (Map.Entry<String, String> entry : templates.entrySet()) {
-            if (utils.isTemplateAvailable(entry.getKey())) {
-                SelectFieldOptionDefinition selectFieldOptionDefinition = new SelectFieldOptionDefinition();
-                selectFieldOptionDefinition.setValue(entry.getKey());
-                selectFieldOptionDefinition.setLabel(entry.getValue());
-                selectFieldOptionDefinitions.add(selectFieldOptionDefinition);
+        List<SelectFieldOptionDefinition> defaultSelectFieldOptionDefinitions = super.getSelectFieldOptionDefinition();
+        List<SelectFieldOptionDefinition> availableSelectFieldOptionDefinitions = new ArrayList<SelectFieldOptionDefinition>();
+        for(SelectFieldOptionDefinition selectFieldOptionDefinition : defaultSelectFieldOptionDefinitions) {
+            if (utils.isTemplateAvailable(selectFieldOptionDefinition.getValue())) {
+                availableSelectFieldOptionDefinitions.add(selectFieldOptionDefinition);
             }
         }
-        return selectFieldOptionDefinitions;
+        return availableSelectFieldOptionDefinitions;
     }
 }
