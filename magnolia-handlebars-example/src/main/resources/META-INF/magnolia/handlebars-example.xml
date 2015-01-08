@@ -9,5 +9,8 @@
         <dependency>
             <name>handlebars</name>
         </dependency>
+        <dependency>
+            <name>handlebars-helpers</name>
+        </dependency>
     </dependencies>
 </module>
