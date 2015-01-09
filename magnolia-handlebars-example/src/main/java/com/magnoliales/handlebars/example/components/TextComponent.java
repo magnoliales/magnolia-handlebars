@@ -1,7 +1,7 @@
-package components;
+package com.magnoliales.handlebars.example.components;
 
 import com.magnoliales.handlebars.annotations.TemplateComponent;
-import dialogs.TextComponentDialog;
+import com.magnoliales.handlebars.example.dialogs.TextComponentDialog;
 import info.magnolia.module.blossom.annotation.Template;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,6 @@ public class TextComponent {
 
     @RequestMapping("/text")
     public String render() {
-        return "components/text";
+        return "com/magnoliales/handlebars/example/components/text";
     }
 }

@@ -14,6 +14,11 @@
             <implementation>com.magnoliales.handlebars.setup.ApplicationContextContainer</implementation>
             <scope>singleton</scope>
         </component>
+        <component>
+            <type>com.magnoliales.handlebars.utils.HandlebarsRegistry</type>
+            <implementation>com.magnoliales.handlebars.utils.HandlebarsRegistryImpl</implementation>
+            <scope>singleton</scope>
+        </component>
     </components>
     <dependencies>
         <dependency>

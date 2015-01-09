@@ -27,13 +27,27 @@
         <version.handlebars>1.3.1</version.handlebars>
         <version.jcr>2.0</version.jcr>
         <version.servet>2.5</version.servet>
+        <version.jackrabbit-ocm>2.0.0</version.jackrabbit-ocm>
         <version.springframework>4.0.6.RELEASE</version.springframework>
         <version.springframework.security>3.2.5.RELEASE</version.springframework.security>
         <version.findbugs>3.0.0</version.findbugs>
         <version.nexus-staging>1.6.2</version.nexus-staging>
         <version.maven-deploy>2.8.2</version.maven-deploy>
         <version.magnolia.dam>2.0.1</version.magnolia.dam>
+        <version.reflections>0.9.9</version.reflections>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
@@ -260,6 +274,16 @@
                 <groupId>info.magnolia.pages</groupId>
                 <artifactId>magnolia-pages</artifactId>
                 <version>${version.magnolia}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache</groupId>
+                <artifactId>jackrabbit-ocm</artifactId>
+                <version>${version.jackrabbit-ocm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${version.reflections}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

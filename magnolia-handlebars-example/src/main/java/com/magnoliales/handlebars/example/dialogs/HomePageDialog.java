@@ -1,4 +1,4 @@
-package dialogs;
+package com.magnoliales.handlebars.example.dialogs;
 
 import info.magnolia.dam.app.ui.config.DamConfig;
 import info.magnolia.module.blossom.annotation.DialogFactory;

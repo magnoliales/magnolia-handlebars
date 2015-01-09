@@ -6,8 +6,12 @@
             <param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n"/>
         </layout>
     </appender>
+    <logger name="com.magnoliales" additivity="false">
+        <level value="ALL"/>
+        <appender-ref ref="CA"/>
+    </logger>
     <root>
-        <level value="INFO"/>
+        <level value="WARN"/>
         <appender-ref ref="CA"/>
     </root>
 </log4j:configuration>
