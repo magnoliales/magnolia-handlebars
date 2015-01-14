@@ -12,7 +12,6 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
 
     private Class<?> templateType;
     private boolean singleton;
-    private String caption;
     private HandlebarsTemplateDefinition parent;
 
     public HandlebarsTemplateDefinition(Class<?> templateType,
@@ -27,14 +26,14 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
         Page page = templateType.getAnnotation(Page.class);
 
         setId(templateType.getName());
-        setName(templateType.getName()); // @todo probably translate it
+        String name = translator.translate("templates." + templateType.getName());
+        setName(name);
 
         setTemplateScript(page.templateScript());
         setTitle(templateType.getName());
         setRenderType("handlebars");
 
         singleton = page.singleton();
-        caption = translator.translate("templates." + templateType.getName());
     }
 
     public Class<?> getTemplateType() {
@@ -56,12 +55,8 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
         return parent;
     }
 
-    public String getCaption() {
-        return caption;
-    }
-
     @Override
     public int compareTo(HandlebarsTemplateDefinition definition) {
-        return caption.compareTo(definition.caption);
+        return getName().compareTo(definition.getName());
     }
 }

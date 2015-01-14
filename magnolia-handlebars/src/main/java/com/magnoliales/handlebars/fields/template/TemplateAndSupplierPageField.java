@@ -34,7 +34,7 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
                 continue;
             }
             templateField.addItem(templateDefinition.getId());
-            templateField.setItemCaption(templateDefinition.getId(), templateDefinition.getCaption());
+            templateField.setItemCaption(templateDefinition.getId(), templateDefinition.getName());
         }
         templateField.setTextInputAllowed(false);
         templateField.setRequired(true);
@@ -50,8 +50,7 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
         supplierPageField.setRequired(false);
         component.addComponent(supplierPageField);
 
-        // add OCM discriminator property as a hidden property
-        // make sure the validator works
+        // add validator
 
         ValueChangeListener templateValueChangeListener = new ValueChangeListener() {
             @Override
@@ -89,7 +88,7 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
             }
         };
 
-        ValueChangeListener valueChangeListener = new ValueChangeListener() {
+        ValueChangeListener supplierPageValueChangeListener = new ValueChangeListener() {
             @Override
             @SuppressWarnings("unchecked")
             public void valueChange(Property.ValueChangeEvent event) {
@@ -101,7 +100,7 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
         };
 
         templateField.addValueChangeListener(templateValueChangeListener);
-        supplierPageField.addValueChangeListener(valueChangeListener);
+        supplierPageField.addValueChangeListener(supplierPageValueChangeListener);
     }
 
     @Override
