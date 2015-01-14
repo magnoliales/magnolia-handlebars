@@ -7,5 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface SingletonTemplate {
+public @interface Page {
+
+    String templateScript();
+    boolean singleton() default false;
+    Class<?>[] parents() default { };
 }

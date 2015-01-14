@@ -1,20 +1,11 @@
 <html>
     <head>
         {{{cms-init}}}
-        <title>{{ content.title }}</title>
+        <title>{{title}}</title>
     </head>
     <body>
-        <h1>Title is: {{ content.title }}!</h1>
-        <h2>Hello, {{ name }}!</h2>
-        <div>
-            {{{img content.image id="image1" class="image"}}}
-        </div>
-        {{{cms-area name="menu"}}}
-        {{#block "body"}}
-            <p>
-                This is a home page
-            </p>
-        {{/block}}
-        {{{cms-area name="footer"}}}
+        <h1>Title is: {{title}}!</h1>
+        <h2>Hello, {{name}}</h2>
+        <p>The time is : {{date}}</p>
     </body>
 </html>

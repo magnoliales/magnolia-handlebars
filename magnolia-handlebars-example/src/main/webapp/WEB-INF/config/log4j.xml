@@ -10,6 +10,18 @@
         <level value="ALL"/>
         <appender-ref ref="CA"/>
     </logger>
+    <logger name="org.apache.jackrabbit.core.query.lucene.join.QueryEngine" additivity="false">
+        <level value="ALL"/>
+        <appender-ref ref="CA"/>
+    </logger>
+    <logger name="info.magnolia.cms.util.ClasspathResourcesUtil">
+        <level value="OFF"/>
+        <appender-ref ref="CA"/>
+    </logger>
+    <logger name="h2database">
+        <level value="WARN"/>
+        <appender-ref ref="CA"/>
+    </logger>
     <root>
         <level value="WARN"/>
         <appender-ref ref="CA"/>

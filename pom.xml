@@ -35,6 +35,7 @@
         <version.maven-deploy>2.8.2</version.maven-deploy>
         <version.magnolia.dam>2.0.1</version.magnolia.dam>
         <version.reflections>0.9.9</version.reflections>
+        <version.h2>1.4.184</version.h2>
     </properties>
 
     <build>
@@ -284,6 +285,11 @@
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${version.reflections}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${version.h2}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

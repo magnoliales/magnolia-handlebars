@@ -10,20 +10,12 @@
     <components>
         <id>main</id>
         <component>
-            <type>com.magnoliales.handlebars.setup.ApplicationContextContainer</type>
-            <implementation>com.magnoliales.handlebars.setup.ApplicationContextContainer</implementation>
-            <scope>singleton</scope>
-        </component>
-        <component>
             <type>com.magnoliales.handlebars.utils.HandlebarsRegistry</type>
             <implementation>com.magnoliales.handlebars.utils.HandlebarsRegistryImpl</implementation>
             <scope>singleton</scope>
         </component>
     </components>
     <dependencies>
-        <dependency>
-            <name>blossom</name>
-        </dependency>
         <dependency>
             <name>pages</name>
         </dependency>

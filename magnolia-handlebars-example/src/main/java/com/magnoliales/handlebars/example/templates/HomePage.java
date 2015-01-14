@@ -1,14 +1,16 @@
 package com.magnoliales.handlebars.example.templates;
 
-import com.magnoliales.handlebars.annotations.Template;
+import com.magnoliales.handlebars.annotations.Page;
+import com.magnoliales.handlebars.example.templates.areas.HeaderArea;
 import org.apache.jackrabbit.ocm.manager.beanconverter.impl.InlineBeanConverterImpl;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Bean;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
-import com.magnoliales.handlebars.example.templates.areas.HeaderArea;
 
-@Node
-@Template(template = "home-page", singleton = true)
+import java.util.Date;
+
+@Node(jcrType = "mgnl:page")
+@Page(templateScript = "home-page", singleton = true)
 public class HomePage {
 
     @Field
@@ -32,4 +34,10 @@ public class HomePage {
     public void setHeader(HeaderArea header) {
         this.header = header;
     }
+
+    public String getName() {
+        return "World";
+    }
+
+    public String getDate() { return new Date().toString(); }
 }

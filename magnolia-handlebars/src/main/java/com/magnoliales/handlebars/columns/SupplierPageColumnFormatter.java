@@ -1,4 +1,4 @@
-package com.magnoliales.handlebars.fields;
+package com.magnoliales.handlebars.columns;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

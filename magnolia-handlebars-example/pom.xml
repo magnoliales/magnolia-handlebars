@@ -103,6 +103,10 @@
             <groupId>info.magnolia.dam</groupId>
             <artifactId>magnolia-dam</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
