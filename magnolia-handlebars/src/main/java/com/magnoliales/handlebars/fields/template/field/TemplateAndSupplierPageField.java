@@ -1,5 +1,6 @@
-package com.magnoliales.handlebars.fields.template;
+package com.magnoliales.handlebars.fields.template.field;
 
+import com.magnoliales.handlebars.fields.template.TemplateAndSupplierPage;
 import com.magnoliales.handlebars.templates.HandlebarsTemplateDefinition;
 import com.magnoliales.handlebars.utils.HandlebarsRegistry;
 import com.vaadin.data.Property;

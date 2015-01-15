@@ -1,5 +1,6 @@
-package com.magnoliales.handlebars.fields.template;
+package com.magnoliales.handlebars.fields.template.transformer;
 
+import com.magnoliales.handlebars.fields.template.TemplateAndSupplierPage;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
@@ -9,10 +10,10 @@ import org.apache.jackrabbit.ocm.manager.ManagerConstant;
 
 import javax.inject.Inject;
 
-public class TemplateAndSupplierFieldTransformer extends BasicTransformer<TemplateAndSupplierPage> {
+public class TemplateAndSupplierPageFieldTransformer extends BasicTransformer<TemplateAndSupplierPage> {
 
     @Inject
-    public TemplateAndSupplierFieldTransformer(Item relatedFormItem, ConfiguredFieldDefinition definition, Class<TemplateAndSupplierPage> type) {
+    public TemplateAndSupplierPageFieldTransformer(Item relatedFormItem, ConfiguredFieldDefinition definition, Class<TemplateAndSupplierPage> type) {
         super(relatedFormItem, definition, type);
     }
 

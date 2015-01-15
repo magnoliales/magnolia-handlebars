@@ -1,22 +1,22 @@
-package com.magnoliales.handlebars.fields.template;
+package com.magnoliales.handlebars.fields.template.field;
 
+import com.magnoliales.handlebars.fields.template.TemplateAndSupplierPage;
 import com.magnoliales.handlebars.utils.HandlebarsRegistry;
 import com.vaadin.data.Item;
-import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.ui.form.field.definition.FieldDefinition;
 import info.magnolia.ui.form.field.factory.AbstractFieldFactory;
 
 import javax.inject.Inject;
 
-public class TemplateAndSupplierFieldFactory<D extends FieldDefinition>
-        extends AbstractFieldFactory<TemplateAndSupplierFieldDefinition, TemplateAndSupplierPage> {
+public class TemplateAndSupplierPageFieldFactory<D extends FieldDefinition>
+        extends AbstractFieldFactory<TemplateAndSupplierPageFieldDefinition, TemplateAndSupplierPage> {
 
     private HandlebarsRegistry handlebarsRegistry;
 
     @Inject
-    public TemplateAndSupplierFieldFactory(TemplateAndSupplierFieldDefinition definition,
-                                           Item relatedFieldItem,
-                                           HandlebarsRegistry handlebarsRegistry) {
+    public TemplateAndSupplierPageFieldFactory(TemplateAndSupplierPageFieldDefinition definition,
+                                               Item relatedFieldItem,
+                                               HandlebarsRegistry handlebarsRegistry) {
         super(definition, relatedFieldItem);
         this.handlebarsRegistry = handlebarsRegistry;
     }
@@ -33,6 +33,6 @@ public class TemplateAndSupplierFieldFactory<D extends FieldDefinition>
 
     @Override
     protected Class<?> getDefinitionType() {
-        return TemplateAndSupplierFieldDefinition.class;
+        return TemplateAndSupplierPageFieldDefinition.class;
     }
 }
