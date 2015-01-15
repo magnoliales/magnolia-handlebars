@@ -22,6 +22,10 @@
         <level value="WARN"/>
         <appender-ref ref="CA"/>
     </logger>
+    <logger name="org.apache.jackrabbit.ocm">
+        <level value="ALL"/>
+        <appender-ref ref="CA"/>
+    </logger>
     <root>
         <level value="WARN"/>
         <appender-ref ref="CA"/>

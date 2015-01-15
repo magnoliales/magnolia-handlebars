@@ -14,6 +14,11 @@
             <implementation>com.magnoliales.handlebars.utils.HandlebarsRegistryImpl</implementation>
             <scope>singleton</scope>
         </component>
+        <component>
+            <type>com.magnoliales.handlebars.mapper.NodeObjectMapper</type>
+            <implementation>com.magnoliales.handlebars.mapper.NodeObjectMapperImpl</implementation>
+            <scope>singleton</scope>
+        </component>
     </components>
     <dependencies>
         <dependency>

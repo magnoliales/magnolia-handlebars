@@ -11,8 +11,6 @@ public interface HandlebarsRegistry {
 
     void init(String... namespaces);
 
-    Mapper getOcmMapper();
-
     List<HandlebarsTemplateDefinition> getTemplateDefinitions();
 
     HandlebarsTemplateDefinition getTemplateDefinition(String template);

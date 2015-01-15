@@ -27,11 +27,13 @@ import javax.jcr.query.QueryResult;
 import javax.jcr.query.Row;
 import java.util.*;
 
+// @todo add checks for initializations in every method
 public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
     private static Logger logger = LoggerFactory.getLogger(HandlebarsRegistryImpl.class);
 
-    private Mapper mapper;
+    private boolean initialized;
+    // make the key to be string and not class, easier that way
     private Map<Class<?>, HandlebarsTemplateDefinition> templateDefinitions;
     private TemplateDefinitionRegistry templateDefinitionRegistry;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
@@ -50,8 +52,8 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     @Override
     public void init(String... namespaces) {
 
-        if (mapper != null) {
-            throw new IllegalStateException("Mapper is already initialized");
+        if (initialized) {
+            throw new IllegalStateException("Handlebars registry is already initialized");
         }
 
         Set<Class> nodeClasses = new HashSet<>();
@@ -62,19 +64,10 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             Reflections reflections = new Reflections(namespace);
 
             pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class));
-            nodeClasses.addAll(reflections.getTypesAnnotatedWith(Node.class));
         }
 
         logger.info("Registering the node types '{}'", nodeClasses);
-        mapper = new AnnotationMapperImpl(new ArrayList<>(nodeClasses));
         processDefinitions(pageClasses, new HashMap<Class<?>, HandlebarsTemplateDefinition>());
-    }
-
-    public Mapper getOcmMapper() {
-        if (mapper == null) {
-            throw new IllegalStateException("Mapper is not initialized yet.");
-        }
-        return mapper;
     }
 
     @Override

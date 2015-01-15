@@ -30,16 +30,6 @@ public class TemplateAndSupplierPageFieldTransformer extends BasicTransformer<Te
         }
 
         @SuppressWarnings("unchecked")
-        Property<String> ocmClassNameProperty =
-                relatedFormItem.getItemProperty(ManagerConstant.DISCRIMINATOR_CLASS_NAME_PROPERTY);
-        if (ocmClassNameProperty == null) {
-            ocmClassNameProperty = new DefaultProperty<>(String.class, templateAndSupplierPage.getTemplate());
-            relatedFormItem.addItemProperty(ManagerConstant.DISCRIMINATOR_CLASS_NAME_PROPERTY, ocmClassNameProperty);
-        } else {
-            ocmClassNameProperty.setValue(templateAndSupplierPage.getTemplate());
-        }
-
-        @SuppressWarnings("unchecked")
         Property<String> supplierPageProperty = relatedFormItem.getItemProperty("mgnl:supplierPage");
         if (supplierPageProperty == null) {
             supplierPageProperty = new DefaultProperty<>(String.class, templateAndSupplierPage.getSupplierPage());

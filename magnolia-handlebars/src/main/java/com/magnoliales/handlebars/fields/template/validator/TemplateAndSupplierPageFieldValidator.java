@@ -14,6 +14,7 @@ public class TemplateAndSupplierPageFieldValidator extends AbstractValidator<Tem
 
     @Override
     protected boolean isValidValue(TemplateAndSupplierPage value) {
+        // @todo, add better logic, like checking that the value combination is correct
         return value != null && value.getTemplate() != null && !value.getTemplate().isEmpty();
     }
 

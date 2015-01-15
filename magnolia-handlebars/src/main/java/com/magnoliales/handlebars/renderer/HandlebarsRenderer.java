@@ -12,7 +12,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import com.magnoliales.handlebars.templates.HandlebarsTemplateDefinition;
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.utils.HandlebarsRegistry;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -24,8 +24,6 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.repository.RepositoryConstants;
 import org.apache.jackrabbit.commons.JcrUtils;
-import org.apache.jackrabbit.ocm.manager.ObjectContentManager;
-import org.apache.jackrabbit.ocm.manager.impl.ObjectContentManagerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +42,11 @@ public class HandlebarsRenderer extends AbstractRenderer {
 
     private Handlebars handlebars;
     private HandlebarsRegistry handlebarsRegistry;
+    private NodeObjectMapper nodeObjectMapper;
 
     @Inject
-    public HandlebarsRenderer(RenderingEngine renderingEngine, HandlebarsRegistry handlebarsRegistry) {
+    public HandlebarsRenderer(RenderingEngine renderingEngine, HandlebarsRegistry handlebarsRegistry,
+                              NodeObjectMapper nodeObjectMapper) {
         super(renderingEngine);
         File templateDirectory = new File("src/main/resources/templates");
         TemplateLoader loader;
@@ -79,6 +79,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
         }
 
         this.handlebarsRegistry = handlebarsRegistry;
+        this.nodeObjectMapper = nodeObjectMapper;
     }
 
     @Override
@@ -87,18 +88,13 @@ public class HandlebarsRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected void onRender(Node content, RenderableDefinition renderableDefinition, RenderingContext renderingContext,
+    protected void onRender(Node node, RenderableDefinition renderableDefinition, RenderingContext renderingContext,
                             Map<String, Object> context, String templateScript) throws RenderException {
 
         final AppendableWriter out;
         try {
-            HandlebarsTemplateDefinition handlebarsTemplateDefinition =
-                    (HandlebarsTemplateDefinition) renderableDefinition;
-            Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-            ObjectContentManager ocm = new ObjectContentManagerImpl(session, handlebarsRegistry.getOcmMapper());
-            Object nodeContext = ocm.getObject(content.getPath());
             out = renderingContext.getAppendable();
-            Context combinedContext = Context.newBuilder(nodeContext)
+            Context combinedContext = Context.newBuilder(nodeObjectMapper.map(node))
                     .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();
             try {
@@ -107,7 +103,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
             } finally {
                 combinedContext.destroy();
             }
-        } catch (IOException | RepositoryException e) {
+        } catch (IOException e) {
             LOGGER.error("Cannot render template", e);
         }
     }
