@@ -13,11 +13,6 @@
         <filter-class>info.magnolia.cms.filters.MgnlMainFilter</filter-class>
     </filter>
 
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>info.magnolia.module.blossom.web.InstallationAwareDelegatingFilterProxy</filter-class>
-    </filter>
-
     <filter-mapping>
         <filter-name>magnoliaFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
@@ -25,11 +20,6 @@
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <listener>
