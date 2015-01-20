@@ -38,7 +38,6 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
             templateField.setItemCaption(templateDefinition.getId(), templateDefinition.getName());
         }
         templateField.setTextInputAllowed(false);
-        templateField.setRequired(true);
         templateField.setCaption(null);
         component.addComponent(templateField);
 
@@ -48,7 +47,6 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
         supplierPageField.setImmediate(true);
         supplierPageField.setCaption(null);
         supplierPageField.setVisible(false);
-        supplierPageField.setRequired(false);
         component.addComponent(supplierPageField);
 
         // add validator
@@ -77,10 +75,8 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
                         supplierPageField.setItemCaption(entry.getValue(), entry.getKey());
                     }
                     supplierPageField.setVisible(true);
-                    supplierPageField.setRequired(true);
                 } else {
                     supplierPageField.setVisible(false);
-                    supplierPageField.setRequired(false);
                 }
 
                 String supplierPage = (String) supplierPageField.getValue();
