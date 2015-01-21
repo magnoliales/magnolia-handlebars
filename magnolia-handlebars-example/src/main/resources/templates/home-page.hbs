@@ -5,7 +5,9 @@
     </head>
     <body>
         <h1>Title is: {{title}}!</h1>
-        <h2>Hello, {{name}}</h2>
-        <p>The time is : {{date}}</p>
+        <h2>{{greeting}}, {{name}}</h2>
+        {{#block "body"}}
+            main body
+        {{/block}}
     </body>
 </html>

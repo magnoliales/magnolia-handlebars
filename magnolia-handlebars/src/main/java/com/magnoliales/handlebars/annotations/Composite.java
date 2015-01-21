@@ -6,9 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Processable
-public @interface Component {
-
-    String template();
+@Target(ElementType.FIELD)
+public @interface Composite {
 }

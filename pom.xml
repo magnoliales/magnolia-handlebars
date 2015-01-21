@@ -246,6 +246,11 @@
                 <version>${version.magnolia}</version>
             </dependency>
             <dependency>
+                <groupId>info.magnolia.ui</groupId>
+                <artifactId>magnolia-ui-form</artifactId>
+                <version>${version.magnolia}</version>
+            </dependency>
+            <dependency>
                 <groupId>info.magnolia.dam</groupId>
                 <artifactId>magnolia-dam</artifactId>
                 <version>${version.magnolia.dam}</version>

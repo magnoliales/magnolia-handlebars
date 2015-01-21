@@ -2,12 +2,14 @@ package com.magnoliales.handlebars.mapper;
 
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.annotations.Value;
-import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.*;
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
@@ -24,7 +26,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             nodeClass = Class.forName(nodeClassName);
             bean = nodeClass.newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            logger.error("Cannot instantiate object of class {}", nodeClassName);
+            logger.error("Cannot instantiate object of class '{}'", nodeClassName);
             return null;
         }
         while (!nodeClass.equals(Object.class)) {
@@ -33,7 +35,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                     try {
                         setValue(bean, field, node.getProperty(field.getName()));
                     } catch (RepositoryException | IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Cannot map property {} to bean {}", field.getName(), bean);
+                        logger.error("Cannot map property '{}' to bean '{}'", field.getName(), bean);
                     }
                 }
             }

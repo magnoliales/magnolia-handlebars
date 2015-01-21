@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Processable
 public @interface Page {
 
     String templateScript();
     boolean singleton() default false;
-    Class<?>[] parents() default { };
 }

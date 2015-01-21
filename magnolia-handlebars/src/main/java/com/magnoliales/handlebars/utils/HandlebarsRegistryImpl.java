@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.utils;
 
 import com.magnoliales.handlebars.annotations.Page;
+import com.magnoliales.handlebars.dialogs.AnnotatedFormDialogDefinitionProvider;
 import com.magnoliales.handlebars.templates.HandlebarsTemplateDefinition;
 import com.magnoliales.handlebars.templates.HandlebarsTemplateDefinitionProvider;
 import info.magnolia.context.MgnlContext;
@@ -25,6 +26,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.query.Row;
+import java.lang.reflect.Field;
 import java.util.*;
 
 // @todo add checks for initializations in every method
@@ -56,17 +58,15 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             throw new IllegalStateException("Handlebars registry is already initialized");
         }
 
-        Set<Class> nodeClasses = new HashSet<>();
         Set<Class<?>> pageClasses = new HashSet<>();
         for (String namespace : namespaces) {
 
             logger.info("Processing the namespace '{}'", namespace);
             Reflections reflections = new Reflections(namespace);
 
-            pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class));
+            pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class, true));
         }
 
-        logger.info("Registering the node types '{}'", nodeClasses);
         processDefinitions(pageClasses, new HashMap<Class<?>, HandlebarsTemplateDefinition>());
     }
 
@@ -94,6 +94,8 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 }
                 HandlebarsTemplateDefinition handlebarsTemplateDefinition =
                         new HandlebarsTemplateDefinition(pageClass, templateAvailability, translator, parent);
+                handlebarsTemplateDefinition.setDialog("dialogs." + pageClass.getName());
+                dialogDefinitionRegistry.register(new AnnotatedFormDialogDefinitionProvider(pageClass));
                 HandlebarsTemplateDefinitionProvider handlebarsTemplateDefinitionProvider =
                         new HandlebarsTemplateDefinitionProvider(handlebarsTemplateDefinition);
                 templateDefinitionRegistry.register(handlebarsTemplateDefinitionProvider);
