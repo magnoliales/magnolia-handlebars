@@ -1,7 +1,7 @@
 package com.magnoliales.handlebars.mapper;
 
 import com.magnoliales.handlebars.annotations.Page;
-import com.magnoliales.handlebars.annotations.Value;
+import com.magnoliales.handlebars.annotations.Field;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class NodeObjectMapperImpl implements NodeObjectMapper {
@@ -30,8 +29,8 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             return null;
         }
         while (!nodeClass.equals(Object.class)) {
-            for (Field field : nodeClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(Value.class)) {
+            for (java.lang.reflect.Field field : nodeClass.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Field.class)) {
                     try {
                         setValue(bean, field, node.getProperty(field.getName()));
                     } catch (RepositoryException | IllegalAccessException | InvocationTargetException e) {
@@ -52,7 +51,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         return bean;
     }
 
-    private void setValue(Object bean, Field field, Property property)
+    private void setValue(Object bean, java.lang.reflect.Field field, Property property)
             throws RepositoryException, InvocationTargetException, IllegalAccessException {
         field.setAccessible(true);
         switch (property.getType()) {

@@ -1,21 +1,25 @@
 package com.magnoliales.handlebars.example.templates;
 
-import com.magnoliales.handlebars.annotations.Composite;
+import com.magnoliales.handlebars.annotations.Area;
+import com.magnoliales.handlebars.annotations.Component;
+import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
-import com.magnoliales.handlebars.annotations.Value;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
+
+import java.util.Collection;
 
 @Page(templateScript = "home-page", singleton = true)
 public class HomePage {
 
-    @Value(fieldDefinition = TextFieldDefinition.class, settings = "{}")
+    @Field(definition = TextFieldDefinition.class, settings = "{}")
     private String title;
 
-    @Value(fieldDefinition = TextFieldDefinition.class)
+    @Field(definition = TextFieldDefinition.class)
     private String name;
 
-    @Composite
     private Meta meta;
+
+    private Awards awards;
 
     public String getTitle() {
         return title;
@@ -33,13 +37,39 @@ public class HomePage {
         return meta;
     }
 
-    public static class Meta {
+    public final static class Meta {
 
-        @Value(fieldDefinition = TextFieldDefinition.class)
-        private String name;
+        @Field(definition = TextFieldDefinition.class)
+        private String title;
 
-        @Value(fieldDefinition = TextFieldDefinition.class)
+        private Facebook facebook;
+
+        @Field
         private String image;
 
+        public final static class Facebook {
+
+            @Field(definition = TextFieldDefinition.class)
+            private String title;
+
+            @Field
+            private String image;
+        }
+    }
+
+    @Area(template = "")
+    public final static class Awards {
+
+        @Field(definition = TextFieldDefinition.class)
+        private String title;
+
+        private Collection<Award> items;
+
+        @Component(template = "")
+        public final static class Award {
+
+            @Field(definition = TextFieldDefinition.class)
+            private String title;
+        }
     }
 }

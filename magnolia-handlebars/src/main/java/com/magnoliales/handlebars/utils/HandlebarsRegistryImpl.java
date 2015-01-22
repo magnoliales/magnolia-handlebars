@@ -1,7 +1,8 @@
 package com.magnoliales.handlebars.utils;
 
 import com.magnoliales.handlebars.annotations.Page;
-import com.magnoliales.handlebars.dialogs.AnnotatedFormDialogDefinitionProvider;
+import com.magnoliales.handlebars.dialogs.AnnotatedDialogDefinitionFactory;
+import com.magnoliales.handlebars.dialogs.AnnotatedDialogDefinitionProvider;
 import com.magnoliales.handlebars.templates.HandlebarsTemplateDefinition;
 import com.magnoliales.handlebars.templates.HandlebarsTemplateDefinitionProvider;
 import info.magnolia.context.MgnlContext;
@@ -10,11 +11,10 @@ import info.magnolia.rendering.template.TemplateAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateAvailability;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.ui.dialog.definition.ConfiguredFormDialogDefinition;
+import info.magnolia.ui.dialog.registry.DialogDefinitionProvider;
 import info.magnolia.ui.dialog.registry.DialogDefinitionRegistry;
 import org.apache.jackrabbit.commons.JcrUtils;
-import org.apache.jackrabbit.ocm.mapper.Mapper;
-import org.apache.jackrabbit.ocm.mapper.impl.annotation.AnnotationMapperImpl;
-import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,16 +26,13 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.query.Row;
-import java.lang.reflect.Field;
 import java.util.*;
 
-// @todo add checks for initializations in every method
 public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
     private static Logger logger = LoggerFactory.getLogger(HandlebarsRegistryImpl.class);
 
     private boolean initialized;
-    // make the key to be string and not class, easier that way
     private Map<Class<?>, HandlebarsTemplateDefinition> templateDefinitions;
     private TemplateDefinitionRegistry templateDefinitionRegistry;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
@@ -53,25 +50,24 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
     @Override
     public void init(String... namespaces) {
-
         if (initialized) {
             throw new IllegalStateException("Handlebars registry is already initialized");
         }
-
         Set<Class<?>> pageClasses = new HashSet<>();
         for (String namespace : namespaces) {
-
             logger.info("Processing the namespace '{}'", namespace);
             Reflections reflections = new Reflections(namespace);
-
             pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class, true));
         }
-
         processDefinitions(pageClasses, new HashMap<Class<?>, HandlebarsTemplateDefinition>());
+        initialized = true;
     }
 
     @Override
     public List<HandlebarsTemplateDefinition> getTemplateDefinitions() {
+        if (!initialized) {
+            throw new IllegalStateException("Handlebars registry is not initialized");
+        }
         List<HandlebarsTemplateDefinition> definitionsList = new ArrayList<>(templateDefinitions.values());
         Collections.sort(definitionsList);
         return definitionsList;
@@ -79,7 +75,6 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
     private void processDefinitions(Set<Class<?>> unprocessedClasses,
                                     Map<Class<?>, HandlebarsTemplateDefinition> processedDefinitions) {
-
         if (unprocessedClasses.isEmpty()) {
             this.templateDefinitions = processedDefinitions;
             return;
@@ -94,8 +89,14 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 }
                 HandlebarsTemplateDefinition handlebarsTemplateDefinition =
                         new HandlebarsTemplateDefinition(pageClass, templateAvailability, translator, parent);
+
+
                 handlebarsTemplateDefinition.setDialog("dialogs." + pageClass.getName());
-                dialogDefinitionRegistry.register(new AnnotatedFormDialogDefinitionProvider(pageClass));
+                for (DialogDefinitionProvider provider :
+                        AnnotatedDialogDefinitionFactory.INSTANCE.discoverDialogProviders(pageClass)) {
+                    dialogDefinitionRegistry.register(provider);
+                }
+
                 HandlebarsTemplateDefinitionProvider handlebarsTemplateDefinitionProvider =
                         new HandlebarsTemplateDefinitionProvider(handlebarsTemplateDefinition);
                 templateDefinitionRegistry.register(handlebarsTemplateDefinitionProvider);
@@ -144,6 +145,9 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
     @Override
     public HandlebarsTemplateDefinition getTemplateDefinition(String template) {
+        if (!initialized) {
+            throw new IllegalStateException("Handlebars registry is not initialized");
+        }
         try {
             Class<?> pageClass = Class.forName(template);
             if (templateDefinitions.containsKey(pageClass)) {
