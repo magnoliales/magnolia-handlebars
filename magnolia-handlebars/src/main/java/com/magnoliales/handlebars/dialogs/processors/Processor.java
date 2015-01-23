@@ -2,6 +2,7 @@ package com.magnoliales.handlebars.dialogs.processors;
 
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Processable;
+import com.magnoliales.handlebars.dialogs.transformers.HierarchicalValueTransformer;
 import info.magnolia.ui.form.definition.ConfiguredFormDefinition;
 import info.magnolia.ui.form.definition.ConfiguredTabDefinition;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
@@ -77,14 +78,19 @@ public abstract class Processor {
 
     protected FieldDefinition getFieldDefinition(Class<?> type, String fieldName, String fieldNamespace) {
         Field field = getFieldAnnotation(type, fieldName);
+        ConfiguredFieldDefinition definition;
         try {
-            ConfiguredFieldDefinition definition = field.definition().newInstance();
-            definition.setName(fieldNamespace + fieldName);
-            // @todo add more advanced configuration here
-            return definition;
+            definition = field.definition().newInstance();
+
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Cannot instantiate field definition for " + fieldName, e);
         }
+        definition.setName(fieldNamespace + fieldName);
+        definition.setTransformerClass(HierarchicalValueTransformer.class);
+
+        // @todo add more advanced configuration here
+
+        return definition;
     }
 
     protected Field getFieldAnnotation(Class<?> type, String fieldName) {
