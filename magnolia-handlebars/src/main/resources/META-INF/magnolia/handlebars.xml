@@ -19,6 +19,11 @@
             <implementation>com.magnoliales.handlebars.mapper.NodeObjectMapperImpl</implementation>
             <scope>singleton</scope>
         </component>
+        <component>
+            <type>com.magnoliales.handlebars.dialogs.AnnotatedDialogDefinitionFactory</type>
+            <implementation>com.magnoliales.handlebars.dialogs.AnnotatedDialogDefinitionFactoryImpl</implementation>
+            <scope>singleton</scope>
+        </component>
     </components>
     <dependencies>
         <dependency>

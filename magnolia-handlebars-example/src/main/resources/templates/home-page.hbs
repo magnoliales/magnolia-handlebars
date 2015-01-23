@@ -5,9 +5,10 @@
     </head>
     <body>
         <h1>Title is: {{title}}!</h1>
-        <h2>{{greeting}}, {{name}}</h2>
+        <h2>{{greeting}}, {{addressee}}</h2>
         {{#block "body"}}
             main body
         {{/block}}
+        {{meta.facebook.title}}
     </body>
 </html>

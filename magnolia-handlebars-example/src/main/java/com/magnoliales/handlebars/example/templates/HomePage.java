@@ -15,7 +15,7 @@ public class HomePage {
     private String title;
 
     @Field(definition = TextFieldDefinition.class)
-    private String name;
+    private String addressee;
 
     private Meta meta;
 
@@ -29,8 +29,8 @@ public class HomePage {
         return "Hello";
     }
 
-    public String getName() {
-        return name;
+    public String getAddressee() {
+        return addressee;
     }
 
     public Meta getMeta() {
@@ -44,7 +44,7 @@ public class HomePage {
 
         private Facebook facebook;
 
-        @Field
+        @Field(definition = TextFieldDefinition.class)
         private String image;
 
         public final static class Facebook {
@@ -52,7 +52,7 @@ public class HomePage {
             @Field(definition = TextFieldDefinition.class)
             private String title;
 
-            @Field
+            @Field(definition = TextFieldDefinition.class)
             private String image;
         }
     }

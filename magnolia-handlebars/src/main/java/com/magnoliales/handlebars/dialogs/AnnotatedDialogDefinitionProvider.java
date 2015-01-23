@@ -9,17 +9,15 @@ import info.magnolia.ui.dialog.registry.DialogDefinitionProvider;
 
 public class AnnotatedDialogDefinitionProvider implements DialogDefinitionProvider {
 
-    private String id;
     private FormDialogDefinition dialogDefinition;
 
-    public AnnotatedDialogDefinitionProvider(String id, ConfiguredFormDialogDefinition dialogDefinition) {
-        this.id = id;
+    public AnnotatedDialogDefinitionProvider(ConfiguredFormDialogDefinition dialogDefinition) {
         this.dialogDefinition = dialogDefinition;
     }
 
     @Override
     public String getId() {
-        return id;
+        return dialogDefinition.getId();
     }
 
     @Override
@@ -29,6 +27,6 @@ public class AnnotatedDialogDefinitionProvider implements DialogDefinitionProvid
 
     @Override
     public Class<? extends FormDialogPresenter> getPresenterClass() throws RegistrationException {
-        return FormDialogPresenterImpl.class;
+        return dialogDefinition.getPresenterClass();
     }
 }

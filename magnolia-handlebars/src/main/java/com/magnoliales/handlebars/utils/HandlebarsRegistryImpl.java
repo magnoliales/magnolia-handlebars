@@ -33,16 +33,19 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     private static Logger logger = LoggerFactory.getLogger(HandlebarsRegistryImpl.class);
 
     private boolean initialized;
+    private AnnotatedDialogDefinitionFactory annotatedDialogDefinitionFactory;
     private Map<Class<?>, HandlebarsTemplateDefinition> templateDefinitions;
     private TemplateDefinitionRegistry templateDefinitionRegistry;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
     private SimpleTranslator translator;
 
     @Inject
-    public HandlebarsRegistryImpl(TemplateDefinitionRegistry templateDefinitionRegistry,
+    public HandlebarsRegistryImpl(AnnotatedDialogDefinitionFactory annotatedDialogDefinitionFactory,
+                                  TemplateDefinitionRegistry templateDefinitionRegistry,
                                   DialogDefinitionRegistry dialogDefinitionRegistry,
                                   SimpleTranslator translator) {
 
+        this.annotatedDialogDefinitionFactory = annotatedDialogDefinitionFactory;
         this.templateDefinitionRegistry = templateDefinitionRegistry;
         this.dialogDefinitionRegistry = dialogDefinitionRegistry;
         this.translator = translator;
@@ -90,10 +93,8 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 HandlebarsTemplateDefinition handlebarsTemplateDefinition =
                         new HandlebarsTemplateDefinition(pageClass, templateAvailability, translator, parent);
 
-
                 handlebarsTemplateDefinition.setDialog("dialogs." + pageClass.getName());
-                for (DialogDefinitionProvider provider :
-                        AnnotatedDialogDefinitionFactory.INSTANCE.discoverDialogProviders(pageClass)) {
+                for (DialogDefinitionProvider provider : annotatedDialogDefinitionFactory.discoverDialogProviders(pageClass)) {
                     dialogDefinitionRegistry.register(provider);
                 }
 
