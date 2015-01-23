@@ -63,7 +63,7 @@ public class HomePage {
         @Field(definition = TextFieldDefinition.class)
         private String title;
 
-        private Collection<Award> items;
+        private Award[] items;
 
         @Component(template = "")
         public final static class Award {
