@@ -19,45 +19,34 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
     @Override
     public Object map(Node node) {
         String nodeClassName = PropertyUtil.getString(node, "mgnl:template");
-        Class<?> nodeClass;
-        Object bean;
         try {
-            nodeClass = Class.forName(nodeClassName);
-            bean = nodeClass.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            logger.error("Cannot instantiate object of class '{}'", nodeClassName);
+            return map(Class.forName(nodeClassName), node);
+        } catch (ClassNotFoundException | RepositoryException | InstantiationException | IllegalAccessException e) {
+            logger.error("Cannot map node {} to class '{}'", node, nodeClassName);
             return null;
         }
-        while (!nodeClass.equals(Object.class)) {
-            for (java.lang.reflect.Field field : nodeClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(Field.class)) {
-                    try {
-                        setValue(bean, field, node.getProperty(field.getName()));
-                    } catch (RepositoryException | IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Cannot map property '{}' to bean '{}'", field.getName(), bean);
-                    }
-                }
-            }
-            nodeClass = nodeClass.getSuperclass();
-            if (nodeClass.isAnnotationPresent(Page.class)) {
-                String supplierId = PropertyUtil.getString(node, "mgnl:supplierPage");
-                try {
-                    node = node.getSession().getNodeByIdentifier(supplierId);
-                } catch (RepositoryException e) {
-                    logger.error("Cannot navigate to the supplier page");
-                }
-            }
-        }
-        return bean;
     }
 
-    private void setValue(Object bean, java.lang.reflect.Field field, Property property)
-            throws RepositoryException, InvocationTargetException, IllegalAccessException {
-        field.setAccessible(true);
-        switch (property.getType()) {
-            case PropertyType.STRING:
-                field.set(bean, property.getString());
-                break;
+    private Object map(Class<?> type, Node node)
+            throws IllegalAccessException, InstantiationException, RepositoryException {
+
+        Object object = type.newInstance();
+        for (java.lang.reflect.Field field : type.getDeclaredFields()) {
+            field.setAccessible(true);
+            String fieldName = field.getName();
+            if (field.isAnnotationPresent(Field.class) && node.hasProperty(fieldName)) {
+                Property property = node.getProperty(fieldName);
+                switch (property.getType()) {
+                    case PropertyType.STRING:
+                        field.set(object, property.getString());
+                        break;
+                    default:
+                        throw new AssertionError("Not implemented");
+                }
+            } else if (node.hasNode(fieldName)) {
+                field.set(object, map(field.getType(), node.getNode(fieldName)));
+            }
         }
+        return object;
     }
 }
