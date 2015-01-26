@@ -2,94 +2,74 @@ package com.magnoliales.handlebars.dialogs.transformers;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
 import info.magnolia.ui.form.field.transformer.basic.BasicTransformer;
+import info.magnolia.ui.vaadin.integration.jcr.DefaultProperty;
+import info.magnolia.ui.vaadin.integration.jcr.JcrNewNodeAdapter;
 import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
-import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 public class HierarchicalValueTransformer extends BasicTransformer<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchicalValueTransformer.class);
 
+    private final String[] path;
+
     public HierarchicalValueTransformer(Item relatedFormItem,
                                         ConfiguredFieldDefinition definition,
                                         Class<Object> type) {
         super(relatedFormItem, definition, type);
+        path = definition.getName().split("\\.");
     }
 
     @Override
-    public void writeToItem(Object newValue) {
-        String[] path = basePropertyName.split("\\.");
-        super.writeToItem(newValue);
-        Node node = ((JcrNodeAdapter) relatedFormItem).getJcrItem();
-        int i = 0;
+    protected <T> Property<T> getOrCreateProperty(Class<T> type) {
+        String propertyName = getPropertyName();
+        Item item;
         try {
-            while (i < path.length - 1) {
-                node = node.addNode(path[i]);
-                i++;
-            }
-            if (newValue instanceof String) {
-                node.setProperty(path[i], (String) newValue);
-            } else if (newValue instanceof Long) {
-                node.setProperty(path[i], (Long) newValue);
-            } else if (newValue instanceof Boolean) {
-                node.setProperty(path[i], (Boolean) newValue);
-            } else if (newValue instanceof BigDecimal) {
-                node.setProperty(path[i], (BigDecimal) newValue);
-            } else if (newValue instanceof Calendar) {
-                node.setProperty(path[i], (Calendar) newValue);
-            } else if (newValue instanceof Double) {
-                node.setProperty(path[i], (Double) newValue);
-            } else {
-                node.setProperty(path[i], newValue.toString());
-            }
-            Property<List> property = getOrCreateProperty(List.class);
+            item = getItem();
         } catch (RepositoryException e) {
-            logger.warn("Cannot write property {} to {}", basePropertyName, node);
+            logger.error("Cannot descend to property {} from node {}", definition.getName(), relatedFormItem);
+            throw new RuntimeException(e);
         }
+        @SuppressWarnings("unchecked")
+        Property<T> property = item.getItemProperty(propertyName);
+        if (property == null) {
+            property = new DefaultProperty<T>(type, null);
+            item.addItemProperty(propertyName, property);
+        }
+        return property;
     }
 
-    @Override
-    public Object readFromItem() {
-        String[] path = basePropertyName.split("\\.");
-        Node node = ((JcrNodeAdapter) relatedFormItem).getJcrItem();
-        int i = 0;
-        try {
-            while (i < path.length - 1) {
-                node = node.getNode(path[i]);
-                i++;
-            }
-            Value value = node.getProperty(path[i]).getValue();
-            switch (value.getType()) {
-                case PropertyType.STRING:
-                    return value.getString();
-                case PropertyType.LONG:
-                    return value.getLong();
-                case PropertyType.BOOLEAN:
-                    return value.getBoolean();
-                case PropertyType.DATE:
-                    return value.getDate();
-                case PropertyType.DECIMAL:
-                    return value.getDecimal();
-                case PropertyType.DOUBLE:
-                    return value.getDouble();
-                default:
-                    return value.toString();
+    private String getPropertyName() {
+        return path[path.length - 1];
+    }
 
+    private Item getItem() throws RepositoryException {
+        JcrNodeAdapter item = (JcrNodeAdapter) relatedFormItem;
+        for (int i = 0; i < path.length - 1; i++) {
+            JcrNodeAdapter childItem = (JcrNodeAdapter) item.getChild(path[i]);
+            if (childItem == null) {
+                Node node = item.getJcrItem();
+                Node childNode = null;
+                if (node.hasNode(path[i])) {
+                    childNode = node.getNode(path[i]);
+                }
+                if (childNode != null) {
+                    childItem = new JcrNodeAdapter(childNode);
+                } else {
+                    childItem = new JcrNewNodeAdapter(item.getJcrItem(), NodeTypes.ContentNode.NAME, path[i]);
+                }
             }
-        } catch (RepositoryException e) {
-            logger.warn("Cannot read property {} from {}", basePropertyName, node);
+            item.addChild(childItem);
+            childItem.setParent(item);
+            item = childItem;
         }
-        return definition.getDefaultValue();
+        return item;
     }
 }
