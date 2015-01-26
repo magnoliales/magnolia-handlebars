@@ -18,25 +18,26 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchicalValueTransformer.class);
 
-    private final String[] path;
+    private final Item item;
+    private final String propertyName;
 
     public HierarchicalValueTransformer(Item relatedFormItem,
                                         ConfiguredFieldDefinition definition,
                                         Class<Object> type) {
         super(relatedFormItem, definition, type);
-        path = definition.getName().split("\\.");
-    }
 
-    @Override
-    protected <T> Property<T> getOrCreateProperty(Class<T> type) {
-        String propertyName = getPropertyName();
-        Item item;
+        String[] path = definition.getName().split("\\.");
+        this.propertyName = path[path.length - 1];
         try {
-            item = getItem();
+            this.item = getItem((JcrNodeAdapter) relatedFormItem, path);
         } catch (RepositoryException e) {
             logger.error("Cannot descend to property {} from node {}", definition.getName(), relatedFormItem);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected <T> Property<T> getOrCreateProperty(Class<T> type) {
         @SuppressWarnings("unchecked")
         Property<T> property = item.getItemProperty(propertyName);
         if (property == null) {
@@ -46,12 +47,7 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
         return property;
     }
 
-    private String getPropertyName() {
-        return path[path.length - 1];
-    }
-
-    private Item getItem() throws RepositoryException {
-        JcrNodeAdapter item = (JcrNodeAdapter) relatedFormItem;
+    private Item getItem(JcrNodeAdapter item, String[] path) throws RepositoryException {
         for (int i = 0; i < path.length - 1; i++) {
             JcrNodeAdapter childItem = (JcrNodeAdapter) item.getChild(path[i]);
             if (childItem == null) {
