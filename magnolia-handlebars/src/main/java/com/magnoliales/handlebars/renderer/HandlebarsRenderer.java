@@ -15,7 +15,7 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.utils.HandlebarsRegistry;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
@@ -23,14 +23,13 @@ import info.magnolia.rendering.renderer.AbstractRenderer;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.repository.RepositoryConstants;
-import org.apache.jackrabbit.commons.JcrUtils;
+import info.magnolia.ui.framework.message.Node2MapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,15 +37,13 @@ import java.util.Map;
 
 public class HandlebarsRenderer extends AbstractRenderer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HandlebarsRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandlebarsRenderer.class);
 
     private Handlebars handlebars;
-    private HandlebarsRegistry handlebarsRegistry;
     private NodeObjectMapper nodeObjectMapper;
 
     @Inject
-    public HandlebarsRenderer(RenderingEngine renderingEngine, HandlebarsRegistry handlebarsRegistry,
-                              NodeObjectMapper nodeObjectMapper) {
+    public HandlebarsRenderer(RenderingEngine renderingEngine, NodeObjectMapper nodeObjectMapper) {
         super(renderingEngine);
         File templateDirectory = new File("src/main/resources/templates");
         TemplateLoader loader;
@@ -62,23 +59,18 @@ public class HandlebarsRenderer extends AbstractRenderer {
         handlebars = new Handlebars(loader);
         handlebars.with(new ConcurrentMapTemplateCache());
 
-        // @todo, really not sure why node2bean doesn't work on this one
         try {
-            Session session = MgnlContext.getJCRSession(RepositoryConstants.CONFIG);
-            Node helpersNode = session.getNode("/modules/handlebars/renderers/handlebars/helpers");
-            for (Node helperNode : JcrUtils.getChildNodes(helpersNode)) {
-                String helperName = PropertyUtil.getString(helperNode, "name");
-                String helperClassName = PropertyUtil.getString(helperNode, "class");
-                LOGGER.info("Adding handlebars helper {}: {}", helperName, helperClassName);
-                Class<?> helperClass = Class.forName(helperClassName);
-                Helper helper = (Helper) helperClass.newInstance();
-                handlebars.registerHelper(helperName, helper);
+            Node node = MgnlContext.getJCRSession(RepositoryConstants.CONFIG)
+                    .getNode("/modules/handlebars/renderers/handlebars/helpers");
+            Map<String, Object> helpers = Node2MapUtil.node2map(node);
+            for (Map.Entry<String, Object> entry : helpers.entrySet()) {
+                logger.info("Adding handlebars helper {}: {}", entry.getKey(), entry.getValue());
+                handlebars.registerHelper(entry.getKey(), (Helper) entry.getValue());
             }
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | RepositoryException e) {
-            LOGGER.error("Cannot read helpers information", e);
+        } catch (Node2BeanException | RepositoryException e) {
+            logger.error("Cannot read helpers information", e);
         }
 
-        this.handlebarsRegistry = handlebarsRegistry;
         this.nodeObjectMapper = nodeObjectMapper;
     }
 
@@ -95,7 +87,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
         try {
             out = renderingContext.getAppendable();
             Context combinedContext = Context.newBuilder(nodeObjectMapper.map(node))
-                    .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
+                    .resolver(JavaBeanValueResolver.INSTANCE)
                     .build();
             try {
                 Template template = handlebars.compile(templateScript);
@@ -104,7 +96,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
                 combinedContext.destroy();
             }
         } catch (IOException e) {
-            LOGGER.error("Cannot render template", e);
+            logger.error("Cannot render template", e);
         }
     }
 }

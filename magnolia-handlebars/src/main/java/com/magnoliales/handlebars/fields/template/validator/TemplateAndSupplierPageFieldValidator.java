@@ -33,8 +33,7 @@ public class TemplateAndSupplierPageFieldValidator extends AbstractValidator<Tem
         if (value == null || value.getTemplate() == null || value.getTemplate().isEmpty()) {
             return false;
         }
-        HandlebarsTemplateDefinition templateDefinition =
-                handlebarsRegistry.getTemplateDefinition(value.getTemplate());
+        HandlebarsTemplateDefinition templateDefinition = handlebarsRegistry.getTemplateDefinition(value.getTemplate());
         if (templateDefinition == null) {
             return false;
         }

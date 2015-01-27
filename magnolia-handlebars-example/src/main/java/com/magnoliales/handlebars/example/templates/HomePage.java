@@ -57,7 +57,7 @@ public class HomePage {
         }
     }
 
-    @Area(template = "")
+    @Area(template = "areas/awards")
     public final static class Awards {
 
         @Field(definition = TextFieldDefinition.class)
@@ -65,7 +65,7 @@ public class HomePage {
 
         private Award[] items;
 
-        @Component(template = "")
+        @Component(template = "components/award")
         public final static class Award {
 
             @Field(definition = TextFieldDefinition.class)
