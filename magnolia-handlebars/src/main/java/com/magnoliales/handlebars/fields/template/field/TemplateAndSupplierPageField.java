@@ -19,7 +19,7 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
     private final ComboBox templateField;
     private final ComboBox supplierPageField;
 
-    public TemplateAndSupplierPageField(final HandlebarsRegistry handlebarsRegistry) {
+    public TemplateAndSupplierPageField(final HandlebarsRegistry handlebarsRegistry, final String pageId) {
 
         component = new VerticalLayout();
         component.setSizeFull();
@@ -71,8 +71,10 @@ public class TemplateAndSupplierPageField extends CustomField<TemplateAndSupplie
                     Map<String, String> pages = handlebarsRegistry.getPagesByTemplate(parentTemplateDefinition.getId());
                     supplierPageField.removeAllItems();
                     for (Map.Entry<String, String> entry : pages.entrySet()) {
-                        supplierPageField.addItem(entry.getValue());
-                        supplierPageField.setItemCaption(entry.getValue(), entry.getKey());
+                        if (!entry.getValue().equals(pageId)) {
+                            supplierPageField.addItem(entry.getValue());
+                            supplierPageField.setItemCaption(entry.getValue(), entry.getKey());
+                        }
                     }
                     supplierPageField.setVisible(true);
                 } else {

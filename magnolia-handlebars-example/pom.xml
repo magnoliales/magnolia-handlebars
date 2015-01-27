@@ -7,11 +7,11 @@
     <parent>
         <groupId>com.magnoliales</groupId>
         <artifactId>magnolia-handlebars-parent</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>magnolia-handlebars-example</artifactId>
     <packaging>war</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
 
     <build>
         <finalName>magnolia-handlebars-example</finalName>
@@ -61,12 +61,12 @@
         <dependency>
             <groupId>com.magnoliales</groupId>
             <artifactId>magnolia-handlebars</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.magnoliales</groupId>
             <artifactId>magnolia-handlebars-helpers</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>info.magnolia</groupId>
