@@ -7,10 +7,9 @@
         <h1>Title is: {{title}}!</h1>
         <h2>{{greeting}}, {{addressee}}</h2>
         {{#block "body"}}
+            {{{cms-area name="awards"}}}
             main body
         {{/block}}
         {{meta.facebook.title}} -- {{meta.facebook.image}}
-        <hr>
-        {{{cms-area name="awards"}}}
     </body>
 </html>

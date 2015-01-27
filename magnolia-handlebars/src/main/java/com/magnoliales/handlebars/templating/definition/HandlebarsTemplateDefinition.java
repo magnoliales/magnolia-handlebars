@@ -57,8 +57,8 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
         return parent;
     }
 
-    public AreaDefinition getArea(String name) {
-        return getAreas().get(name);
+    public HandlebarsAreaDefinition getArea(String name) {
+        return (HandlebarsAreaDefinition) getAreas().get(name);
     }
 
     @Override

@@ -3,12 +3,14 @@ package com.magnoliales.handlebars.templating.helpers;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
 import com.magnoliales.handlebars.setup.HandlebarsRegistry;
+import com.magnoliales.handlebars.templating.definition.HandlebarsAreaDefinition;
 import com.magnoliales.handlebars.templating.elements.HandlebarsAreaElement;
 import com.magnoliales.handlebars.templating.elements.HandlebarsInitElement;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.rendering.template.variation.DefaultRenderableVariationResolver;
 import info.magnolia.rendering.template.variation.RenderableVariationResolver;
 import info.magnolia.templating.elements.TemplatingElement;
@@ -47,11 +49,16 @@ public class HandlebarsAreaTemplateHelper implements Helper {
             Node node = (Node) options.context.get("mgnl:node");
             String name = options.hash("name");
 
+            HandlebarsAreaDefinition definition = handlebarsRegistry.getTemplateDefinition(node).getArea(name);
+
             Node areaNode;
             if (node.hasNode(name)) {
                 areaNode = node.getNode(name);
             } else {
+                // @todo scream at people if there's inherited area, but not area defined in the page class
+                // @todo, find a better format to show error messages by using magnolia resources
                 areaNode = node.addNode(name, NodeTypes.Area.NAME);
+                areaNode.setProperty("mgnl:template", definition.getAreaType().getName());
                 areaNode.getSession().save();
             }
 
