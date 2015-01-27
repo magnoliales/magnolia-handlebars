@@ -10,8 +10,8 @@
     <components>
         <id>main</id>
         <component>
-            <type>com.magnoliales.handlebars.utils.HandlebarsRegistry</type>
-            <implementation>com.magnoliales.handlebars.utils.HandlebarsRegistryImpl</implementation>
+            <type>com.magnoliales.handlebars.setup.HandlebarsRegistry</type>
+            <implementation>com.magnoliales.handlebars.setup.HandlebarsRegistryImpl</implementation>
             <scope>singleton</scope>
         </component>
         <component>
@@ -20,8 +20,8 @@
             <scope>singleton</scope>
         </component>
         <component>
-            <type>com.magnoliales.handlebars.dialogs.AnnotatedDialogDefinitionFactory</type>
-            <implementation>com.magnoliales.handlebars.dialogs.AnnotatedDialogDefinitionFactoryImpl</implementation>
+            <type>com.magnoliales.handlebars.ui.dialogs.AnnotatedDialogDefinitionFactory</type>
+            <implementation>com.magnoliales.handlebars.ui.dialogs.AnnotatedDialogDefinitionFactoryImpl</implementation>
             <scope>singleton</scope>
         </component>
     </components>

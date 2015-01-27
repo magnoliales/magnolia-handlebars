@@ -1,7 +1,7 @@
 package com.magnoliales.handlebars.setup;
 
-import com.magnoliales.handlebars.columns.TemplateColumnFormatter;
-import com.magnoliales.handlebars.fields.template.field.TemplateAndSupplierPageFieldDefinition;
+import com.magnoliales.handlebars.ui.columns.TemplateColumnFormatter;
+import com.magnoliales.handlebars.ui.fields.template.field.TemplateAndSupplierPageFieldDefinition;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.SetPropertyTask;

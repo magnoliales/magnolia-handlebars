@@ -1,6 +1,6 @@
 package com.magnoliales.handlebars.annotations;
 
-import com.magnoliales.handlebars.dialogs.processors.PageProcessor;
+import com.magnoliales.handlebars.ui.dialogs.processors.PageProcessor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
