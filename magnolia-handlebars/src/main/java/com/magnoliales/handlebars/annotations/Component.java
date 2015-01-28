@@ -1,6 +1,6 @@
 package com.magnoliales.handlebars.annotations;
 
-import com.magnoliales.handlebars.dialogs.processors.ComponentProcessor;
+import com.magnoliales.handlebars.ui.dialogs.processors.ComponentProcessor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Processable(processor = ComponentProcessor.class)
 public @interface Component {
-    String template();
+    String templateScript();
 }

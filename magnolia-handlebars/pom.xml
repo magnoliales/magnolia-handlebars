@@ -7,10 +7,10 @@
     <parent>
         <groupId>com.magnoliales</groupId>
         <artifactId>magnolia-handlebars-parent</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>magnolia-handlebars</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <build>

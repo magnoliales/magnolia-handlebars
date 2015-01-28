@@ -2,7 +2,6 @@ package com.magnoliales.handlebars.mapper;
 
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.annotations.Field;
-import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,47 +14,41 @@ import java.lang.reflect.InvocationTargetException;
 
 public class NodeObjectMapperImpl implements NodeObjectMapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(NodeObjectMapperImpl.class);
+    public static final Logger logger = LoggerFactory.getLogger(NodeObjectMapperImpl.class);
 
     @Override
     public Object map(Node node) {
-        String objectClassName;
+        String nodeClassName = PropertyUtil.getString(node, "mgnl:template");
+        Class<?> nodeClass;
+        Object bean;
         try {
-            objectClassName = node.getProperty(TEMPLATE_PROPERTY).getString();
-        } catch (RepositoryException e) {
-            logger.error("Cannot read property {} from node {}", TEMPLATE_PROPERTY, node);
-            return null;
-        }
-        Class<?> objectClass;
-        Object object;
-        try {
-            objectClass = Class.forName(objectClassName);
-            object = objectClass.newInstance();
+            nodeClass = Class.forName(nodeClassName);
+            bean = nodeClass.newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            logger.error("Cannot instantiate object of class '{}'", objectClassName);
+            logger.error("Cannot instantiate object of class '{}'", nodeClassName);
             return null;
         }
-        while (!objectClass.equals(Object.class)) {
-            for (java.lang.reflect.Field field : objectClass.getDeclaredFields()) {
+        while (!nodeClass.equals(Object.class)) {
+            for (java.lang.reflect.Field field : nodeClass.getDeclaredFields()) {
                 if (field.isAnnotationPresent(Field.class)) {
                     try {
-                        setValue(object, field, node.getProperty(field.getName()));
+                        setValue(bean, field, node.getProperty(field.getName()));
                     } catch (RepositoryException | IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Cannot map property '{}' to bean '{}'", field.getName(), object);
+                        logger.error("Cannot map property '{}' to bean '{}'", field.getName(), bean);
                     }
                 }
             }
-            objectClass = objectClass.getSuperclass();
-            if (objectClass.isAnnotationPresent(Page.class)) {
+            nodeClass = nodeClass.getSuperclass();
+            if (nodeClass.isAnnotationPresent(Page.class)) {
+                String supplierId = PropertyUtil.getString(node, "mgnl:supplierPage");
                 try {
-                    String supplierId = node.getProperty(SUPPLIER_PAGE_PROPERTY).getString();
                     node = node.getSession().getNodeByIdentifier(supplierId);
                 } catch (RepositoryException e) {
                     logger.error("Cannot navigate to the supplier page");
                 }
             }
         }
-        return object;
+        return bean;
     }
 
     private void setValue(Object bean, java.lang.reflect.Field field, Property property)

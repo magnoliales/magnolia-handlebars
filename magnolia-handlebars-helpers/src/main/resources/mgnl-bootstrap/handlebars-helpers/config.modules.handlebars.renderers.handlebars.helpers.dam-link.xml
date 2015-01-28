@@ -7,7 +7,7 @@
     <sv:value>5e2f1e5c-65da-437b-9353-884871352ed1</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>com.magnoliales.handlebars.helpers.DamLinkTemplateHelper</sv:value>
+    <sv:value>com.magnoliales.handlebars.templating.helpers.DamLinkTemplateHelper</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>

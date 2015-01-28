@@ -1,6 +1,6 @@
 package com.magnoliales.handlebars.example.setup;
 
-import com.magnoliales.handlebars.utils.HandlebarsRegistry;
+import com.magnoliales.handlebars.setup.HandlebarsRegistry;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 

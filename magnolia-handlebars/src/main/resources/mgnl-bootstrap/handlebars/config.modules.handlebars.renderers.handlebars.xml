@@ -7,7 +7,7 @@
         <sv:value>5e16af96-bfb8-48d5-b1ad-ca40c4ae718e</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-        <sv:value>com.magnoliales.handlebars.renderer.HandlebarsRenderer</sv:value>
+        <sv:value>com.magnoliales.handlebars.templating.renderer.HandlebarsRenderer</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -58,7 +58,7 @@
         <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
             <sv:value>superuser</sv:value>
         </sv:property>
-        <sv:node sv:name="cms-init">
+        <sv:node sv:name="init">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
@@ -66,7 +66,7 @@
                 <sv:value>32479016-9e7c-4def-8d54-8314659697f4</sv:value>
             </sv:property>
             <sv:property sv:name="class" sv:type="String">
-                <sv:value>com.magnoliales.handlebars.helpers.CmsInitTemplateHelper</sv:value>
+                <sv:value>com.magnoliales.handlebars.templating.helpers.HandlebarsInitTemplateHelper</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:createdBy" sv:type="String">
                 <sv:value>admin</sv:value>
@@ -84,10 +84,10 @@
                 <sv:value>superuser</sv:value>
             </sv:property>
             <sv:property sv:name="name" sv:type="String">
-                <sv:value>cms-init</sv:value>
+                <sv:value>init</sv:value>
             </sv:property>
         </sv:node>
-        <sv:node sv:name="cms-area">
+        <sv:node sv:name="area">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
@@ -95,7 +95,7 @@
                 <sv:value>5c41af18-3673-4037-b784-91a3e8ff3f30</sv:value>
             </sv:property>
             <sv:property sv:name="class" sv:type="String">
-                <sv:value>com.magnoliales.handlebars.helpers.CmsAreaTemplateHelper</sv:value>
+                <sv:value>com.magnoliales.handlebars.templating.helpers.HandlebarsAreaTemplateHelper</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:createdBy" sv:type="String">
                 <sv:value>admin</sv:value>
@@ -113,10 +113,10 @@
                 <sv:value>superuser</sv:value>
             </sv:property>
             <sv:property sv:name="name" sv:type="String">
-                <sv:value>cms-area</sv:value>
+                <sv:value>area</sv:value>
             </sv:property>
         </sv:node>
-        <sv:node sv:name="cms-component">
+        <sv:node sv:name="component">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
@@ -124,7 +124,7 @@
                 <sv:value>1c4cff43-52cf-4c13-a69d-04cf741c99d7</sv:value>
             </sv:property>
             <sv:property sv:name="class" sv:type="String">
-                <sv:value>com.magnoliales.handlebars.helpers.CmsComponentTemplateHelper</sv:value>
+                <sv:value>com.magnoliales.handlebars.templating.helpers.HandlebarsComponentTemplateHelper</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:createdBy" sv:type="String">
                 <sv:value>admin</sv:value>
@@ -142,7 +142,7 @@
                 <sv:value>superuser</sv:value>
             </sv:property>
             <sv:property sv:name="name" sv:type="String">
-                <sv:value>cms-component</sv:value>
+                <sv:value>component</sv:value>
             </sv:property>
         </sv:node>
     </sv:node>

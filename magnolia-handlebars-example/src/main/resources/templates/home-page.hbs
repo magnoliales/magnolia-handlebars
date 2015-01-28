@@ -1,13 +1,15 @@
 <html>
     <head>
-        {{{cms-init}}}
+        {{{init}}}
         <title>{{title}}</title>
     </head>
     <body>
         <h1>Title is: {{title}}!</h1>
-        <h2>{{greeting}}, {{name}}</h2>
+        <h2>{{greeting}}, {{addressee}}</h2>
         {{#block "body"}}
             main body
         {{/block}}
+        {{meta.facebook.title}} -- {{meta.facebook.image}}
+        {{{area name="awards"}}}
     </body>
 </html>
