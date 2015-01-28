@@ -61,6 +61,10 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
         return (HandlebarsAreaDefinition) getAreas().get(name);
     }
 
+    public boolean hasArea(String name) {
+        return getAreas().containsKey(name);
+    }
+
     @Override
     public int compareTo(HandlebarsTemplateDefinition definition) {
         return getName().compareTo(definition.getName());
