@@ -4,7 +4,6 @@
     <name>handlebars-example</name>
     <displayName>Magnolia Handlebars Example Module</displayName>
     <description>Example module using Blossom and Handlebars based templating</description>
-    <class>com.magnoliales.handlebars.example.setup.HandlebarsExampleModule</class>
     <version>1.0.0</version>
     <dependencies>
         <dependency>

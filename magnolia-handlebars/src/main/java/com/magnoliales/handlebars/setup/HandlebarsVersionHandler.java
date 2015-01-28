@@ -1,5 +1,6 @@
 package com.magnoliales.handlebars.setup;
 
+import com.magnoliales.handlebars.setup.tasks.RegisterNamespaceTask;
 import com.magnoliales.handlebars.ui.columns.TemplateColumnFormatter;
 import com.magnoliales.handlebars.ui.fields.template.field.TemplateAndSupplierPageFieldDefinition;
 import info.magnolia.module.DefaultModuleVersionHandler;
@@ -16,6 +17,10 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         List<Task> tasks = new ArrayList<Task>();
+
+        tasks.add(new RegisterNamespaceTask("Adding handlebars namespace",
+                RepositoryConstants.WEBSITE, "handlebars", "http://magnoliales.com/handlebars"));
+
         tasks.add(new SetPropertyTask("Replace templateScript selector in pages:createPage dialog",
                 RepositoryConstants.CONFIG,
                 "/modules/pages/dialogs/createPage/form/tabs/tabPage/fields/template",
@@ -28,6 +33,7 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
                 RepositoryConstants.CONFIG,
                 "/modules/pages/apps/pages/subApps/browser/workbench/contentViews/list/columns/template",
                 "formatterClass", TemplateColumnFormatter.class.getName()));
+
         return tasks;
     }
 }
