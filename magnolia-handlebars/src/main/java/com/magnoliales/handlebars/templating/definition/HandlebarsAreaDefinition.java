@@ -3,15 +3,21 @@ package com.magnoliales.handlebars.templating.definition;
 import com.magnoliales.handlebars.annotations.Area;
 import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.rendering.template.TemplateAvailability;
+import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredComponentAvailability;
 
-public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition {
+import java.util.List;
+
+public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition implements TemplateDefinition {
 
     private final Class<?> areaType;
 
     public HandlebarsAreaDefinition(Class<?> areaType,
                                     TemplateAvailability templateAvailability,
-                                    SimpleTranslator translator) {
+                                    SimpleTranslator translator,
+                                    List<Class<?>> components) {
+
         super(templateAvailability);
 
         this.areaType = areaType;
@@ -21,9 +27,16 @@ public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition {
         String id = areaType.getName();
         setId(id);
         setDialog("dialogs." + id);
-        setTemplateScript(area.template());
+        setTemplateScript(area.templateScript());
         String name = translator.translate("areas." + id);
         this.setName(name);
+
+        for (Class<?> component : components) {
+            ConfiguredComponentAvailability componentAvailability = new ConfiguredComponentAvailability();
+            componentAvailability.setEnabled(true);
+            componentAvailability.setId(component.getName());
+            addAvailableComponent(component.getName(), componentAvailability);
+        }
     }
 
     public Class<?> getAreaType() {

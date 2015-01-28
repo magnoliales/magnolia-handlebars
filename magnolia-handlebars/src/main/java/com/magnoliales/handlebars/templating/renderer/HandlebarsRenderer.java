@@ -12,9 +12,12 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import com.magnoliales.handlebars.annotations.Component;
 import com.magnoliales.handlebars.mapper.NodeObjectMapper;
+import com.magnoliales.handlebars.setup.HandlebarsRegistry;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
@@ -31,7 +34,9 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HandlebarsRenderer extends AbstractRenderer {
@@ -40,9 +45,11 @@ public class HandlebarsRenderer extends AbstractRenderer {
 
     private Handlebars handlebars;
     private NodeObjectMapper nodeObjectMapper;
+    private HandlebarsRegistry handlebarsRegistry;
 
     @Inject
-    public HandlebarsRenderer(RenderingEngine renderingEngine, NodeObjectMapper nodeObjectMapper) {
+    public HandlebarsRenderer(RenderingEngine renderingEngine, NodeObjectMapper nodeObjectMapper,
+                              HandlebarsRegistry handlebarsRegistry) {
         super(renderingEngine);
         File templateDirectory = new File("src/main/resources/templates");
         TemplateLoader loader;
@@ -71,6 +78,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
         }
 
         this.nodeObjectMapper = nodeObjectMapper;
+        this.handlebarsRegistry = handlebarsRegistry;
     }
 
     @Override
@@ -82,6 +90,21 @@ public class HandlebarsRenderer extends AbstractRenderer {
     protected void onRender(Node node, RenderableDefinition renderableDefinition, RenderingContext renderingContext,
                             Map<String, Object> context, String templateScript) throws RenderException {
 
+        if (context.containsKey("components")) {
+            @SuppressWarnings("unchecked")
+            List<ContentMap> contentMaps = (List<ContentMap>) context.get("components");
+            for (ContentMap contentMap : contentMaps) {
+                try {
+                    Class<?> componentClass = Class.forName((String) contentMap.get("mgnl:template"));
+                    Node componentNode = contentMap.getJCRNode();
+                    Component component = componentClass.getAnnotation(Component.class);
+                    onRender(componentNode, renderableDefinition, renderingContext,
+                            new HashMap<String, Object>(), component.templateScript());
+                } catch (ClassNotFoundException e) {
+                    logger.error("Cannot render templateScript", e);
+                }
+            }
+        }
         final AppendableWriter out;
         try {
             out = renderingContext.getAppendable();
@@ -96,7 +119,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
                 combinedContext.destroy();
             }
         } catch (IOException e) {
-            logger.error("Cannot render template", e);
+            logger.error("Cannot render templateScript", e);
         }
     }
 }

@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Processable(processor = ComponentProcessor.class)
 public @interface Component {
-    String template();
+    String templateScript();
 }

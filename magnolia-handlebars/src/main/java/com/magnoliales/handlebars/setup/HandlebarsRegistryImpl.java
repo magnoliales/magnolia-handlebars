@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.setup;
 
 import com.magnoliales.handlebars.annotations.Area;
+import com.magnoliales.handlebars.annotations.Component;
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.templating.definition.HandlebarsAreaDefinition;
 import com.magnoliales.handlebars.ui.dialogs.AnnotatedDialogDefinitionFactory;
@@ -95,7 +96,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                     parent = processedDefinitions.get(pageSuperclass);
                 }
 
-                // create new template definition
+                // create new templateScript definition
                 HandlebarsTemplateDefinition handlebarsTemplateDefinition =
                         new HandlebarsTemplateDefinition(pageClass, templateAvailability, translator, parent);
 
@@ -107,16 +108,31 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
                 // discover and register all area definitions
                 Map<String, AreaDefinition> areas = new HashMap<>();
-                for (Field field : pageClass.getDeclaredFields()) {
-                    if (field.getType().isAnnotationPresent(Area.class)) {
-                        AreaDefinition areaDefinition =
-                                new HandlebarsAreaDefinition(field.getType(), templateAvailability, translator);
-                        areas.put(field.getName(), areaDefinition);
+                for (Field pageField : pageClass.getDeclaredFields()) {
+                    if (pageField.getType().isAnnotationPresent(Area.class)) {
+                        List<Class<?>> components = new ArrayList<>();
+                        for (Field areaField : pageField.getType().getDeclaredFields()) {
+                            if (areaField.getType().isArray()) {
+                                Class<?> componentClass = areaField.getType().getComponentType();
+                                if (componentClass.isAnnotationPresent(Component.class)) {
+                                    components.add(componentClass);
+                                    HandlebarsTemplateDefinition componentDefinition = new
+                                            HandlebarsTemplateDefinition(componentClass, templateAvailability, translator, null);
+                                    templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
+                                }
+                            }
+                        }
+                        HandlebarsAreaDefinition areaDefinition =
+                                new HandlebarsAreaDefinition(pageField.getType(), templateAvailability, translator, components);
+                        HandlebarsTemplateDefinitionProvider areaDefinitionProvider =
+                                new HandlebarsTemplateDefinitionProvider(areaDefinition);
+                        templateDefinitionRegistry.register(areaDefinitionProvider);
+                        areas.put(pageField.getName(), areaDefinition);
                     }
                 }
                 handlebarsTemplateDefinition.setAreas(areas);
 
-                // register template definition in the template definition registry
+                // register templateScript definition in the templateScript definition registry
                 HandlebarsTemplateDefinitionProvider handlebarsTemplateDefinitionProvider =
                         new HandlebarsTemplateDefinitionProvider(handlebarsTemplateDefinition);
                 templateDefinitionRegistry.register(handlebarsTemplateDefinitionProvider);
@@ -158,7 +174,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 pages.put(node.getPath(), node.getIdentifier());
             }
         } catch (RepositoryException e) {
-            logger.error("Cannot fetch pages using template {}", template);
+            logger.error("Cannot fetch pages using templateScript {}", template);
         }
         return pages;
     }
@@ -173,7 +189,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             if (templateDefinitions.containsKey(pageClass)) {
                 return templateDefinitions.get(pageClass);
             } else {
-                logger.warn("Cannot find template definitions for class {}", pageClass);
+                logger.warn("Cannot find templateScript definitions for class {}", pageClass);
                 throw new RuntimeException();
             }
         } catch (ClassNotFoundException e) {
@@ -188,7 +204,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             String template = node.getProperty("mgnl:template").getString();
             return getTemplateDefinition(template);
         } catch (RepositoryException e) {
-            logger.error("Cannot read template name of node {}", node);
+            logger.error("Cannot read templateScript name of node {}", node);
             throw new RuntimeException(e);
         }
     }

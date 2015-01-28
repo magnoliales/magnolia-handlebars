@@ -3,6 +3,7 @@ package com.magnoliales.handlebars.mapper;
 import com.github.jknack.handlebars.internal.js.RhinoHandlebars;
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.annotations.Field;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,9 @@ import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class NodeObjectMapperImpl implements NodeObjectMapper {
 
@@ -31,7 +35,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
     }
 
     private Object map(Class<?> type, Object object, Node node)
-            throws IllegalAccessException, InstantiationException, RepositoryException {
+            throws IllegalAccessException, InstantiationException, RepositoryException, ClassNotFoundException {
 
         while (!type.equals(Object.class)) {
             for (java.lang.reflect.Field field : type.getDeclaredFields()) {
@@ -49,6 +53,18 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                 } else if (node.hasNode(fieldName)) {
                     Object property = field.getType().newInstance();
                     field.set(object, map(field.getType(), property, node.getNode(fieldName)));
+                } else if (field.getType().isArray()) {
+                    Class<?> componentType = field.getType().getComponentType();
+                    List<Object> items = new ArrayList<>();
+                    for (Node childNode : NodeUtil.getNodes(node)) {
+                        Class<?> childNodeClass = Class.forName(PropertyUtil.getString(childNode, "mgnl:template"));
+                        if (componentType.isAssignableFrom(childNodeClass)) {
+                            items.add(map(childNodeClass, childNodeClass.newInstance(), childNode));
+                        }
+                    }
+                    if (items.size() > 0) {
+                        field.set(object, toArray(items, componentType));
+                    }
                 }
             }
             type = type.getSuperclass();
@@ -59,5 +75,15 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             map(type, object, node);
         }
         return object;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(List<?> list, Class<T> type) {
+        T[] array = (T[]) java.lang.reflect.Array.newInstance(type, list.size());
+        int i = 0;
+        for (Object item : list) {
+            array[i++] = type.cast(item);
+        }
+        return array;
     }
 }

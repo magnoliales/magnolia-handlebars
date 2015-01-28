@@ -6,19 +6,19 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 
 public class HandlebarsTemplateDefinitionProvider implements TemplateDefinitionProvider {
 
-    private HandlebarsTemplateDefinition handlebarsTemplateDefinition;
+    private TemplateDefinition templateDefinition;
 
-    public HandlebarsTemplateDefinitionProvider(HandlebarsTemplateDefinition handlebarsTemplateDefinition) {
-        this.handlebarsTemplateDefinition = handlebarsTemplateDefinition;
+    public HandlebarsTemplateDefinitionProvider(TemplateDefinition templateDefinition) {
+        this.templateDefinition = templateDefinition;
     }
 
     @Override
     public String getId() {
-        return handlebarsTemplateDefinition.getId();
+        return templateDefinition.getId();
     }
 
     @Override
     public TemplateDefinition getTemplateDefinition() throws RegistrationException {
-        return handlebarsTemplateDefinition;
+        return templateDefinition;
     }
 }

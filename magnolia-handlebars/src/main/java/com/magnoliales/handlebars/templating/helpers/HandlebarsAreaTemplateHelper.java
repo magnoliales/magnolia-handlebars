@@ -10,6 +10,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.variation.RenderableVariationResolver;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,8 +73,8 @@ public class HandlebarsAreaTemplateHelper implements Helper {
             element.setWorkspace(areaNode.getSession().getWorkspace().getName());
 
             element.setName(name);
-            element.setArea(handlebarsRegistry.getTemplateDefinition(node).getArea(name));
-            element.setDialog(element.getArea().getDialog());
+            element.setArea(areaDefinition);
+            element.setDialog(areaDefinition.getDialog());
 
         } catch (RepositoryException e) {
             logger.error("Cannot initialize area element", e);

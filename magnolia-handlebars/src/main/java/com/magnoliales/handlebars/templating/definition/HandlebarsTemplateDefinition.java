@@ -1,5 +1,6 @@
 package com.magnoliales.handlebars.templating.definition;
 
+import com.magnoliales.handlebars.annotations.Component;
 import com.magnoliales.handlebars.annotations.Page;
 import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.rendering.template.AreaDefinition;
@@ -16,6 +17,9 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
     private boolean singleton;
     private HandlebarsTemplateDefinition parent;
 
+    /**
+     * @todo extends template definition factory that is smart enough to discover the proper definition
+     */
     public HandlebarsTemplateDefinition(Class<?> templateType,
                                         TemplateAvailability templateAvailability,
                                         SimpleTranslator translator,
@@ -25,17 +29,26 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
         this.templateType = templateType;
         this.parent = parent;
 
-        Page page = templateType.getAnnotation(Page.class);
-
         setId(templateType.getName());
-        String name = translator.translate("templates." + templateType.getName());
+        String name;
+
+        if (templateType.isAnnotationPresent(Page.class)) {
+            Page page = templateType.getAnnotation(Page.class);
+            setTemplateScript(page.templateScript());
+            singleton = page.singleton();
+            name = translator.translate("templates." + templateType.getName());
+
+        } else {
+            Component component = templateType.getAnnotation(Component.class);
+            setTemplateScript(component.templateScript());
+
+            setId(templateType.getName());
+            name = translator.translate("components." + templateType.getName());
+        }
         setName(name);
 
-        setTemplateScript(page.templateScript());
         setTitle(templateType.getName());
         setRenderType("handlebars");
-
-        singleton = page.singleton();
     }
 
     public Class<?> getTemplateType() {
@@ -52,7 +65,7 @@ public class HandlebarsTemplateDefinition extends ConfiguredTemplateDefinition
 
     public HandlebarsTemplateDefinition getParent() {
         if (parent == null) {
-            throw new IllegalStateException("parent template is not defined");
+            throw new IllegalStateException("parent templateScript is not defined");
         }
         return parent;
     }
