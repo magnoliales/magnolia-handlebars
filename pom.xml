@@ -21,10 +21,13 @@
     </contributors>
 
     <scm>
-        <connection>scm:git:https://github.com/magnoliales/magnolia-handlebars.git</connection>
-        <developerConnection>scm:git:https://github.com/magnoliales/magnolia-handlebars.git</developerConnection>
-        <tag>HEAD</tag>
         <url>https://github.com/magnoliales/magnolia-handlebars</url>
+
+        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars.git</connection>
+        <developerConnection>scm:git:git@github.com/magnoliales/magnolia-handlebars.git</developerConnection>
+
+        <tag>HEAD</tag>
+
     </scm>
 
     <properties>
