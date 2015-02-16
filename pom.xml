@@ -18,13 +18,17 @@
             <name>Danny Marsland</name>
             <email>danny.marsland@gmail.com</email>
         </contributor>
+        <contributor>
+            <name>Izaac Broadbent</name>
+            <email>izaac.broadbent@gmail.com</email>
+        </contributor>
     </contributors>
 
     <scm>
         <url>https://github.com/magnoliales/magnolia-handlebars</url>
 
         <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars.git</connection>
-        <developerConnection>scm:git:git@github.com/magnoliales/magnolia-handlebars.git</developerConnection>
+        <developerConnection>scm:git:izdb@github.com/magnoliales/magnolia-handlebars.git</developerConnection>
 
         <tag>HEAD</tag>
 
