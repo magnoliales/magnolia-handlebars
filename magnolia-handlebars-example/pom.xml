@@ -14,10 +14,10 @@
     <version>0.1.1-SNAPSHOT</version>
 
     <scm>
-        <url>https://github.com/magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars-example</url>
+        <url>https://github.com/magnoliales/magnolia-handlebars</url>
 
-        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars-example</connection>
-        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars-example</developerConnection>
+        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
+        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
 
         <tag>HEAD</tag>
 
