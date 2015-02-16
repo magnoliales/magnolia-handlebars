@@ -11,7 +11,7 @@
     </parent>
     <artifactId>magnolia-handlebars-example</artifactId>
     <packaging>war</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <scm>
         <url>https://github.com/magnoliales/magnolia-handlebars</url>
@@ -24,7 +24,7 @@
     </scm>
 
     <build>
-        <finalName>magnolia-handlebars-example</finalName>
+        <finalName>$\{project.artifactId}-$\{project.version}-r$\{buildNumber}</finalName>
         <plugins>
             <!-- delete repository on clean -->
             <plugin>
