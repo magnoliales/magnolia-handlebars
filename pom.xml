@@ -156,6 +156,13 @@
                         <configuration>
                             <doCheck>true</doCheck>
                             <doUpdate>true</doUpdate>
+                            <format>Build: #{0} ({1,date})</format>
+
+                            <items>
+                                <item>buildNumber\d*</item>
+                                <item>timestamp</item>
+                            </items>
+
                         </configuration>
                     </plugin>
                 </plugins>
