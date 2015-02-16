@@ -27,8 +27,8 @@
     <scm>
         <url>https://github.com/magnoliales/magnolia-handlebars</url>
 
-        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars.git</connection>
-        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars.git</developerConnection>
+        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
+        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
 
         <tag>HEAD</tag>
 
