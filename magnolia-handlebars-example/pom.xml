@@ -13,6 +13,16 @@
     <packaging>war</packaging>
     <version>0.1.1-SNAPSHOT</version>
 
+    <scm>
+        <url>https://github.com/magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars-example</url>
+
+        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars-example</connection>
+        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars-example</developerConnection>
+
+        <tag>HEAD</tag>
+
+    </scm>
+
     <build>
         <finalName>magnolia-handlebars-example</finalName>
         <plugins>

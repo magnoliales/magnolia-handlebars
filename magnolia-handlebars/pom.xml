@@ -13,6 +13,15 @@
     <version>0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <scm>
+        <url>https://github.com/magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars</url>
+
+        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars</connection>
+        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars/tree/master/magnolia-handlebars</developerConnection>
+
+        <tag>HEAD</tag>
+
+    </scm>
     <build>
         <plugins>
             <plugin>
