@@ -1,4 +1,4 @@
-package com.magnoliales.handlebars.templating.helpers;
+package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;

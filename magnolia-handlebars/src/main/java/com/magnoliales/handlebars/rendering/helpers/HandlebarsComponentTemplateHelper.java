@@ -1,14 +1,14 @@
-package com.magnoliales.handlebars.templating.helpers;
+package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.magnoliales.handlebars.setup.HandlebarsRegistry;
-import com.magnoliales.handlebars.templating.elements.HandlebarsComponentElement;
+import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
+import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
-import info.magnolia.rendering.template.variation.RenderableVariationResolver;
+import info.magnolia.templating.elements.ComponentElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,20 +39,24 @@ public class HandlebarsComponentTemplateHelper implements Helper {
 
     @Override
     public CharSequence apply(Object context, Options options) throws IOException {
-        HandlebarsComponentElement element = new HandlebarsComponentElement(serverConfiguration,
-                renderingEngine.getRenderingContext(), renderingEngine, templateDefinitionAssignment);
-
-        Node node = (Node) options.context.get("mgnl:node");
+        ComponentElement element = new ComponentElement(serverConfiguration, renderingEngine.getRenderingContext(),
+                renderingEngine, templateDefinitionAssignment);
+        StringBuilder builder = new StringBuilder();
         try {
+            Node node = (Node) options.context.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
+            String name = options.hash("name");
+
             element.setContent(node);
             element.setNodeIdentifier(node.getIdentifier());
             element.setPath(node.getPath());
             element.setWorkspace(node.getSession().getWorkspace().getName());
-        } catch (RepositoryException e) {
-            logger.error("Cannot initialize component element", e);
-            throw new RuntimeException(e);
-        }
+            element.setDialog(handlebarsRegistry.getTemplateDefinition(node).getDialog());
 
-        return new HelperRenderer().render(element);
+            element.begin(builder);
+            element.end(builder);
+        } catch (RepositoryException | RenderException e) {
+            logger.error("Cannot render component", e);
+        }
+        return builder;
     }
 }

@@ -29,10 +29,10 @@
             <sv:value>62bc0969-c47f-48d9-9a31-e63b61f1fd4e</sv:value>
         </sv:property>
         <sv:property sv:name="definitionClass" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.ui.fields.template.field.TemplateAndSupplierPageFieldDefinition</sv:value>
+            <sv:value>com.magnoliales.handlebars.ui.fields.template.field.PageClassFieldDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="factoryClass" sv:type="String">
-            <sv:value>com.magnoliales.handlebars.ui.fields.template.field.TemplateAndSupplierPageFieldFactory</sv:value>
+            <sv:value>com.magnoliales.handlebars.ui.fields.template.field.PageClassFieldFactory</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>

@@ -13,7 +13,7 @@ import javax.jcr.Node;
  */
 public interface NodeObjectMapper {
 
-    public static final String CLASS_PROPERTY = "handlebars:class";
+    public static final String CLASS_PROPERTY = "mgnl:template";
     public static final String PARENT_PROPERTY = "handlebars:parent";
 
     Object map(Node node);

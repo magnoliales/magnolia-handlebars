@@ -1,11 +1,13 @@
-package com.magnoliales.handlebars.templating.helpers;
+package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.magnoliales.handlebars.setup.HandlebarsRegistry;
-import com.magnoliales.handlebars.templating.elements.HandlebarsInitElement;
+import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
+import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.templating.elements.InitElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,21 +34,22 @@ public class HandlebarsInitTemplateHelper implements Helper {
     }
 
     public CharSequence apply(Object context, Options options) throws IOException {
-        HandlebarsInitElement element = new HandlebarsInitElement(serverConfiguration,
-                renderingEngine.getRenderingContext());
+        InitElement element = new InitElement(serverConfiguration, renderingEngine.getRenderingContext());
+        StringBuilder builder = new StringBuilder();
         try {
-            Node node = (Node) options.context.get("mgnl:node");
+            Node node = (Node) options.context.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
 
             element.setContent(node);
             element.setNodeIdentifier(node.getIdentifier());
             element.setPath(node.getIdentifier());
             element.setWorkspace(node.getSession().getWorkspace().getName());
-
             element.setDialog(handlebarsRegistry.getTemplateDefinition(node).getDialog());
-        } catch (RepositoryException e) {
-            logger.error("Cannot initialize init element", e);
-            throw new RuntimeException(e);
+
+            element.begin(builder);
+            element.end(builder);
+        } catch (RepositoryException | RenderException e) {
+            logger.error("Cannot render init element", e);
         }
-        return new HelperRenderer().render(element);
+        return builder;
     }
 }

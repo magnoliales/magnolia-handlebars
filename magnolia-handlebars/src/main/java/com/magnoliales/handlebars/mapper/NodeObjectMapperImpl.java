@@ -50,8 +50,8 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                     Class<?> itemSuperclass = field.getType().getComponentType();
                     List<Object> items = new ArrayList<>();
                     NodeIterator iterator = objectNode.getNodes();
-                    Node itemNode;
-                    while ((itemNode = iterator.nextNode()) != null) {
+                    while (iterator.hasNext()) {
+                        Node itemNode = iterator.nextNode();
                         String itemClassName = itemNode.getProperty(CLASS_PROPERTY).getString();
                         Class<?> itemClass = Class.forName(itemClassName);
                         if (itemSuperclass.isAssignableFrom(itemClass)) {

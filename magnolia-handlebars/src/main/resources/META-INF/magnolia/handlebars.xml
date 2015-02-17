@@ -10,8 +10,8 @@
     <components>
         <id>main</id>
         <component>
-            <type>com.magnoliales.handlebars.setup.HandlebarsRegistry</type>
-            <implementation>com.magnoliales.handlebars.setup.HandlebarsRegistryImpl</implementation>
+            <type>com.magnoliales.handlebars.setup.registry.HandlebarsRegistry</type>
+            <implementation>com.magnoliales.handlebars.setup.registry.HandlebarsRegistryImpl</implementation>
             <scope>singleton</scope>
         </component>
         <component>

@@ -2,7 +2,7 @@ package com.magnoliales.handlebars.setup;
 
 import com.magnoliales.handlebars.setup.tasks.RegisterNamespaceTask;
 import com.magnoliales.handlebars.ui.columns.TemplateColumnFormatter;
-import com.magnoliales.handlebars.ui.fields.template.field.TemplateAndSupplierPageFieldDefinition;
+import com.magnoliales.handlebars.ui.fields.template.field.PageClassFieldDefinition;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.SetPropertyTask;
@@ -24,11 +24,11 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(new SetPropertyTask("Replace templateScript selector in pages:createPage dialog",
                 RepositoryConstants.CONFIG,
                 "/modules/pages/dialogs/createPage/form/tabs/tabPage/fields/template",
-                "class", TemplateAndSupplierPageFieldDefinition.class.getName()));
+                "class", PageClassFieldDefinition.class.getName()));
         tasks.add(new SetPropertyTask("Replace templateScript selector in pages:editTemplate dialog",
                 RepositoryConstants.CONFIG,
                 "/modules/pages/dialogs/editTemplate/form/tabs/tabTemplate/fields/template",
-                "class", TemplateAndSupplierPageFieldDefinition.class.getName()));
+                "class", PageClassFieldDefinition.class.getName()));
         tasks.add(new SetPropertyTask("Translate templateScript column formatter",
                 RepositoryConstants.CONFIG,
                 "/modules/pages/apps/pages/subApps/browser/workbench/contentViews/list/columns/template",

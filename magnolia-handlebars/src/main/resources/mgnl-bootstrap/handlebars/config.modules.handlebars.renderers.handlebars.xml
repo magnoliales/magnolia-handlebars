@@ -7,7 +7,7 @@
         <sv:value>5e16af96-bfb8-48d5-b1ad-ca40c4ae718e</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-        <sv:value>com.magnoliales.handlebars.templating.renderer.HandlebarsRenderer</sv:value>
+        <sv:value>com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -66,7 +66,7 @@
                 <sv:value>32479016-9e7c-4def-8d54-8314659697f4</sv:value>
             </sv:property>
             <sv:property sv:name="class" sv:type="String">
-                <sv:value>com.magnoliales.handlebars.templating.helpers.HandlebarsInitTemplateHelper</sv:value>
+                <sv:value>com.magnoliales.handlebars.rendering.helpers.HandlebarsInitTemplateHelper</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:createdBy" sv:type="String">
                 <sv:value>admin</sv:value>
@@ -95,7 +95,7 @@
                 <sv:value>5c41af18-3673-4037-b784-91a3e8ff3f30</sv:value>
             </sv:property>
             <sv:property sv:name="class" sv:type="String">
-                <sv:value>com.magnoliales.handlebars.templating.helpers.HandlebarsAreaTemplateHelper</sv:value>
+                <sv:value>com.magnoliales.handlebars.rendering.helpers.HandlebarsAreaTemplateHelper</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:createdBy" sv:type="String">
                 <sv:value>admin</sv:value>
@@ -124,7 +124,7 @@
                 <sv:value>1c4cff43-52cf-4c13-a69d-04cf741c99d7</sv:value>
             </sv:property>
             <sv:property sv:name="class" sv:type="String">
-                <sv:value>com.magnoliales.handlebars.templating.helpers.HandlebarsComponentTemplateHelper</sv:value>
+                <sv:value>com.magnoliales.handlebars.rendering.helpers.HandlebarsComponentTemplateHelper</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:createdBy" sv:type="String">
                 <sv:value>admin</sv:value>

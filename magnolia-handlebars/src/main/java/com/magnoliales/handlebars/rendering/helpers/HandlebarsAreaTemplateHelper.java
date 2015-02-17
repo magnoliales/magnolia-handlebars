@@ -1,16 +1,18 @@
-package com.magnoliales.handlebars.templating.helpers;
+package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.magnoliales.handlebars.setup.HandlebarsRegistry;
-import com.magnoliales.handlebars.templating.definition.HandlebarsAreaDefinition;
-import com.magnoliales.handlebars.templating.definition.HandlebarsTemplateDefinition;
-import com.magnoliales.handlebars.templating.elements.HandlebarsAreaElement;
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
+import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
+import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.NodeTypes;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.variation.RenderableVariationResolver;
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.templating.elements.AreaElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +35,7 @@ public class HandlebarsAreaTemplateHelper implements Helper {
                                         RenderingEngine renderingEngine,
                                         RenderableVariationResolver renderableVariationResolver,
                                         HandlebarsRegistry handlebarsRegistry) {
+
         this.serverConfiguration = serverConfiguration;
         this.renderingEngine = renderingEngine;
         this.renderableVariationResolver = renderableVariationResolver;
@@ -40,46 +43,46 @@ public class HandlebarsAreaTemplateHelper implements Helper {
     }
 
     public CharSequence apply(Object context, Options options) throws IOException {
-        HandlebarsAreaElement element = new HandlebarsAreaElement(serverConfiguration,
-                renderingEngine.getRenderingContext(), renderingEngine, renderableVariationResolver);
+        AreaElement element = new AreaElement(serverConfiguration, renderingEngine.getRenderingContext(),
+                renderingEngine, renderableVariationResolver);
+        StringBuilder builder = new StringBuilder();
         try {
-            Node node = (Node) options.context.get("mgnl:node");
+            Node node = (Node) options.context.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
             String name = options.hash("name");
 
-            HandlebarsTemplateDefinition templateDefinition;
-            HandlebarsAreaDefinition areaDefinition = null;
+            TemplateDefinition templateDefinition;
+            AreaDefinition areaDefinition = null;
             while (areaDefinition == null) {
                 templateDefinition = handlebarsRegistry.getTemplateDefinition(node);
-                if (templateDefinition.hasArea(name)) {
-                    areaDefinition = templateDefinition.getArea(name);
+                if (templateDefinition.getAreas().containsKey(name)) {
+                    areaDefinition = templateDefinition.getAreas().get(name);
                 } else {
-                    String supplierPage = node.getProperty("mgnl:supplierPage").getString();
+                    String supplierPage = node.getProperty(NodeObjectMapper.PARENT_PROPERTY).getString();
                     node = node.getSession().getNodeByIdentifier(supplierPage);
                 }
             }
-
             Node areaNode;
             if (node.hasNode(name)) {
                 areaNode = node.getNode(name);
             } else {
                 areaNode = node.addNode(name, NodeTypes.Area.NAME);
-                areaNode.setProperty("mgnl:template", areaDefinition.getAreaType().getName());
+                areaNode.setProperty(NodeObjectMapper.CLASS_PROPERTY, areaDefinition.getId());
                 areaNode.getSession().save();
             }
-
             element.setContent(areaNode);
             element.setNodeIdentifier(areaNode.getIdentifier());
             element.setPath(areaNode.getPath());
             element.setWorkspace(areaNode.getSession().getWorkspace().getName());
-
             element.setName(name);
             element.setArea(areaDefinition);
             element.setDialog(areaDefinition.getDialog());
 
-        } catch (RepositoryException e) {
-            logger.error("Cannot initialize area element", e);
-            throw new RuntimeException(e);
+            element.begin(builder);
+            element.end(builder);
+
+        } catch (RepositoryException | RenderException e) {
+            logger.error("Cannot render area element", e);
         }
-        return new HelperRenderer().render(element);
+        return builder;
     }
 }

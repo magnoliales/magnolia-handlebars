@@ -1,4 +1,4 @@
-package com.magnoliales.handlebars.templating.definition;
+package com.magnoliales.handlebars.rendering.definition;
 
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;

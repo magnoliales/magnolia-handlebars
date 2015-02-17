@@ -1,35 +1,26 @@
-package com.magnoliales.handlebars.templating.definition;
+package com.magnoliales.handlebars.rendering.definition;
 
 import com.magnoliales.handlebars.annotations.Area;
 import info.magnolia.i18nsystem.SimpleTranslator;
-import info.magnolia.rendering.template.TemplateAvailability;
-import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredComponentAvailability;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateAvailability;
 
-import java.util.List;
-
-public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition implements TemplateDefinition {
-
-    private final Class<?> areaType;
+public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition {
 
     public HandlebarsAreaDefinition(Class<?> areaType,
-                                    TemplateAvailability templateAvailability,
                                     SimpleTranslator translator,
-                                    List<Class<?>> components) {
+                                    Iterable<Class<?>> components) {
 
-        super(templateAvailability);
+        super(new ConfiguredTemplateAvailability());
 
-        this.areaType = areaType;
-
+        String name = areaType.getName();
         Area area = areaType.getAnnotation(Area.class);
 
-        String id = areaType.getName();
-        setId(id);
-        setDialog("dialogs." + id);
+        setId(name);
+        setDialog("dialogs." + name);
         setTemplateScript(area.templateScript());
-        String name = translator.translate("areas." + id);
-        this.setName(name);
+        setName(translator.translate(name));
 
         for (Class<?> component : components) {
             ConfiguredComponentAvailability componentAvailability = new ConfiguredComponentAvailability();
@@ -37,9 +28,5 @@ public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition implement
             componentAvailability.setId(component.getName());
             addAvailableComponent(component.getName(), componentAvailability);
         }
-    }
-
-    public Class<?> getAreaType() {
-        return areaType;
     }
 }

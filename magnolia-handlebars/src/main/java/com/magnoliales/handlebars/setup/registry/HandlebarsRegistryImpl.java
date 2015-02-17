@@ -1,18 +1,19 @@
-package com.magnoliales.handlebars.setup;
+package com.magnoliales.handlebars.setup.registry;
 
 import com.magnoliales.handlebars.annotations.Area;
 import com.magnoliales.handlebars.annotations.Component;
 import com.magnoliales.handlebars.annotations.Page;
-import com.magnoliales.handlebars.templating.definition.HandlebarsAreaDefinition;
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
+import com.magnoliales.handlebars.rendering.definition.HandlebarsAreaDefinition;
+import com.magnoliales.handlebars.rendering.definition.HandlebarsComponentDefinition;
+import com.magnoliales.handlebars.rendering.definition.HandlebarsPageDefinition;
+import com.magnoliales.handlebars.rendering.definition.HandlebarsTemplateDefinitionProvider;
 import com.magnoliales.handlebars.ui.dialogs.AnnotatedDialogDefinitionFactory;
-import com.magnoliales.handlebars.templating.definition.HandlebarsTemplateDefinition;
-import com.magnoliales.handlebars.templating.definition.HandlebarsTemplateDefinitionProvider;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.i18nsystem.SimpleTranslator;
-import info.magnolia.registry.RegistrationException;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.rendering.template.TemplateAvailability;
-import info.magnolia.rendering.template.configured.ConfiguredTemplateAvailability;
+import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.dialog.registry.DialogDefinitionProvider;
@@ -39,7 +40,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
 
     private boolean initialized;
     private AnnotatedDialogDefinitionFactory annotatedDialogDefinitionFactory;
-    private Map<Class<?>, HandlebarsTemplateDefinition> templateDefinitions;
+    private Map<Class<?>, TemplateDefinition> templateDefinitions;
     private TemplateDefinitionRegistry templateDefinitionRegistry;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
     private SimpleTranslator translator;
@@ -49,7 +50,6 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                                   TemplateDefinitionRegistry templateDefinitionRegistry,
                                   DialogDefinitionRegistry dialogDefinitionRegistry,
                                   SimpleTranslator translator) {
-
         this.annotatedDialogDefinitionFactory = annotatedDialogDefinitionFactory;
         this.templateDefinitionRegistry = templateDefinitionRegistry;
         this.dialogDefinitionRegistry = dialogDefinitionRegistry;
@@ -67,77 +67,65 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             Reflections reflections = new Reflections(namespace);
             pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class, true));
         }
-        processDefinitions(pageClasses, new HashMap<Class<?>, HandlebarsTemplateDefinition>());
+        processDefinitions(pageClasses, new HashMap<Class<?>, TemplateDefinition>());
         initialized = true;
     }
 
     @Override
-    public List<HandlebarsTemplateDefinition> getTemplateDefinitions() {
+    public List<TemplateDefinition> getTemplateDefinitions() {
         if (!initialized) {
             throw new IllegalStateException("Handlebars registry is not initialized");
         }
-        List<HandlebarsTemplateDefinition> definitionsList = new ArrayList<>(templateDefinitions.values());
-        Collections.sort(definitionsList);
+        List<TemplateDefinition> definitionsList = new ArrayList<>(templateDefinitions.values());
+        // Collections.sort(definitionsList);
         return definitionsList;
     }
 
     private void processDefinitions(Set<Class<?>> unprocessedClasses,
-                                    Map<Class<?>, HandlebarsTemplateDefinition> processedDefinitions) {
+                                    Map<Class<?>, TemplateDefinition> processedDefinitions) {
         if (unprocessedClasses.isEmpty()) {
             this.templateDefinitions = processedDefinitions;
             return;
         }
         for (Class<?> pageClass : unprocessedClasses) {
             Class<?> pageSuperclass = getPageSuperclass(pageClass);
-            if (pageSuperclass == null || processedDefinitions.containsKey(pageSuperclass)) {
-                TemplateAvailability templateAvailability = new ConfiguredTemplateAvailability();
-                HandlebarsTemplateDefinition parent = null;
-                if (pageSuperclass != null) {
-                    parent = processedDefinitions.get(pageSuperclass);
-                }
-
-                // create new templateScript definition
-                HandlebarsTemplateDefinition handlebarsTemplateDefinition =
-                        new HandlebarsTemplateDefinition(pageClass, templateAvailability, translator, parent);
-
-                // discover and register all dialogs
-                handlebarsTemplateDefinition.setDialog("dialogs." + pageClass.getName());
-                for (DialogDefinitionProvider provider : annotatedDialogDefinitionFactory.discoverDialogProviders(pageClass)) {
-                    dialogDefinitionRegistry.register(provider);
-                }
-
-                // discover and register all area definitions
-                Map<String, AreaDefinition> areas = new HashMap<>();
-                for (Field pageField : pageClass.getDeclaredFields()) {
-                    if (pageField.getType().isAnnotationPresent(Area.class)) {
-                        List<Class<?>> components = new ArrayList<>();
-                        for (Field areaField : pageField.getType().getDeclaredFields()) {
-                            if (areaField.getType().isArray()) {
-                                Class<?> componentClass = areaField.getType().getComponentType();
-                                if (componentClass.isAnnotationPresent(Component.class)) {
-                                    components.add(componentClass);
-                                    HandlebarsTemplateDefinition componentDefinition = new
-                                            HandlebarsTemplateDefinition(componentClass, templateAvailability, translator, null);
-                                    templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
-                                }
+            if (pageSuperclass != null && !processedDefinitions.containsKey(pageSuperclass)) {
+                continue;
+            }
+            Map<String, AreaDefinition> areas = new HashMap<>();
+            for (Field pageField : pageClass.getDeclaredFields()) {
+                if (pageField.getType().isAnnotationPresent(Area.class)) {
+                    List<Class<?>> components = new ArrayList<>();
+                    for (Field areaField : pageField.getType().getDeclaredFields()) {
+                        if (areaField.getType().isArray()) {
+                            Class<?> componentClass = areaField.getType().getComponentType();
+                            if (componentClass.isAnnotationPresent(Component.class)) {
+                                components.add(componentClass);
+                                HandlebarsComponentDefinition componentDefinition = new HandlebarsComponentDefinition(componentClass, translator);
+                                templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
                             }
                         }
-                        HandlebarsAreaDefinition areaDefinition =
-                                new HandlebarsAreaDefinition(pageField.getType(), templateAvailability, translator, components);
-                        HandlebarsTemplateDefinitionProvider areaDefinitionProvider =
-                                new HandlebarsTemplateDefinitionProvider(areaDefinition);
-                        templateDefinitionRegistry.register(areaDefinitionProvider);
-                        areas.put(pageField.getName(), areaDefinition);
                     }
+                    HandlebarsAreaDefinition areaDefinition = new HandlebarsAreaDefinition(pageField.getType(), translator, components);
+                    HandlebarsTemplateDefinitionProvider areaDefinitionProvider = new HandlebarsTemplateDefinitionProvider(areaDefinition);
+                    templateDefinitionRegistry.register(areaDefinitionProvider);
+                    areas.put(pageField.getName(), areaDefinition);
                 }
-                handlebarsTemplateDefinition.setAreas(areas);
-
-                // register templateScript definition in the templateScript definition registry
-                HandlebarsTemplateDefinitionProvider handlebarsTemplateDefinitionProvider =
-                        new HandlebarsTemplateDefinitionProvider(handlebarsTemplateDefinition);
-                templateDefinitionRegistry.register(handlebarsTemplateDefinitionProvider);
-                processedDefinitions.put(pageClass, handlebarsTemplateDefinition);
             }
+            HandlebarsPageDefinition pageDefinition;
+            if (pageSuperclass != null) {
+                HandlebarsPageDefinition parent = (HandlebarsPageDefinition) processedDefinitions.get(pageSuperclass);
+                pageDefinition = new HandlebarsPageDefinition(pageClass, translator, areas, parent);
+            } else {
+                pageDefinition = new HandlebarsPageDefinition(pageClass, translator, areas);
+            }
+
+            for (DialogDefinitionProvider provider : annotatedDialogDefinitionFactory.discoverDialogProviders(pageClass)) {
+                dialogDefinitionRegistry.register(provider);
+            }
+
+            templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(pageDefinition));
+            processedDefinitions.put(pageClass, pageDefinition);
         }
         unprocessedClasses.removeAll(processedDefinitions.keySet());
         processDefinitions(unprocessedClasses, processedDefinitions);
@@ -163,7 +151,8 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     @Override
     public Map<String, String> getPagesByTemplate(String template) {
         Map<String, String> pages = new TreeMap<>();
-        String expression = "SELECT * FROM [mgnl:page] WHERE [mgnl:template] = '" + template + "'";
+        String expression = "SELECT * FROM [" + NodeTypes.Page.NAME
+                + "] WHERE [" + NodeObjectMapper.CLASS_PROPERTY + "] = '" + template + "'";
         try {
             Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
             QueryManager queryManager = session.getWorkspace().getQueryManager();
@@ -180,7 +169,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     }
 
     @Override
-    public HandlebarsTemplateDefinition getTemplateDefinition(String template) {
+    public TemplateDefinition getTemplateDefinition(String template) {
         if (!initialized) {
             throw new IllegalStateException("Handlebars registry is not initialized");
         }
@@ -199,9 +188,9 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     }
 
     @Override
-    public HandlebarsTemplateDefinition getTemplateDefinition(Node node) {
+    public TemplateDefinition getTemplateDefinition(Node node) {
         try {
-            String template = node.getProperty("mgnl:template").getString();
+            String template = node.getProperty(NodeObjectMapper.CLASS_PROPERTY).getString();
             return getTemplateDefinition(template);
         } catch (RepositoryException e) {
             logger.error("Cannot read templateScript name of node {}", node);

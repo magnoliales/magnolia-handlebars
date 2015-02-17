@@ -1,15 +1,15 @@
 package com.magnoliales.handlebars.ui.fields.template.validator;
 
-import com.magnoliales.handlebars.setup.HandlebarsRegistry;
+import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.ui.form.validator.definition.ConfiguredFieldValidatorDefinition;
 
-public class TemplateAndSupplierPageFieldValidatorDefinition extends ConfiguredFieldValidatorDefinition {
+public class PageClassFieldValidatorDefinition extends ConfiguredFieldValidatorDefinition {
 
     private final HandlebarsRegistry handlebarsRegistry;
 
-    public TemplateAndSupplierPageFieldValidatorDefinition(HandlebarsRegistry handlebarsRegistry) {
+    public PageClassFieldValidatorDefinition(HandlebarsRegistry handlebarsRegistry) {
         this.handlebarsRegistry = handlebarsRegistry;
-        setFactoryClass(TemplateAndSupplierPageFieldValidatorFactory.class);
+        setFactoryClass(PageClassFieldValidatorFactory.class);
     }
 
     public HandlebarsRegistry getHandlebarsRegistry() {

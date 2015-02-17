@@ -3,9 +3,7 @@ package com.magnoliales.handlebars.ui.columns;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.PropertyUtil;
-import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 import info.magnolia.ui.workbench.column.AbstractColumnFormatter;
 import info.magnolia.ui.workbench.column.definition.AbstractColumnDefinition;
 import org.slf4j.Logger;
@@ -14,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 public class SupplierPageColumnFormatter extends AbstractColumnFormatter<AbstractColumnDefinition> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SupplierPageColumnFormatter.class);
-    private static final long serialVersionUID = 9765635846L;
+    private static final Logger logger = LoggerFactory.getLogger(SupplierPageColumnFormatter.class);
 
     @Inject
     public SupplierPageColumnFormatter(AbstractColumnDefinition definition) {
@@ -29,15 +27,14 @@ public class SupplierPageColumnFormatter extends AbstractColumnFormatter<Abstrac
     public Object generateCell(Table source, Object itemId, Object columnId) {
         Item item = source.getItem(itemId);
         Property property = (item == null) ? null : item.getItemProperty(columnId);
-
-        if (property != null) {
-            Node supplierPage = null;
+        if (property != null && item instanceof JcrNodeAdapter) {
             try {
-                supplierPage = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getNodeByIdentifier(property.toString());
+                Session session = ((JcrNodeAdapter) item).getJcrItem().getSession();
+                Node supplierPage = session.getNodeByIdentifier(property.toString());
+                return supplierPage.getProperty("title").getString();
             } catch (RepositoryException e) {
-                LOGGER.error("Cannot fetch supplier page", e);
+                logger.error("Cannot fetch supplier page", e);
             }
-            return PropertyUtil.getString(supplierPage, "title");
         }
         return null;
     }

@@ -26,7 +26,7 @@ public class TemplateColumnFormatter extends AbstractColumnFormatter<AbstractCol
         if (property != null) {
             String template = (String) property.getValue();
             if (template != null) {
-                return translator.translate("templates." + template);
+                return translator.translate("pages." + template);
             }
         }
         return null;
