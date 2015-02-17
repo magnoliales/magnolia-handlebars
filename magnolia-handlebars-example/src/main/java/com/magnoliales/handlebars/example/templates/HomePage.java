@@ -4,6 +4,9 @@ import com.magnoliales.handlebars.annotations.Area;
 import com.magnoliales.handlebars.annotations.Component;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
+import com.magnoliales.handlebars.example.templates.areas.Awards;
+import com.magnoliales.handlebars.example.templates.embedded.Meta;
+import info.magnolia.ui.form.field.definition.LinkFieldDefinition;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
 
 import java.util.Collection;
@@ -11,11 +14,14 @@ import java.util.Collection;
 @Page(templateScript = "home-page", singleton = true)
 public class HomePage {
 
-    @Field(definition = TextFieldDefinition.class, settings = "{}")
+    @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2 }")
     private String title;
 
     @Field(definition = TextFieldDefinition.class)
     private String addressee;
+
+    @Field(definition = LinkFieldDefinition.class, settings = "{ appName : 'assets', targetWorkspace : 'dam' }")
+    private String heroImageLink;
 
     private Meta meta;
 
@@ -35,41 +41,5 @@ public class HomePage {
 
     public Meta getMeta() {
         return meta;
-    }
-
-    public final static class Meta {
-
-        @Field(definition = TextFieldDefinition.class)
-        private String title;
-
-        private Facebook facebook;
-
-        @Field(definition = TextFieldDefinition.class)
-        private String image;
-
-        public final static class Facebook {
-
-            @Field(definition = TextFieldDefinition.class)
-            private String title;
-
-            @Field(definition = TextFieldDefinition.class)
-            private String image;
-        }
-    }
-
-    @Area(templateScript = "areas/awards")
-    public final static class Awards {
-
-        @Field(definition = TextFieldDefinition.class)
-        private String title;
-
-        private Award[] items;
-
-        @Component(templateScript = "components/award")
-        public final static class Award {
-
-            @Field(definition = TextFieldDefinition.class)
-            private String title;
-        }
     }
 }
