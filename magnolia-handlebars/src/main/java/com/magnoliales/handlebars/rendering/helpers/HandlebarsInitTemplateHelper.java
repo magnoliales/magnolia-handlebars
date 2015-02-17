@@ -2,9 +2,11 @@ package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.templating.elements.InitElement;
@@ -23,21 +25,24 @@ public class HandlebarsInitTemplateHelper implements Helper {
     private final ServerConfiguration serverConfiguration;
     private final RenderingEngine renderingEngine;
     private final HandlebarsRegistry handlebarsRegistry;
+    private final NodeObjectMapper mapper;
 
     @Inject
     public HandlebarsInitTemplateHelper(ServerConfiguration serverConfiguration,
                                         RenderingEngine renderingEngine,
-                                        HandlebarsRegistry handlebarsRegistry) {
+                                        HandlebarsRegistry handlebarsRegistry,
+                                        NodeObjectMapper mapper) {
         this.serverConfiguration = serverConfiguration;
         this.renderingEngine = renderingEngine;
         this.handlebarsRegistry = handlebarsRegistry;
+        this.mapper = mapper;
     }
 
     public CharSequence apply(Object context, Options options) throws IOException {
         InitElement element = new InitElement(serverConfiguration, renderingEngine.getRenderingContext());
         StringBuilder builder = new StringBuilder();
         try {
-            Node node = (Node) options.context.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
+            Node node = options.get("node");
 
             element.setContent(node);
             element.setNodeIdentifier(node.getIdentifier());

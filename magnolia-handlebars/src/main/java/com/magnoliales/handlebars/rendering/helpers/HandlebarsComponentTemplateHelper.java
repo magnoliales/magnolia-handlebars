@@ -2,9 +2,11 @@ package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import java.io.IOException;
 
@@ -43,14 +46,31 @@ public class HandlebarsComponentTemplateHelper implements Helper {
                 renderingEngine, templateDefinitionAssignment);
         StringBuilder builder = new StringBuilder();
         try {
-            Node node = (Node) options.context.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
-            String name = options.hash("name");
+            Node node = options.get("node");
+            int index = options.get("@index");
 
-            element.setContent(node);
-            element.setNodeIdentifier(node.getIdentifier());
-            element.setPath(node.getPath());
-            element.setWorkspace(node.getSession().getWorkspace().getName());
-            element.setDialog(handlebarsRegistry.getTemplateDefinition(node).getDialog());
+            NodeIterator iterator = node.getNodes();
+            Node componentNode = null;
+            while (iterator.hasNext()) {
+                componentNode = iterator.nextNode();
+                String componentClassName = componentNode.getProperty(NodeObjectMapper.CLASS_PROPERTY).getString();
+                if (componentClassName.equals(context.getClass().getName())) {
+                    if (index == 0) {
+                        break;
+                    } else {
+                        index--;
+                    }
+                }
+            }
+            if (componentNode == null) {
+                throw new AssertionError("Cannot find component node");
+            }
+
+            element.setContent(componentNode);
+            element.setNodeIdentifier(componentNode.getIdentifier());
+            element.setPath(componentNode.getPath());
+            element.setWorkspace(componentNode.getSession().getWorkspace().getName());
+            element.setDialog(handlebarsRegistry.getTemplateDefinition(componentNode).getDialog());
 
             element.begin(builder);
             element.end(builder);

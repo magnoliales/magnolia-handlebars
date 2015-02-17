@@ -37,14 +37,13 @@ import java.util.Map;
 
 public class HandlebarsRenderer extends AbstractRenderer {
 
-    public static final String CURRENT_NODE_PROPERTY = "handlebars:node";
     private static final Logger logger = LoggerFactory.getLogger(HandlebarsRenderer.class);
 
     private Handlebars handlebars;
-    private NodeObjectMapper nodeObjectMapper;
+    private NodeObjectMapper mapper;
 
     @Inject
-    public HandlebarsRenderer(RenderingEngine renderingEngine, NodeObjectMapper nodeObjectMapper) {
+    public HandlebarsRenderer(RenderingEngine renderingEngine, NodeObjectMapper mapper) {
         super(renderingEngine);
         File templateDirectory = new File("src/main/resources/templates");
         TemplateLoader loader;
@@ -72,7 +71,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
             logger.error("Cannot read helpers information", e);
         }
 
-        this.nodeObjectMapper = nodeObjectMapper;
+        this.mapper = mapper;
     }
 
     @Override
@@ -81,13 +80,17 @@ public class HandlebarsRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected void onRender(Node node, RenderableDefinition renderableDefinition, RenderingContext renderingContext,
-                            Map<String, Object> context, String templateScript) throws RenderException {
+    protected void onRender(Node node,
+                            RenderableDefinition renderableDefinition,
+                            RenderingContext renderingContext,
+                            Map<String, Object> context,
+                            String templateScript) throws RenderException {
+
         Context combinedContext = null;
         try {
-            logger.info("Rendering node {} with {}", node.getPath(), templateScript);
-            combinedContext = Context.newBuilder(nodeObjectMapper.map(node))
-                    .combine(CURRENT_NODE_PROPERTY, node)
+            logger.info("Rendering node '{}' with template '{}'", node.getPath(), templateScript);
+            combinedContext = Context.newBuilder(mapper.map(node))
+                    .combine("node", node)
                     .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();
             Template template = handlebars.compile(templateScript);

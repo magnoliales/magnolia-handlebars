@@ -16,7 +16,7 @@ public class HandlebarsComponentDefinition extends ConfiguredTemplateDefinition 
 
         this.setId(name);
         this.setName(translator.translate(name));
-        this.setTitle(name);
+        this.setTitle(this.getName());
         this.setTemplateScript(component.templateScript());
         this.setDialog("dialogs." + name);
         this.setRenderType("handlebars");

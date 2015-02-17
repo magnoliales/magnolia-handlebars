@@ -18,9 +18,10 @@ public class HandlebarsAreaDefinition extends ConfiguredAreaDefinition {
         Area area = areaType.getAnnotation(Area.class);
 
         setId(name);
+        setName(translator.translate(name));
+        setTitle(getName());
         setDialog("dialogs." + name);
         setTemplateScript(area.templateScript());
-        setName(translator.translate(name));
 
         for (Class<?> component : components) {
             ConfiguredComponentAvailability componentAvailability = new ConfiguredComponentAvailability();

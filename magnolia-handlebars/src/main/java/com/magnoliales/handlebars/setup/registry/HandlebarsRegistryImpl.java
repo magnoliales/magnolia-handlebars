@@ -103,6 +103,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                                 components.add(componentClass);
                                 HandlebarsComponentDefinition componentDefinition = new HandlebarsComponentDefinition(componentClass, translator);
                                 templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
+                                processedDefinitions.put(componentClass, componentDefinition);
                             }
                         }
                     }
@@ -178,8 +179,9 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             if (templateDefinitions.containsKey(pageClass)) {
                 return templateDefinitions.get(pageClass);
             } else {
-                logger.warn("Cannot find templateScript definitions for class {}", pageClass);
-                throw new RuntimeException();
+                String message = String.format("\"Cannot find templateScript definitions for class '%s'", pageClass);
+                logger.error(message);
+                throw new RuntimeException(message);
             }
         } catch (ClassNotFoundException e) {
             logger.error("Cannot find class {}", template);

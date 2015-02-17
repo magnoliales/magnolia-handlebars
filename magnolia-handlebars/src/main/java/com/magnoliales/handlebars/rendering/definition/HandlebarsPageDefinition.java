@@ -34,7 +34,7 @@ public class HandlebarsPageDefinition extends ConfiguredTemplateDefinition {
 
         this.setId(name);
         this.setName(translator.translate(name));
-        this.setTitle(name);
+        this.setTitle(this.getName());
         this.setDialog("dialogs." + name);
         this.setTemplateScript(page.templateScript());
         this.setAreas(areas);
