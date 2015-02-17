@@ -77,7 +77,12 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             throw new IllegalStateException("Handlebars registry is not initialized");
         }
         List<TemplateDefinition> definitionsList = new ArrayList<>(templateDefinitions.values());
-        // Collections.sort(definitionsList);
+        Collections.sort(definitionsList, new Comparator<TemplateDefinition>() {
+            @Override
+            public int compare(TemplateDefinition o1, TemplateDefinition o2) {
+                return o1.getTitle().compareTo(o2.getTitle());
+            }
+        });
         return definitionsList;
     }
 
@@ -164,7 +169,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 pages.put(node.getPath(), node.getIdentifier());
             }
         } catch (RepositoryException e) {
-            logger.error("Cannot fetch pages using templateScript {}", template);
+            throw new RuntimeException("Cannot fetch pages using template '" + template + "'", e);
         }
         return pages;
     }
@@ -179,12 +184,9 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             if (templateDefinitions.containsKey(pageClass)) {
                 return templateDefinitions.get(pageClass);
             } else {
-                String message = String.format("\"Cannot find templateScript definitions for class '%s'", pageClass);
-                logger.error(message);
-                throw new RuntimeException(message);
+                throw new RuntimeException("Cannot find templateScript definitions for class '" + pageClass + "'");
             }
         } catch (ClassNotFoundException e) {
-            logger.error("Cannot find class {}", template);
             throw new RuntimeException(e);
         }
     }
@@ -195,8 +197,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             String template = node.getProperty(NodeObjectMapper.CLASS_PROPERTY).getString();
             return getTemplateDefinition(template);
         } catch (RepositoryException e) {
-            logger.error("Cannot read templateScript name of node {}", node);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot read templateScript name of node '" + node + "'", e);
         }
     }
 }

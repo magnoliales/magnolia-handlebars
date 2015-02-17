@@ -17,4 +17,9 @@ public class DetailsPage extends AbstractDetailsPage {
     public String getGreeting() {
         return greeting;
     }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
 }

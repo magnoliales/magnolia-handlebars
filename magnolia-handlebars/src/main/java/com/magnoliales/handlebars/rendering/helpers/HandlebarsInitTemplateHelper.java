@@ -25,17 +25,14 @@ public class HandlebarsInitTemplateHelper implements Helper {
     private final ServerConfiguration serverConfiguration;
     private final RenderingEngine renderingEngine;
     private final HandlebarsRegistry handlebarsRegistry;
-    private final NodeObjectMapper mapper;
 
     @Inject
     public HandlebarsInitTemplateHelper(ServerConfiguration serverConfiguration,
                                         RenderingEngine renderingEngine,
-                                        HandlebarsRegistry handlebarsRegistry,
-                                        NodeObjectMapper mapper) {
+                                        HandlebarsRegistry handlebarsRegistry) {
         this.serverConfiguration = serverConfiguration;
         this.renderingEngine = renderingEngine;
         this.handlebarsRegistry = handlebarsRegistry;
-        this.mapper = mapper;
     }
 
     public CharSequence apply(Object context, Options options) throws IOException {

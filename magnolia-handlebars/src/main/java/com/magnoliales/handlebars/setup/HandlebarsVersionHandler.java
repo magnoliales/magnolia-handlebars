@@ -16,7 +16,7 @@ public class HandlebarsVersionHandler extends DefaultModuleVersionHandler {
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
-        List<Task> tasks = new ArrayList<Task>();
+        List<Task> tasks = new ArrayList<>();
 
         tasks.add(new RegisterNamespaceTask("Adding handlebars namespace",
                 RepositoryConstants.WEBSITE, "handlebars", "http://magnoliales.com/handlebars"));
