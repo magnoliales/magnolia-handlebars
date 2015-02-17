@@ -6,7 +6,6 @@ import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
@@ -46,9 +45,14 @@ public class HandlebarsComponentTemplateHelper implements Helper {
                 renderingEngine, templateDefinitionAssignment);
         StringBuilder builder = new StringBuilder();
         try {
-            Node node = options.get("node");
+            Node node = options.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
             int index = options.get("@index");
 
+            // There is nothing beautiful about this solution.
+            // Knowing the index of the component we're are looking
+            // for a child node of the specified class at the specified position.
+            // Unfortunately at the moment this seems to be the only option, as the connection
+            // between the node and mapped object is lost and we have to recreate is this way.
             NodeIterator iterator = node.getNodes();
             Node componentNode = null;
             while (iterator.hasNext()) {

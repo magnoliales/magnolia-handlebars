@@ -2,11 +2,9 @@ package com.magnoliales.handlebars.rendering.helpers;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.templating.elements.InitElement;
@@ -39,7 +37,7 @@ public class HandlebarsInitTemplateHelper implements Helper {
         InitElement element = new InitElement(serverConfiguration, renderingEngine.getRenderingContext());
         StringBuilder builder = new StringBuilder();
         try {
-            Node node = options.get("node");
+            Node node = options.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
 
             element.setContent(node);
             element.setNodeIdentifier(node.getIdentifier());

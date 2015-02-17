@@ -6,7 +6,6 @@ import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.magnoliales.handlebars.rendering.renderer.HandlebarsRenderer;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
@@ -21,7 +20,6 @@ import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import java.io.IOException;
-import java.util.Map;
 
 public class HandlebarsAreaTemplateHelper implements Helper {
 
@@ -49,7 +47,7 @@ public class HandlebarsAreaTemplateHelper implements Helper {
                 renderingEngine, renderableVariationResolver);
         StringBuilder builder = new StringBuilder();
         try {
-            Node node = options.get("node");
+            Node node = options.get(HandlebarsRenderer.CURRENT_NODE_PROPERTY);
             String name = options.hash("name");
 
             TemplateDefinition templateDefinition;

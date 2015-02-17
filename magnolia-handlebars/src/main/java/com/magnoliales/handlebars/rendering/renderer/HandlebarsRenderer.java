@@ -13,7 +13,6 @@ import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import com.magnoliales.handlebars.mapper.NodeObjectMapper;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.rendering.context.RenderingContext;
@@ -21,7 +20,6 @@ import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.renderer.AbstractRenderer;
 import info.magnolia.rendering.template.RenderableDefinition;
-import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.framework.message.Node2MapUtil;
 import org.slf4j.Logger;
@@ -37,6 +35,7 @@ import java.util.Map;
 
 public class HandlebarsRenderer extends AbstractRenderer {
 
+    public static final String CURRENT_NODE_PROPERTY = "handlebars:node";
     private static final Logger logger = LoggerFactory.getLogger(HandlebarsRenderer.class);
 
     private Handlebars handlebars;
@@ -90,7 +89,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
         try {
             logger.info("Rendering node '{}' with template '{}'", node.getPath(), templateScript);
             combinedContext = Context.newBuilder(mapper.map(node))
-                    .combine("node", node)
+                    .combine(CURRENT_NODE_PROPERTY, node)
                     .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();
             Template template = handlebars.compile(templateScript);
