@@ -4,8 +4,6 @@ magnolia-handlebars
 ### Current Versions
 
  - magnolia-handlebars-parent - `1.0.0`
-
-
  - magnolia-handlebars - `1.0.0`
  - magnolia-handlebars-example - `1.0.0`
  - magnolia-handlebars-helpers - `1.0.0`
