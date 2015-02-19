@@ -14,12 +14,10 @@ public class PageClassFieldValidator extends AbstractValidator<PageClass> {
     public static final Logger logger = LoggerFactory.getLogger(PageClassFieldValidator.class);
 
     private final HandlebarsRegistry handlebarsRegistry;
-    private final String pageId;
 
-    public PageClassFieldValidator(String errorMessage, HandlebarsRegistry handlebarsRegistry, String pageId) {
+    public PageClassFieldValidator(String errorMessage, HandlebarsRegistry handlebarsRegistry) {
         super(errorMessage);
         this.handlebarsRegistry = handlebarsRegistry;
-        this.pageId = pageId;
     }
 
     @Override
@@ -34,7 +32,7 @@ public class PageClassFieldValidator extends AbstractValidator<PageClass> {
         if (!pageDefinition.hasParent()) {
             return true;
         }
-        if (value.getParentNodeId() == null || value.getParentNodeId().isEmpty() || pageId.equals(value.getParentNodeId())) {
+        if (value.getParentNodeId() == null || value.getParentNodeId().isEmpty()) {
             return false;
         }
         Map<String, String> pages = handlebarsRegistry.getPagesByTemplate(pageDefinition.getParent().getId());

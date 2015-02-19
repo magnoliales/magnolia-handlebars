@@ -11,20 +11,12 @@ public class PageClassFieldValidatorFactory extends AbstractFieldValidatorFactor
 
     private final static Logger logger = LoggerFactory.getLogger(PageClassFieldValidatorFactory.class);
 
-    private final String pageId;
-
-    public PageClassFieldValidatorFactory(Item item, PageClassFieldValidatorDefinition definition) {
+    public PageClassFieldValidatorFactory(PageClassFieldValidatorDefinition definition) {
         super(definition);
-        if (item instanceof JcrNodeAdapter) {
-            pageId = ((JcrNodeAdapter) item).getItemId().getUuid();
-        } else {
-            pageId = null;
-            logger.warn("Expecting JcrNodeAdapter instead of {}", item);
-        }
     }
 
     @Override
     public Validator createValidator() {
-        return new PageClassFieldValidator(definition.getErrorMessage(), definition.getHandlebarsRegistry(), pageId);
+        return new PageClassFieldValidator(definition.getErrorMessage(), definition.getHandlebarsRegistry());
     }
 }

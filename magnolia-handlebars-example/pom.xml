@@ -92,14 +92,6 @@
             <artifactId>magnolia-ui-form</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
-        <dependency>
             <groupId>info.magnolia.dam</groupId>
             <artifactId>magnolia-dam</artifactId>
         </dependency>

@@ -24,8 +24,7 @@ public class PageClassFieldFactory<D extends FieldDefinition>
 
     @Override
     protected PageClassField createFieldComponent() {
-        String pageId = ((JcrNodeAdapter) item).getItemId().getUuid();
-        return new PageClassField(handlebarsRegistry, pageId);
+        return new PageClassField(handlebarsRegistry);
     }
 
     @Override

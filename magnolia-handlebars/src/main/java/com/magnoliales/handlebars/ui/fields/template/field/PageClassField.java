@@ -23,7 +23,7 @@ public class PageClassField extends CustomField<PageClass> {
     private final ComboBox pageClassField;
     private final ComboBox parentNodeField;
 
-    public PageClassField(final HandlebarsRegistry handlebarsRegistry, final String pageId) {
+    public PageClassField(final HandlebarsRegistry handlebarsRegistry) {
 
         component = new VerticalLayout();
         component.setSizeFull();
@@ -73,10 +73,8 @@ public class PageClassField extends CustomField<PageClass> {
                     Map<String, String> pages = handlebarsRegistry.getPagesByTemplate(parentPageDefinition.getId());
                     parentNodeField.removeAllItems();
                     for (Map.Entry<String, String> entry : pages.entrySet()) {
-                        if (!entry.getValue().equals(pageId)) {
-                            parentNodeField.addItem(entry.getValue());
-                            parentNodeField.setItemCaption(entry.getValue(), entry.getKey());
-                        }
+                        parentNodeField.addItem(entry.getValue());
+                        parentNodeField.setItemCaption(entry.getValue(), entry.getKey());
                     }
                     parentNodeField.setVisible(true);
                 } else {
