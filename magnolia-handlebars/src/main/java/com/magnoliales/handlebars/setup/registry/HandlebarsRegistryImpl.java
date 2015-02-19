@@ -1,6 +1,5 @@
 package com.magnoliales.handlebars.setup.registry;
 
-import com.google.inject.Injector;
 import com.magnoliales.handlebars.annotations.Area;
 import com.magnoliales.handlebars.annotations.Component;
 import com.magnoliales.handlebars.annotations.Page;

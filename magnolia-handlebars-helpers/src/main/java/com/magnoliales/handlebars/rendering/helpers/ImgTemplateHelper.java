@@ -17,7 +17,6 @@ public class ImgTemplateHelper implements Helper<String> {
 
     private DamTemplatingFunctions damTemplatingFunctions;
 
-
     public ImgTemplateHelper() {
         this.damTemplatingFunctions = Components.getComponent(DamTemplatingFunctions.class);
     }
@@ -25,34 +24,31 @@ public class ImgTemplateHelper implements Helper<String> {
     @Override
     public CharSequence apply(String context, Options options) throws IOException {
 
-
-        String attributes = "";
-        Map<String, String> attributeMap = new HashMap<String,String>();
+        StringBuilder attributes = new StringBuilder("<img ");
+        Map<String, String> attributeMap = new HashMap<>();
         Asset asset = this.damTemplatingFunctions.getAsset(context);
-        if( asset != null) {
+        if (asset != null) {
             String src = asset.getLink();
             String alt = asset.getCaption();
             attributeMap.put("src", src);
             attributeMap.put("alt", alt);
         } else {
-            log.error("Could not get asset with itemKey " + context );
+            log.error("Could not get asset with itemKey '{}'", context);
         }
 
-        for (Map.Entry<String, Object> entry : options.hash.entrySet())
-        {
+        for (Map.Entry<String, Object> entry : options.hash.entrySet()) {
             if (entry.getValue() != null) {
                 attributeMap.put(entry.getKey(), entry.getValue().toString());
             }
         }
 
-        for (Map.Entry<String, String> entry : attributeMap.entrySet())
-        {
+        for (Map.Entry<String, String> entry : attributeMap.entrySet()) {
             if (entry.getValue() != null) {
-                attributes += String.format("%s=\"%s\" ", entry.getKey(), entry.getValue());
+                attributes.append(entry.getKey()).append('"').append(entry.getValue()).append('"');
             }
         }
 
-        return String.format("<img %s/>", attributes);
-
+        attributes.append("/>");
+        return attributes.toString();
     }
 }

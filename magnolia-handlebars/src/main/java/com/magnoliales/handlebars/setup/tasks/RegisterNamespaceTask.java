@@ -12,7 +12,7 @@ import javax.jcr.RepositoryException;
 
 public class RegisterNamespaceTask extends AbstractTask {
 
-    private final static Logger logger = LoggerFactory.getLogger(RegisterNamespaceTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterNamespaceTask.class);
 
     private final String workspace;
     private final String prefix;

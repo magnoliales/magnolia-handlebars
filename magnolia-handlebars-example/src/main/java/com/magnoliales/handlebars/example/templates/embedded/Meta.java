@@ -13,7 +13,7 @@ public final class Meta {
     @Field(definition = TextFieldDefinition.class)
     private String image;
 
-    public final static class Facebook {
+    public static final class Facebook {
 
         @Field(definition = TextFieldDefinition.class)
         private String title;

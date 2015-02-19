@@ -1,11 +1,10 @@
 package com.magnoliales.handlebars.ui.fields.template.field;
 
-import com.magnoliales.handlebars.ui.fields.template.PageClass;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
+import com.magnoliales.handlebars.ui.fields.template.PageClass;
 import com.vaadin.data.Item;
 import info.magnolia.ui.form.field.definition.FieldDefinition;
 import info.magnolia.ui.form.field.factory.AbstractFieldFactory;
-import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 
 import javax.inject.Inject;
 

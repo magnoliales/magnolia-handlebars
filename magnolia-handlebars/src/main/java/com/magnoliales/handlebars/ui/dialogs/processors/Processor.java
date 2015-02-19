@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,9 +19,14 @@ import java.util.Map;
 
 public abstract class Processor {
 
-    private final static Logger logger = LoggerFactory.getLogger(Processor.class);
+    private static final Logger logger = LoggerFactory.getLogger(Processor.class);
 
-    protected Class<?> type;
+    private Class<?> type;
+
+    protected Processor(Class<?> type) {
+        validate(type);
+        this.type = type;
+    }
 
     public static Processor getInstance(Class<?> type) {
         Processable annotation = getProcessableAnnotation(type);
@@ -29,7 +35,7 @@ public abstract class Processor {
         }
         try {
             return annotation.processor().getDeclaredConstructor(Class.class).newInstance(type);
-        } catch (Exception e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Cannot instantiate processor", e);
         }
     }
@@ -47,11 +53,6 @@ public abstract class Processor {
             formDefinition.addTab(tabDefinition);
         }
         return formDefinition;
-    }
-
-    protected Processor(Class<?> type) {
-        validate(type);
-        this.type = type;
     }
 
     protected void processFields(Class<?> type, String scope, Map<String, List<FieldDefinition>> fields,
