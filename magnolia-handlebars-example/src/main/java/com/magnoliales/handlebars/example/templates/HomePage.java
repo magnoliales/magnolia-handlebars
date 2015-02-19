@@ -4,7 +4,10 @@ import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
+
+import javax.inject.Inject;
 
 @Page(templateScript = "home-page", singleton = true)
 public class HomePage {

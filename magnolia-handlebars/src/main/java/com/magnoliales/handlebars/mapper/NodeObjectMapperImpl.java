@@ -28,6 +28,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             String objectClassName = objectNode.getProperty(CLASS_PROPERTY).getString();
             Class<?> objectClass = Class.forName(objectClassName);
             Object object = injector.getInstance(objectClass);
+            injector.injectMembers(object);
             return map(objectClass, object, objectNode);
         } catch (ClassNotFoundException | RepositoryException | InstantiationException | IllegalAccessException e) {
             logger.error("Cannot map node {}", objectNode);
