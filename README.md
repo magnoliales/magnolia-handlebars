@@ -1,6 +1,24 @@
 magnolia-handlebars
 ===================
 
+### Current Versions
+
+ - magnolia-handlebars-parent - `1.0.0`
+
+
+ - magnolia-handlebars - `1.0.0`
+ - magnolia-handlebars-example - `1.0.0`
+ - magnolia-handlebars-helpers - `1.0.0`
+ 
+### Changelog
+
+ - Created version 1.0.0
+ - Added a buildNumber.properties for later use in development builds
+ 
+
+Installation
+------------
+
 Handlebars rendering for Magnolia CMS
 
 For the compilation add the following repositories to your a profile in `settings.xml`
