@@ -1,8 +1,11 @@
 package com.magnoliales.handlebars.mapper;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.jcr.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -12,12 +15,19 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     public static final Logger logger = LoggerFactory.getLogger(NodeObjectMapperImpl.class);
 
+    private final Injector injector;
+
+    @Inject
+    public NodeObjectMapperImpl(Injector injector) {
+        this.injector = injector;
+    }
+
     @Override
     public Object map(Node objectNode) {
         try {
             String objectClassName = objectNode.getProperty(CLASS_PROPERTY).getString();
             Class<?> objectClass = Class.forName(objectClassName);
-            Object object = objectClass.newInstance();
+            Object object = injector.getInstance(objectClass);
             return map(objectClass, object, objectNode);
         } catch (ClassNotFoundException | RepositoryException | InstantiationException | IllegalAccessException e) {
             logger.error("Cannot map node {}", objectNode);

@@ -90,7 +90,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
             logger.info("Rendering node '{}' with template '{}'", node.getPath(), templateScript);
             combinedContext = Context.newBuilder(mapper.map(node))
                     .combine(CURRENT_NODE_PROPERTY, node)
-                    .resolver(JavaBeanValueResolver.INSTANCE, FieldValueResolver.INSTANCE, MapValueResolver.INSTANCE)
+                    .resolver(JavaBeanValueResolver.INSTANCE)
                     .build();
             Template template = handlebars.compile(templateScript);
             template.apply(combinedContext, renderingContext.getAppendable());
