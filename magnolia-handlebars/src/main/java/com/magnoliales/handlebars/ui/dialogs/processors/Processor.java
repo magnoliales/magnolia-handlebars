@@ -7,15 +7,18 @@ import info.magnolia.ui.form.definition.ConfiguredFormDefinition;
 import info.magnolia.ui.form.definition.ConfiguredTabDefinition;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
 import info.magnolia.ui.form.field.definition.FieldDefinition;
+import net.minidev.json.JSONValue;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
+import org.apache.commons.beanutils.BeanUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Processor {
 
@@ -87,10 +90,12 @@ public abstract class Processor {
             throw new RuntimeException("Cannot instantiate field definition for " + fieldName, e);
         }
         definition.setName(fieldNamespace + fieldName);
+        if (definition.getTransformerClass() != null) {
+            throw new RuntimeException("The field " + fieldName + " of class "
+                    + type.getName() + " cannot have a transformer");
+        }
         definition.setTransformerClass(HierarchicalValueTransformer.class);
-
-        // @todo add more advanced configuration here
-
+        JSONValue.parse(field.settings(), definition);
         return definition;
     }
 

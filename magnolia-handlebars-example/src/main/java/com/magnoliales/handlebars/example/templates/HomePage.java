@@ -4,6 +4,7 @@ import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
+import info.magnolia.ui.form.field.definition.LinkFieldDefinition;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
 
 @Page(templateScript = "home-page", singleton = true)
@@ -15,7 +16,7 @@ public class HomePage {
     @Field(definition = TextFieldDefinition.class)
     private String addressee;
 
-    // @Field(definition = LinkFieldDefinition.class, settings = "{ appName : 'assets', targetWorkspace : 'dam' }")
+    @Field(definition = LinkFieldDefinition.class, settings = "{ appName : assets, targetWorkspace : dam }")
     private String heroImageLink;
 
     private Meta meta;

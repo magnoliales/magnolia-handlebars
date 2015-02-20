@@ -46,8 +46,28 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                     Property property = objectNode.getProperty(fieldName);
                     switch (property.getType()) {
                         case PropertyType.STRING:
+                        case PropertyType.URI:
+                        case PropertyType.NAME:
+                        case PropertyType.BINARY:
+                        case PropertyType.UNDEFINED:
+                        case PropertyType.PATH:
                             field.set(object, property.getString());
                             break;
+                        case PropertyType.BOOLEAN:
+                            field.set(object, property.getBoolean());
+                            break;
+                        case PropertyType.DOUBLE:
+                            field.set(object, property.getDouble());
+                            break;
+                        case PropertyType.LONG:
+                            field.set(object, property.getLong());
+                            break;
+                        case PropertyType.DATE:
+                            field.set(object, property.getDate());
+                            break;
+                        case PropertyType.DECIMAL:
+                        case PropertyType.REFERENCE:
+                        case PropertyType.WEAKREFERENCE:
                         default:
                             throw new AssertionError("Not implemented");
                     }
