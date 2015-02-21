@@ -9,7 +9,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.IllegalFormatException;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -20,7 +19,7 @@ public @interface Field {
     boolean inherits() default false;
     Class<? extends Reader> reader() default Reader.class;
 
-    public static interface Reader {
-        Object read(Property property) throws IllegalFormatException, RepositoryException;
+    public interface Reader {
+        Object read(Property property) throws RepositoryException;
     }
 }
