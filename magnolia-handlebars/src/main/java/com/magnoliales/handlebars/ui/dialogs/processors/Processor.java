@@ -1,8 +1,10 @@
 package com.magnoliales.handlebars.ui.dialogs.processors;
 
+import com.google.inject.Injector;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Processable;
 import com.magnoliales.handlebars.ui.dialogs.transformers.HierarchicalValueTransformer;
+import com.magnoliales.handlebars.utils.FieldDefinitionFactory;
 import info.magnolia.ui.form.definition.ConfiguredFormDefinition;
 import info.magnolia.ui.form.definition.ConfiguredTabDefinition;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
@@ -23,19 +25,23 @@ public abstract class Processor {
     private static final Logger logger = LoggerFactory.getLogger(Processor.class);
 
     private Class<?> type;
+    private Injector injector;
 
-    protected Processor(Class<?> type) {
+    protected Processor(Class<?> type, Injector injector) {
         validate(type);
         this.type = type;
+        this.injector = injector;
     }
 
-    public static Processor getInstance(Class<?> type) {
+    public static Processor getInstance(Class<?> type, Injector injector) {
         Processable annotation = getProcessableAnnotation(type);
         if (annotation == null) {
             return null;
         }
         try {
-            return annotation.processor().getDeclaredConstructor(Class.class).newInstance(type);
+            return annotation.processor()
+                    .getDeclaredConstructor(Class.class, Injector.class)
+                    .newInstance(type, injector);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Cannot instantiate processor", e);
         }
@@ -81,12 +87,22 @@ public abstract class Processor {
     protected FieldDefinition getFieldDefinition(Class<?> type, String fieldName, String fieldNamespace) {
         Field field = getFieldAnnotation(type, fieldName);
         ConfiguredFieldDefinition definition;
-        try {
-            definition = field.definition().newInstance();
 
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Cannot instantiate field definition for " + fieldName, e);
+        Class<? extends ConfiguredFieldDefinition> definitionClass = field.definition();
+        Class<? extends FieldDefinitionFactory> factoryClass = field.factory();
+        if (definitionClass != ConfiguredFieldDefinition.class
+                && factoryClass != FieldDefinitionFactory.class) {
+            throw new RuntimeException("Please use either 'factory' or 'definition' for field " + fieldName);
         }
+        if (factoryClass != FieldDefinitionFactory.class) {
+            FieldDefinitionFactory factory = injector.getInstance(factoryClass);
+            injector.injectMembers(factory);
+            definition = factory.getInstance();
+        } else {
+            definition = injector.getInstance(definitionClass);
+            injector.injectMembers(definition);
+        }
+
         definition.setName(fieldNamespace + fieldName);
         if (definition.getTransformerClass() != null) {
             throw new RuntimeException("The field " + fieldName + " of class "

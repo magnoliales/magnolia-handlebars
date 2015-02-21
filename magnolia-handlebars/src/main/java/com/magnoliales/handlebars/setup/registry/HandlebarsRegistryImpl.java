@@ -98,26 +98,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 continue;
             }
             Map<String, AreaDefinition> areas = new HashMap<>();
-            for (Field pageField : pageClass.getDeclaredFields()) {
-                if (pageField.getType().isAnnotationPresent(Area.class)) {
-                    List<Class<?>> components = new ArrayList<>();
-                    for (Field areaField : pageField.getType().getDeclaredFields()) {
-                        if (areaField.getType().isArray()) {
-                            Class<?> componentClass = areaField.getType().getComponentType();
-                            if (componentClass.isAnnotationPresent(Component.class)) {
-                                components.add(componentClass);
-                                HandlebarsComponentDefinition componentDefinition = new HandlebarsComponentDefinition(componentClass, translator);
-                                templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
-                                processedDefinitions.put(componentClass, componentDefinition);
-                            }
-                        }
-                    }
-                    HandlebarsAreaDefinition areaDefinition = new HandlebarsAreaDefinition(pageField.getType(), translator, components);
-                    HandlebarsTemplateDefinitionProvider areaDefinitionProvider = new HandlebarsTemplateDefinitionProvider(areaDefinition);
-                    templateDefinitionRegistry.register(areaDefinitionProvider);
-                    areas.put(pageField.getName(), areaDefinition);
-                }
-            }
+            discoverAreas(pageClass, areas, processedDefinitions);
             HandlebarsPageDefinition pageDefinition;
             if (pageSuperclass != null) {
                 HandlebarsPageDefinition parent = (HandlebarsPageDefinition) processedDefinitions.get(pageSuperclass);
@@ -135,6 +116,31 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
         }
         unprocessedClasses.removeAll(processedDefinitions.keySet());
         processDefinitions(unprocessedClasses, processedDefinitions);
+    }
+
+    private void discoverAreas(Class<?> currentContainerClass,
+                               Map<String, AreaDefinition> areas,
+                               Map<Class<?>, TemplateDefinition> processedDefinitions) {
+        for (Field pageField : currentContainerClass.getDeclaredFields()) {
+            if (pageField.getType().isAnnotationPresent(Area.class)) {
+                List<Class<?>> components = new ArrayList<>();
+                for (Field areaField : pageField.getType().getDeclaredFields()) {
+                    if (areaField.getType().isArray()) {
+                        Class<?> componentClass = areaField.getType().getComponentType();
+                        if (componentClass.isAnnotationPresent(Component.class)) {
+                            components.add(componentClass);
+                            HandlebarsComponentDefinition componentDefinition = new HandlebarsComponentDefinition(componentClass, translator);
+                            templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
+                            processedDefinitions.put(componentClass, componentDefinition);
+                        }
+                    }
+                }
+                HandlebarsAreaDefinition areaDefinition = new HandlebarsAreaDefinition(pageField.getType(), translator, components);
+                HandlebarsTemplateDefinitionProvider areaDefinitionProvider = new HandlebarsTemplateDefinitionProvider(areaDefinition);
+                templateDefinitionRegistry.register(areaDefinitionProvider);
+                areas.put(pageField.getName(), areaDefinition);
+            }
+        }
     }
 
     private Class<?> getPageSuperclass(Class<?> pageClass) {

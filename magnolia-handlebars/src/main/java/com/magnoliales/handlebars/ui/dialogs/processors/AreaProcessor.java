@@ -1,11 +1,13 @@
 package com.magnoliales.handlebars.ui.dialogs.processors;
 
+import com.google.inject.Injector;
+
 import java.lang.reflect.Modifier;
 
 public class AreaProcessor extends Processor {
 
-    protected AreaProcessor(Class<?> type) {
-        super(type);
+    protected AreaProcessor(Class<?> type, Injector injector) {
+        super(type, injector);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.magnoliales.handlebars.ui.dialogs;
 
+import com.google.inject.Injector;
 import com.magnoliales.handlebars.ui.dialogs.processors.Processor;
 import info.magnolia.ui.admincentral.dialog.action.CancelDialogActionDefinition;
 import info.magnolia.ui.admincentral.dialog.action.SaveDialogActionDefinition;
@@ -9,12 +10,20 @@ import info.magnolia.ui.dialog.registry.DialogDefinitionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.util.*;
 
 public class AnnotatedDialogDefinitionFactoryImpl implements AnnotatedDialogDefinitionFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(AnnotatedDialogDefinitionProvider.class);
+
+    private final Injector injector;
+
+    @Inject
+    public AnnotatedDialogDefinitionFactoryImpl(Injector injector) {
+        this.injector = injector;
+    }
 
     @Override
     public List<DialogDefinitionProvider> discoverDialogProviders(Class<?> type) {
@@ -56,9 +65,9 @@ public class AnnotatedDialogDefinitionFactoryImpl implements AnnotatedDialogDefi
 
     private Map<Class<?>, Processor> getProcessors(Class<?> type, Set<Class<?>> processedTypes) {
         Map<Class<?>, Processor> processors = new HashMap<>();
-        Processor processor = Processor.getInstance(type);
+        Processor processor = Processor.getInstance(type, injector);
         if (processor != null) {
-            processors.put(type, Processor.getInstance(type));
+            processors.put(type, processor);
         }
         for (Field field : type.getDeclaredFields()) {
             if (field.getType().isPrimitive()) {

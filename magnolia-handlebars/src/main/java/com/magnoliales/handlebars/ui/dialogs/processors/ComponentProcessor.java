@@ -1,11 +1,13 @@
 package com.magnoliales.handlebars.ui.dialogs.processors;
 
+import com.google.inject.Injector;
+
 import java.lang.reflect.Modifier;
 
 public class ComponentProcessor extends Processor {
 
-    protected ComponentProcessor(Class<?> type) {
-        super(type);
+    protected ComponentProcessor(Class<?> type, Injector injector) {
+        super(type, injector);
     }
 
     @Override

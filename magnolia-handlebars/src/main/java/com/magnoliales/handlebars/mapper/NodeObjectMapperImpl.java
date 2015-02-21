@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.mapper;
 
 import com.google.inject.Injector;
+import com.magnoliales.handlebars.annotations.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,7 @@ import javax.inject.Inject;
 import javax.jcr.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 
 public class NodeObjectMapperImpl implements NodeObjectMapper {
@@ -44,32 +46,43 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                 String fieldName = field.getName();
                 if (objectNode.hasProperty(fieldName)) {
                     Property property = objectNode.getProperty(fieldName);
-                    switch (property.getType()) {
-                        case PropertyType.STRING:
-                        case PropertyType.URI:
-                        case PropertyType.NAME:
-                        case PropertyType.BINARY:
-                        case PropertyType.UNDEFINED:
-                        case PropertyType.PATH:
-                            field.set(object, property.getString());
-                            break;
-                        case PropertyType.BOOLEAN:
-                            field.set(object, property.getBoolean());
-                            break;
-                        case PropertyType.DOUBLE:
-                            field.set(object, property.getDouble());
-                            break;
-                        case PropertyType.LONG:
-                            field.set(object, property.getLong());
-                            break;
-                        case PropertyType.DATE:
-                            field.set(object, property.getDate());
-                            break;
-                        case PropertyType.DECIMAL:
-                        case PropertyType.REFERENCE:
-                        case PropertyType.WEAKREFERENCE:
-                        default:
-                            throw new AssertionError("Not implemented");
+                    Class<? extends Field.Reader> readerClass = field.getAnnotation(Field.class).reader();
+                    if (readerClass == Field.Reader.class) {
+                        switch (property.getType()) {
+                            case PropertyType.STRING:
+                            case PropertyType.URI:
+                            case PropertyType.NAME:
+                            case PropertyType.BINARY:
+                            case PropertyType.UNDEFINED:
+                            case PropertyType.PATH:
+                                field.set(object, property.getString());
+                                break;
+                            case PropertyType.BOOLEAN:
+                                field.set(object, property.getBoolean());
+                                break;
+                            case PropertyType.DOUBLE:
+                                field.set(object, property.getDouble());
+                                break;
+                            case PropertyType.LONG:
+                                field.set(object, property.getLong());
+                                break;
+                            case PropertyType.DATE:
+                                field.set(object, property.getDate());
+                                break;
+                            case PropertyType.DECIMAL:
+                            case PropertyType.REFERENCE:
+                            case PropertyType.WEAKREFERENCE:
+                            default:
+                                throw new AssertionError("Not implemented");
+                        }
+                    } else {
+                        Field.Reader reader = injector.getInstance(readerClass);
+                        injector.injectMembers(reader);
+                        try {
+                            field.set(object, reader.read(property));
+                        } catch (RepositoryException | IllegalFormatException e) {
+                            logger.error("Cannot set field {}, {}", fieldName, e);
+                        }
                     }
                 } else if (objectNode.hasNode(fieldName)) {
                     Class<?> propertyClass = field.getType();
