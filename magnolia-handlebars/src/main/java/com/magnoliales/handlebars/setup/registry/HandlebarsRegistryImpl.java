@@ -44,6 +44,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     private TemplateDefinitionRegistry templateDefinitionRegistry;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
     private SimpleTranslator translator;
+    private final Map<String, Set<String>> mixinTypes = new HashMap<>();
 
     @Inject
     public HandlebarsRegistryImpl(AnnotatedDialogDefinitionFactory annotatedDialogDefinitionFactory,

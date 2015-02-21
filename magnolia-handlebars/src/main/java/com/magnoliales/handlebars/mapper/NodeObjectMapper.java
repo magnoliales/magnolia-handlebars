@@ -15,6 +15,7 @@ public interface NodeObjectMapper {
 
     String CLASS_PROPERTY = "mgnl:template";
     String PARENT_PROPERTY = "handlebars:parent";
+    String MIXIN_PROPERTY = "handlebars:mixin";
 
     Object map(Node node);
 }

@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.annotations;
 
 import com.magnoliales.handlebars.utils.FieldDefinitionFactory;
+import com.magnoliales.handlebars.utils.PropertyReader;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
 
 import javax.jcr.Property;
@@ -17,9 +18,5 @@ public @interface Field {
     Class<? extends FieldDefinitionFactory> factory() default FieldDefinitionFactory.class;
     String settings() default "";
     boolean inherits() default false;
-    Class<? extends Reader> reader() default Reader.class;
-
-    public interface Reader {
-        Object read(Property property) throws RepositoryException;
-    }
+    Class<? extends PropertyReader> reader() default PropertyReader.class;
 }
