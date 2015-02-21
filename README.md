@@ -45,4 +45,5 @@ To Do
 
 - Put all interfaces and super classes into mixin set of all nodes created by magnolia
 - Add automatic mapping to @Collection fetched my mixin type only (need to fix it).
-  Add scope, order, offset and limit parameters
+- Add scope, order, offset and limit parameters
+- Add query parameter to @Collection to invalidate all parameters

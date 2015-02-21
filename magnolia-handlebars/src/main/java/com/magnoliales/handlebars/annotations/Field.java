@@ -4,8 +4,6 @@ import com.magnoliales.handlebars.utils.FieldDefinitionFactory;
 import com.magnoliales.handlebars.utils.PropertyReader;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
 
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

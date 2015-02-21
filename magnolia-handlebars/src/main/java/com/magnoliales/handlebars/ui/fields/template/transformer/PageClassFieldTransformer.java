@@ -9,11 +9,6 @@ import info.magnolia.ui.form.field.transformer.basic.BasicTransformer;
 import info.magnolia.ui.vaadin.integration.jcr.DefaultProperty;
 
 import javax.inject.Inject;
-import javax.jcr.query.qom.PropertyValue;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 public class PageClassFieldTransformer extends BasicTransformer<PageClass> {
 

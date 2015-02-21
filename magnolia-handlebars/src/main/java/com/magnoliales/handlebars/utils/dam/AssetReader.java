@@ -1,6 +1,5 @@
 package com.magnoliales.handlebars.utils.dam;
 
-import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.utils.PropertyReader;
 import info.magnolia.dam.api.Asset;
 import info.magnolia.dam.templating.functions.DamTemplatingFunctions;
