@@ -146,7 +146,6 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         Properties properties = new Properties();
         properties.setProperty("javax.el.methodInvocations", "true");
 
-
         ExpressionFactory factory = new ExpressionFactoryImpl(properties);
         SimpleContext context = new SimpleContext();
         context.setVariable("node", factory.createValueExpression(objectNode, objectNode.getClass()));
