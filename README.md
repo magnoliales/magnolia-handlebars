@@ -46,4 +46,9 @@ To Do
 - Put all interfaces and super classes into mixin set of all nodes created by magnolia
 - Add automatic mapping to @Collection fetched my mixin type only (need to fix it).
 - Add scope, order, offset and limit parameters
-- Add query parameter to @Collection to invalidate all parameters
+- Add query parameter to @Collection to use custom queries,
+  use some kind of expression language
+- Test references and reference resolution
+- Add parent resolution, and maybe xpath
+- Add simple availability for hierarchies
+- Add @Value mapper to map things from node

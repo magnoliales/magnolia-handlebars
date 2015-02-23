@@ -33,6 +33,7 @@
         <version.reflections>0.9.9</version.reflections>
         <version.h2>1.4.184</version.h2>
         <version.json-smart>2.1.1</version.json-smart>
+        <version.juel>2.2.7</version.juel>
     </properties>
 
     <build>
@@ -241,6 +242,16 @@
                 <groupId>net.minidev</groupId>
                 <artifactId>json-smart</artifactId>
                 <version>${version.json-smart}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-api</artifactId>
+                <version>${version.juel}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-impl</artifactId>
+                <version>${version.juel}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

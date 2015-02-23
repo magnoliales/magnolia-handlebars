@@ -2,17 +2,22 @@ package com.magnoliales.handlebars.mapper;
 
 import com.google.inject.Injector;
 import com.magnoliales.handlebars.annotations.Field;
+import com.magnoliales.handlebars.annotations.Query;
+import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.utils.PropertyReader;
+import de.odysseus.el.ExpressionFactoryImpl;
+import de.odysseus.el.util.SimpleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.el.ExpressionFactory;
+import javax.el.ValueExpression;
 import javax.inject.Inject;
 import javax.jcr.*;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NodeObjectMapperImpl implements NodeObjectMapper {
 
@@ -50,6 +55,8 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             return;
         }
 
+        objectCache.put(cacheKey, object);
+
         while (objectClass != Object.class) {
             for (java.lang.reflect.Field field : objectClass.getDeclaredFields()) {
                 field.setAccessible(true);
@@ -58,6 +65,10 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                     mapProperty(field, object, objectNode.getProperty(fieldName), objectCache);
                 } else if (objectNode.hasNode(fieldName)) {
                     mapNode(field, object, objectNode.getNode(fieldName), objectCache);
+                } else if (field.isAnnotationPresent(Query.class)) {
+                    mapQuery(field, object, objectNode, objectCache);
+                } else if (field.isAnnotationPresent(Value.class)) {
+                    mapValue(field, object, objectNode);
                 } else if (field.getType().isArray()) {
                     mapChildren(field, object, objectNode, objectCache);
                 }
@@ -65,8 +76,6 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             objectClass = objectClass.getSuperclass();
             objectNode = getParentNode(objectNode);
         }
-
-        objectCache.put(cacheKey, object);
     }
 
     private void mapProperty(java.lang.reflect.Field field,
@@ -128,6 +137,57 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         field.set(object, subObject);
     }
 
+    private void mapValue(java.lang.reflect.Field field,
+                          Object object,
+                          Node objectNode)
+            throws IllegalAccessException {
+
+        String expression = field.getAnnotation(Value.class).value();
+        Properties properties = new Properties();
+        properties.setProperty("javax.el.methodInvocations", "true");
+
+
+        ExpressionFactory factory = new ExpressionFactoryImpl(properties);
+        SimpleContext context = new SimpleContext();
+        context.setVariable("node", factory.createValueExpression(objectNode, objectNode.getClass()));
+        context.setVariable("this", factory.createValueExpression(object, object.getClass()));
+
+        ValueExpression valueExpression =
+                factory.createValueExpression(context, expression, String.class);
+        field.set(object, valueExpression.getValue(context));
+    }
+
+    private void mapQuery(java.lang.reflect.Field field,
+                          Object object,
+                          Node objectNode,
+                          Map<String, Object> objectCache)
+            throws RepositoryException, ClassNotFoundException, IllegalAccessException {
+
+        if (!field.getType().isArray()) {
+            throw new RepositoryException("Non array type is annotated with query");
+        }
+        Class<?> itemSuperclass = field.getType().getComponentType();
+
+        String expression = field.getAnnotation(Query.class).value();
+        Properties properties = new Properties();
+        properties.setProperty("javax.el.methodInvocations", "true");
+
+        ExpressionFactory factory = new ExpressionFactoryImpl(properties);
+        SimpleContext context = new SimpleContext();
+        context.setVariable("node", factory.createValueExpression(objectNode, objectNode.getClass()));
+        context.setVariable("this", factory.createValueExpression(object, object.getClass()));
+
+        ValueExpression valueExpression =
+                factory.createValueExpression(context, expression, String.class);
+        String interpolatedExpression = (String) valueExpression.getValue(context);
+
+        Session session = objectNode.getSession();
+        QueryManager queryManager = session.getWorkspace().getQueryManager();
+        QueryResult result = queryManager
+                .createQuery(interpolatedExpression, javax.jcr.query.Query.JCR_SQL2).execute();
+        field.set(object, readArray(itemSuperclass, result.getNodes(), objectCache));
+    }
+
     private void mapChildren(java.lang.reflect.Field field,
                              Object object,
                              Node objectNode,
@@ -135,27 +195,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
         Class<?> itemSuperclass = field.getType().getComponentType();
-        List<Object> items = new ArrayList<>();
-        NodeIterator iterator = objectNode.getNodes();
-        while (iterator.hasNext()) {
-            Node itemNode = iterator.nextNode();
-            String itemClassName = itemNode.getProperty(CLASS_PROPERTY).getString();
-            Class<?> itemClass = Class.forName(itemClassName);
-            String cacheKey = itemNode.getIdentifier();
-            if (itemSuperclass.isAssignableFrom(itemClass)) {
-                Object item;
-                if (objectCache.containsKey(cacheKey)) {
-                    item = objectCache.get(cacheKey);
-                } else {
-                    item = createBareObject(itemClass);
-                    map(itemClass, item, itemNode, objectCache);
-                }
-                items.add(item);
-            }
-        }
-        if (items.size() > 0) {
-            field.set(object, toArray(items, itemSuperclass));
-        }
+        field.set(object, readArray(itemSuperclass, objectNode.getNodes(), objectCache));
     }
 
     private Object createBareObject(Class<?> objectClass)
@@ -173,6 +213,28 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         } else {
             return node;
         }
+    }
+
+    private <T> T[] readArray(Class<T> type, NodeIterator iterator, Map<String, Object> objectCache)
+            throws RepositoryException, ClassNotFoundException, IllegalAccessException {
+        List<Object> items = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Node itemNode = iterator.nextNode();
+            String itemClassName = itemNode.getProperty(CLASS_PROPERTY).getString();
+            Class<?> itemClass = Class.forName(itemClassName);
+            String cacheKey = itemNode.getIdentifier();
+            if (type.isAssignableFrom(itemClass)) {
+                Object item;
+                if (objectCache.containsKey(cacheKey)) {
+                    item = objectCache.get(cacheKey);
+                } else {
+                    item = createBareObject(itemClass);
+                    map(itemClass, item, itemNode, objectCache);
+                }
+                items.add(item);
+            }
+        }
+        return toArray(items, type);
     }
 
     private <T> T[] toArray(List<?> list, Class<T> type) {

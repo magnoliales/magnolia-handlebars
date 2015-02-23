@@ -10,6 +10,14 @@
             main body
         {{/block}}
         {{meta.facebook.title}}
+        <ul>
+            {{#each children}}
+                <li>
+                    <a href="{{path}}">{{title}}</a>
+                </li>
+            {{/each}}
+        </ul>
+        <hr>
         {{heroImage}}
         {{{area name="awards"}}}
     </body>

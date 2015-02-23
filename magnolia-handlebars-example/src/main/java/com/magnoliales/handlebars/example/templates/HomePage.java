@@ -2,6 +2,7 @@ package com.magnoliales.handlebars.example.templates;
 
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
+import com.magnoliales.handlebars.annotations.Query;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
 import com.magnoliales.handlebars.utils.dam.AssetReader;
@@ -25,6 +26,9 @@ public class HomePage {
 
     private Awards awards;
 
+    @Query("SELECT * from [mgnl:page] AS page WHERE ISDESCENDANTNODE(page, [${node.path}])")
+    private DetailsPage[] children;
+
     public String getTitle() {
         return title;
     }
@@ -43,5 +47,9 @@ public class HomePage {
 
     public Asset getHeroImage() {
         return heroImage;
+    }
+
+    public DetailsPage[] getChildren() {
+        return children;
     }
 }
