@@ -6,7 +6,7 @@ import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
 
-@Page(templateScript = "details-page")
+@Page(templateScript = "details-page", parents = { Page.Root.class, HomePage.class })
 public class DetailsPage extends AbstractDetailsPage {
 
     @Value("${node.path}")

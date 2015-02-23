@@ -11,7 +11,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Processable(processor = PageProcessor.class)
 public @interface Page {
-
     String templateScript();
     boolean singleton() default false;
+    Class<?>[] parents() default { Root.class };
+
+    public interface Root {}
 }

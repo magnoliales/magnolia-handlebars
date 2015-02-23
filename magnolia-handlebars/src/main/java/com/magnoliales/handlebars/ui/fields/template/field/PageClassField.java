@@ -1,5 +1,6 @@
 package com.magnoliales.handlebars.ui.fields.template.field;
 
+import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.rendering.definition.HandlebarsPageDefinition;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import com.magnoliales.handlebars.ui.fields.template.PageClass;
@@ -12,6 +13,7 @@ import info.magnolia.rendering.template.TemplateDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Node;
 import java.util.Map;
 
 public class PageClassField extends CustomField<PageClass> {
@@ -23,7 +25,9 @@ public class PageClassField extends CustomField<PageClass> {
     private final ComboBox pageClassField;
     private final ComboBox parentNodeField;
 
-    public PageClassField(final HandlebarsRegistry handlebarsRegistry) {
+    public PageClassField(final HandlebarsRegistry handlebarsRegistry, 
+                          final Node parentNode,
+                          final TemplateDefinition parentTemplate) {
 
         component = new VerticalLayout();
         component.setSizeFull();
@@ -33,10 +37,14 @@ public class PageClassField extends CustomField<PageClass> {
         pageClassField.setImmediate(true);
         pageClassField.setWidth(100, Unit.PERCENTAGE);
         pageClassField.setImmediate(true);
+
         for (TemplateDefinition templateDefinition : handlebarsRegistry.getTemplateDefinitions()) {
             if (templateDefinition instanceof HandlebarsPageDefinition) {
                 HandlebarsPageDefinition pageDefinition = (HandlebarsPageDefinition) templateDefinition;
-                if (!pageDefinition.singleton() || !handlebarsRegistry.pageWithTemplateExists(pageDefinition.getId())) {
+                if (pageDefinition.singleton() && handlebarsRegistry.pageWithTemplateExists(pageDefinition.getId())) {
+                    continue;
+                }
+                if (pageDefinition.getTemplateAvailability().isAvailable(parentNode, parentTemplate)) {
                     pageClassField.addItem(pageDefinition.getId());
                     pageClassField.setItemCaption(pageDefinition.getId(), pageDefinition.getName());
                 }
