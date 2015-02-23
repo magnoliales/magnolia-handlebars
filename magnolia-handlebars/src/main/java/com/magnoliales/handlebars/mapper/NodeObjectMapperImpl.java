@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.mapper;
 
 import com.google.inject.Injector;
+import com.magnoliales.handlebars.annotations.Collection;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Query;
 import com.magnoliales.handlebars.annotations.Value;
@@ -69,7 +70,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                     mapQuery(field, object, objectNode, objectCache);
                 } else if (field.isAnnotationPresent(Value.class)) {
                     mapValue(field, object, objectNode);
-                } else if (field.getType().isArray()) {
+                } else if (field.isAnnotationPresent(Collection.class)) {
                     mapChildren(field, object, objectNode, objectCache);
                 }
             }
@@ -193,6 +194,9 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                              Map<String, Object> objectCache)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
+        if (!field.getType().isArray()) {
+            throw new RepositoryException("Non array type is annotated with collection");
+        }
         Class<?> itemSuperclass = field.getType().getComponentType();
         field.set(object, readArray(itemSuperclass, objectNode.getNodes(), objectCache));
     }
@@ -200,9 +204,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
     private Object createBareObject(Class<?> objectClass)
             throws RepositoryException, ClassNotFoundException {
 
-        Object object = injector.getInstance(objectClass);
-        injector.injectMembers(object);
-        return object;
+        return injector.getInstance(objectClass);
     }
 
     private Node getParentNode(Node node) throws RepositoryException {

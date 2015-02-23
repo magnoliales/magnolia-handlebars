@@ -3,6 +3,7 @@ package com.magnoliales.handlebars.example.templates;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.annotations.Query;
+import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
 import com.magnoliales.handlebars.utils.dam.AssetReader;
@@ -12,6 +13,9 @@ import info.magnolia.ui.form.field.definition.TextFieldDefinition;
 
 @Page(templateScript = "home-page", singleton = true)
 public class HomePage {
+
+    @Value("${node.path}")
+    private String path;
 
     @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2 }")
     private String title;

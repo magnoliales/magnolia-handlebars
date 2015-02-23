@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.example.templates.areas;
 
 import com.magnoliales.handlebars.annotations.Area;
+import com.magnoliales.handlebars.annotations.Collection;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.example.templates.components.Award;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
@@ -11,6 +12,7 @@ public final class Awards {
     @Field(definition = TextFieldDefinition.class)
     private String title;
 
+    @Collection
     private Award[] items;
 
     public String getTitle() {

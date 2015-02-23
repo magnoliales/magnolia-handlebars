@@ -1,5 +1,6 @@
 package com.magnoliales.handlebars.ui.dialogs.transformers;
 
+import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import info.magnolia.jcr.util.NodeTypes;
@@ -20,6 +21,7 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
 
     private final Item item;
     private final String propertyName;
+    private final Class<?> itemClass;
 
     public HierarchicalValueTransformer(Item relatedFormItem,
                                         ConfiguredFieldDefinition definition,
@@ -29,9 +31,12 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
         String[] path = definition.getName().split("\\.");
         this.propertyName = path[path.length - 1];
         try {
+            Property itemClassProperty = relatedFormItem.getItemProperty(NodeObjectMapper.CLASS_PROPERTY);
+            this.itemClass = Class.forName(itemClassProperty.toString());
             this.item = getItem((JcrNodeAdapter) relatedFormItem, path);
-        } catch (RepositoryException e) {
-            logger.error("Cannot descend to property {} from node {}", definition.getName(), relatedFormItem);
+        } catch (RepositoryException | ClassNotFoundException | NoSuchFieldException e) {
+            logger.error("Cannot initialize transformer for property {} of node {}",
+                    definition.getName(), relatedFormItem);
             throw new RuntimeException(e);
         }
     }
@@ -47,8 +52,10 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
         return property;
     }
 
-    private Item getItem(JcrNodeAdapter item, String[] path) throws RepositoryException {
+    private Item getItem(JcrNodeAdapter item, String[] path) throws RepositoryException, NoSuchFieldException {
+        Class<?> currentClass = itemClass;
         for (int i = 0; i < path.length - 1; i++) {
+            currentClass = currentClass.getDeclaredField(path[i]).getType();
             JcrNodeAdapter childItem = (JcrNodeAdapter) item.getChild(path[i]);
             if (childItem == null) {
                 Node node = item.getJcrItem();
@@ -60,6 +67,8 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
                     childItem = new JcrNodeAdapter(childNode);
                 } else {
                     childItem = new JcrNewNodeAdapter(item.getJcrItem(), NodeTypes.ContentNode.NAME, path[i]);
+                    DefaultProperty<String> property = new DefaultProperty<>(String.class, currentClass.getName());
+                    childItem.addItemProperty(NodeObjectMapper.CLASS_PROPERTY, property);
                 }
             }
             item.addChild(childItem);
