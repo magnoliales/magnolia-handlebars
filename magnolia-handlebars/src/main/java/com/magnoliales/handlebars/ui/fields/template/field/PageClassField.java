@@ -1,6 +1,5 @@
 package com.magnoliales.handlebars.ui.fields.template.field;
 
-import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.rendering.definition.HandlebarsPageDefinition;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import com.magnoliales.handlebars.ui.fields.template.PageClass;
@@ -25,7 +24,7 @@ public class PageClassField extends CustomField<PageClass> {
     private final ComboBox pageClassField;
     private final ComboBox parentNodeField;
 
-    public PageClassField(final HandlebarsRegistry handlebarsRegistry, 
+    public PageClassField(final HandlebarsRegistry handlebarsRegistry,
                           final Node parentNode,
                           final TemplateDefinition parentTemplate) {
 

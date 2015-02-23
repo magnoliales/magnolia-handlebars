@@ -1,7 +1,6 @@
 package com.magnoliales.handlebars.ui.fields.template.field;
 
 import com.magnoliales.handlebars.mapper.NodeObjectMapper;
-import com.magnoliales.handlebars.rendering.definition.HandlebarsPageDefinition;
 import com.magnoliales.handlebars.setup.registry.HandlebarsRegistry;
 import com.magnoliales.handlebars.ui.fields.template.PageClass;
 import com.vaadin.data.Item;

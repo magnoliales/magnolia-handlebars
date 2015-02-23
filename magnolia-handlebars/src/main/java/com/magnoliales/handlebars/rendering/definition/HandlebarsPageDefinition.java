@@ -5,7 +5,6 @@ import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.rendering.template.TemplateAvailability;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.configured.ConfiguredTemplateAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 import javax.jcr.Node;

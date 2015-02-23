@@ -15,5 +15,5 @@ public @interface Page {
     boolean singleton() default false;
     Class<?>[] parents() default { Root.class };
 
-    public interface Root {}
+    public interface Root { }
 }
