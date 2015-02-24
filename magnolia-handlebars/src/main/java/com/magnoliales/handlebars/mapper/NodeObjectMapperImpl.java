@@ -43,11 +43,16 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     @Override
     public Object map(Node objectNode) {
+        return map(objectNode, new HashMap<String, Object>());
+    }
+
+    @Override
+    public Object map(Node objectNode, Map<String, Object> objectCache) {
         try {
             String objectClassName = objectNode.getProperty(NodeObjectMapper.CLASS_PROPERTY).getString();
             Class<?> objectClass = Class.forName(objectClassName);
             Object object = createBareObject(objectClass);
-            map(objectClass, object, objectNode, new HashMap<String, Object>());
+            map(objectClass, object, objectNode, objectCache);
             return object;
         } catch (RepositoryException | ClassNotFoundException | IllegalAccessException e) {
             logger.error("Cannot map node {}", objectNode, e);
@@ -149,7 +154,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         } else {
             PropertyReader propertyReader = injector.getInstance(readerClass);
             injector.injectMembers(propertyReader);
-            field.set(object, propertyReader.read(property));
+            field.set(object, propertyReader.read(property, this, objectCache));
         }
     }
 

@@ -7,7 +7,9 @@ import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
 import com.magnoliales.handlebars.utils.dam.AssetReader;
-import com.magnoliales.handlebars.utils.dam.DamLinkFieldDefinitionFactory;
+import com.magnoliales.handlebars.utils.dam.AssetLinkFieldDefinitionFactory;
+import com.magnoliales.handlebars.utils.pages.PageLinkFieldDefinitionFactory;
+import com.magnoliales.handlebars.utils.pages.PageReader;
 import info.magnolia.dam.api.Asset;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
 
@@ -23,7 +25,7 @@ public class HomePage {
     @Field(definition = TextFieldDefinition.class)
     private String addressee;
 
-    @Field(factory = DamLinkFieldDefinitionFactory.class, reader = AssetReader.class)
+    @Field(factory = AssetLinkFieldDefinitionFactory.class, reader = AssetReader.class)
     private Asset heroImage;
 
     private Meta meta;
@@ -32,6 +34,9 @@ public class HomePage {
 
     @Query("SELECT * FROM [mgnl:page] AS page WHERE CONTAINS(page.*, '\"${parameters.query}\"~10')")
     private DetailsPage[] children;
+
+    @Field(factory = PageLinkFieldDefinitionFactory.class, reader = PageReader.class)
+    private Object page;
 
     public String getTitle() {
         return title;

@@ -4,7 +4,7 @@ import com.magnoliales.handlebars.utils.FieldDefinitionFactory;
 import info.magnolia.dam.app.assets.field.translator.AssetCompositeIdKeyTranslator;
 import info.magnolia.ui.form.field.definition.LinkFieldDefinition;
 
-public class DamLinkFieldDefinitionFactory implements FieldDefinitionFactory {
+public class AssetLinkFieldDefinitionFactory implements FieldDefinitionFactory {
 
     public LinkFieldDefinition getInstance() {
         LinkFieldDefinition definition = new LinkFieldDefinition();
