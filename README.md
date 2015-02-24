@@ -44,17 +44,27 @@ The expression language
 -----------------------
 
 The `@Query` and `@Value` annotations accept use JSR-245 (http://download.oracle.com/otndocs/jcp/jsp-2.1-fr-eval-spec-oth-JSpec/)
-as implemented by JUEL to interpolate values. At the moment the expressions `this` and `node` can be used.
+as implemented by JUEL to interpolate values. The following variables are defined:
+- `this` - current object
+- `node` - current node
+- `properties` - the magnolia settings
+- `parameters` - query parameters
+
+
+`@Collection` and `@Query` post filter the results, only accepting mapped classes of compatible type.
+For example the following annotation would result in collecting only the child nodes that
+are mapped either to `DetailsPage` or one of its subclasses
+
+```
+@Collection
+DetailPage[] details;
+```
+
 
 
 To Do
 -----
 
-- Make sure all nodes created by handlebars have mgnl:template set up for mapping. Prio 1
-
 - Put all interfaces and super classes into mixin set of all nodes created by magnolia
-- Add automatic mapping to @Collection fetched my mixin type only (need to fix it).
-- Add scope, order, offset and limit parameters
 - Test references and reference resolution
 - Add parent resolution
-- Add simple availability for hierarchies

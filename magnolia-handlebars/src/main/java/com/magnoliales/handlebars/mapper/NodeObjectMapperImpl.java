@@ -7,6 +7,8 @@ import com.magnoliales.handlebars.annotations.Query;
 import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.utils.PropertyReader;
 import de.odysseus.el.util.SimpleContext;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +30,15 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     private final Injector injector;
     private final ExpressionFactory expressionFactory;
+    private final MagnoliaConfigurationProperties properties;
 
     @Inject
-    public NodeObjectMapperImpl(Injector injector, ExpressionFactory expressionFactory) {
+    public NodeObjectMapperImpl(Injector injector,
+                                ExpressionFactory expressionFactory,
+                                MagnoliaConfigurationProperties properties) {
         this.injector = injector;
         this.expressionFactory = expressionFactory;
+        this.properties = properties;
     }
 
     @Override
@@ -95,6 +101,8 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         SimpleContext context = new SimpleContext();
         context.setVariable("node", expressionFactory.createValueExpression(objectNode, objectNode.getClass()));
         context.setVariable("this", expressionFactory.createValueExpression(object, object.getClass()));
+        context.setVariable("properties", expressionFactory.createValueExpression(properties, properties.getClass()));
+        context.setVariable("parameters", expressionFactory.createValueExpression(MgnlContext.getParameters(), Map.class));
         return context;
     }
 

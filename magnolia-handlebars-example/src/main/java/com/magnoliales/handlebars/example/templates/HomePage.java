@@ -30,7 +30,7 @@ public class HomePage {
 
     private Awards awards;
 
-    @Query("SELECT * from [mgnl:page] AS page WHERE ISDESCENDANTNODE(page, [${node.path}])")
+    @Query("SELECT * FROM [mgnl:page] AS page WHERE CONTAINS(page.*, '\"${parameters.query}\"~10')")
     private DetailsPage[] children;
 
     public String getTitle() {
