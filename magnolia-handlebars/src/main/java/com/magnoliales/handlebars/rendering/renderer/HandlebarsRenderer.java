@@ -11,6 +11,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import com.google.inject.Injector;
 import com.magnoliales.handlebars.mapper.NodeObjectMapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
@@ -38,10 +39,10 @@ public class HandlebarsRenderer extends AbstractRenderer {
     private static final Logger logger = LoggerFactory.getLogger(HandlebarsRenderer.class);
 
     private Handlebars handlebars;
-    private NodeObjectMapper mapper;
+    private Injector injector;
 
     @Inject
-    public HandlebarsRenderer(RenderingEngine renderingEngine, NodeObjectMapper mapper) {
+    public HandlebarsRenderer(RenderingEngine renderingEngine, Injector injector) {
         super(renderingEngine);
         File templateDirectory = new File("src/main/resources/templates");
         TemplateLoader loader;
@@ -69,7 +70,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
             logger.error("Cannot read helpers information", e);
         }
 
-        this.mapper = mapper;
+        this.injector = injector;
     }
 
     @Override
@@ -87,6 +88,7 @@ public class HandlebarsRenderer extends AbstractRenderer {
         Context combinedContext = null;
         try {
             logger.info("Rendering node '{}' with template '{}'", node.getPath(), templateScript);
+            NodeObjectMapper mapper = injector.getInstance(NodeObjectMapper.class);
             combinedContext = Context.newBuilder(mapper.map(node))
                     .combine(CURRENT_NODE_PROPERTY, node)
                     .resolver(JavaBeanValueResolver.INSTANCE, MapValueResolver.INSTANCE)

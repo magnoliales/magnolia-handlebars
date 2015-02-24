@@ -8,7 +8,6 @@ import info.magnolia.dam.templating.functions.DamTemplatingFunctions;
 import javax.inject.Inject;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import java.util.Map;
 
 public class AssetReader implements PropertyReader {
 
@@ -20,8 +19,7 @@ public class AssetReader implements PropertyReader {
     }
 
     @Override
-    public Asset read(Property property, NodeObjectMapper mapper, Map<String, Object> objectCache)
-            throws RepositoryException {
+    public Asset read(Property property, NodeObjectMapper mapper) throws RepositoryException {
         return damTemplatingFunction.getAsset(property.getString());
     }
 }

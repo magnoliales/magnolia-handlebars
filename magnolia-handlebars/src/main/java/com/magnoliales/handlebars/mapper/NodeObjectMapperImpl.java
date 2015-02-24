@@ -31,6 +31,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
     private final Injector injector;
     private final ExpressionFactory expressionFactory;
     private final MagnoliaConfigurationProperties properties;
+    private final Map<String, Object> objectCache;
 
     @Inject
     public NodeObjectMapperImpl(Injector injector,
@@ -39,20 +40,16 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         this.injector = injector;
         this.expressionFactory = expressionFactory;
         this.properties = properties;
+        this.objectCache = new HashMap<>();
     }
 
     @Override
     public Object map(Node objectNode) {
-        return map(objectNode, new HashMap<String, Object>());
-    }
-
-    @Override
-    public Object map(Node objectNode, Map<String, Object> objectCache) {
         try {
             String objectClassName = objectNode.getProperty(NodeObjectMapper.CLASS_PROPERTY).getString();
             Class<?> objectClass = Class.forName(objectClassName);
             Object object = createBareObject(objectClass);
-            map(objectClass, object, objectNode, objectCache);
+            map(objectClass, object, objectNode);
             return object;
         } catch (RepositoryException | ClassNotFoundException | IllegalAccessException e) {
             logger.error("Cannot map node {}", objectNode, e);
@@ -62,8 +59,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     private void map(Class<?> objectClass,
                      Object object,
-                     Node objectNode,
-                     Map<String, Object> objectCache)
+                     Node objectNode)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
         String cacheKey = objectNode.getIdentifier();
@@ -80,21 +76,21 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                 field.setAccessible(true);
                 String fieldName = field.getName();
                 if (objectNode.hasProperty(fieldName)) {
-                    mapProperty(field, object, objectNode.getProperty(fieldName), objectCache);
+                    mapProperty(field, object, objectNode.getProperty(fieldName));
                 } else if (objectNode.hasNode(fieldName)) {
-                    mapNode(field, object, objectNode.getNode(fieldName), objectCache);
+                    mapNode(field, object, objectNode.getNode(fieldName));
                 } else if (field.isAnnotationPresent(Query.class)) {
                     if (context == null) {
                         context = initContext(object, objectNode);
                     }
-                    mapQuery(field, object, objectNode, context, objectCache);
+                    mapQuery(field, object, objectNode, context);
                 } else if (field.isAnnotationPresent(Value.class)) {
                     if (context == null) {
                         context = initContext(object, objectNode);
                     }
                     mapValue(field, object, context);
                 } else if (field.isAnnotationPresent(Collection.class)) {
-                    mapChildren(field, object, objectNode, objectCache);
+                    mapChildren(field, object, objectNode);
                 }
             }
             objectClass = objectClass.getSuperclass();
@@ -113,8 +109,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     private void mapProperty(java.lang.reflect.Field field,
                              Object object,
-                             Property property,
-                             Map<String, Object> objectCache)
+                             Property property)
             throws RepositoryException, IllegalAccessException, ClassNotFoundException {
 
         Class<? extends PropertyReader> readerClass = field.getAnnotation(Field.class).reader();
@@ -146,7 +141,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                 case PropertyType.REFERENCE:
                 case PropertyType.WEAKREFERENCE:
                     Node referencedNode = property.getSession().getNodeByIdentifier(property.getString());
-                    mapNode(field, object, referencedNode, objectCache);
+                    mapNode(field, object, referencedNode);
                     break;
                 default:
                     throw new AssertionError("Not implemented");
@@ -154,19 +149,18 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         } else {
             PropertyReader propertyReader = injector.getInstance(readerClass);
             injector.injectMembers(propertyReader);
-            field.set(object, propertyReader.read(property, this, objectCache));
+            field.set(object, propertyReader.read(property, this));
         }
     }
 
     private void mapNode(java.lang.reflect.Field field,
                          Object object,
-                         Node subNode,
-                         Map<String, Object> objectCache)
+                         Node subNode)
             throws ClassNotFoundException, RepositoryException, IllegalAccessException {
 
         Class<?> subObjectClass = field.getType();
         Object subObject = createBareObject(subObjectClass);
-        map(subObjectClass, subObject, subNode, objectCache);
+        map(subObjectClass, subObject, subNode);
         field.set(object, subObject);
     }
 
@@ -183,8 +177,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
     private void mapQuery(java.lang.reflect.Field field,
                           Object object,
                           Node objectNode,
-                          SimpleContext context,
-                          Map<String, Object> objectCache)
+                          SimpleContext context)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
         if (!field.getType().isArray()) {
@@ -200,20 +193,19 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         QueryManager queryManager = session.getWorkspace().getQueryManager();
         QueryResult result = queryManager
                 .createQuery(interpolatedExpression, javax.jcr.query.Query.JCR_SQL2).execute();
-        field.set(object, readArray(itemSuperclass, result.getNodes(), objectCache));
+        field.set(object, readArray(itemSuperclass, result.getNodes()));
     }
 
     private void mapChildren(java.lang.reflect.Field field,
                              Object object,
-                             Node objectNode,
-                             Map<String, Object> objectCache)
+                             Node objectNode)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
         if (!field.getType().isArray()) {
             throw new RepositoryException("Non array type is annotated with collection");
         }
         Class<?> itemSuperclass = field.getType().getComponentType();
-        field.set(object, readArray(itemSuperclass, objectNode.getNodes(), objectCache));
+        field.set(object, readArray(itemSuperclass, objectNode.getNodes()));
     }
 
     private Object createBareObject(Class<?> objectClass)
@@ -231,7 +223,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         }
     }
 
-    private <T> T[] readArray(Class<T> type, NodeIterator iterator, Map<String, Object> objectCache)
+    private <T> T[] readArray(Class<T> type, NodeIterator iterator)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
         List<Object> items = new ArrayList<>();
         while (iterator.hasNext()) {
@@ -245,7 +237,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                     item = objectCache.get(cacheKey);
                 } else {
                     item = createBareObject(itemClass);
-                    map(itemClass, item, itemNode, objectCache);
+                    map(itemClass, item, itemNode);
                 }
                 items.add(item);
             }

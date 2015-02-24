@@ -1,7 +1,6 @@
 package com.magnoliales.handlebars.mapper;
 
 import javax.jcr.Node;
-import java.util.Map;
 
 /**
  * Maps node into an object.
@@ -18,5 +17,4 @@ public interface NodeObjectMapper {
     String PARENT_PROPERTY = "handlebars:parent";
 
     Object map(Node node);
-    Object map(Node node, Map<String, Object> objectCache);
 }
