@@ -39,7 +39,14 @@ For the compilation add the following repositories to your a profile in `setting
 ```
 
 Handlebars templates need to be in `classpath:/templates`
- 
+
+The expression language
+-----------------------
+
+The `@Query` and `@Value` annotations accept use JSR-245 (http://download.oracle.com/otndocs/jcp/jsp-2.1-fr-eval-spec-oth-JSpec/)
+as implemented by JUEL to interpolate values. At the moment the expressions `this` and `node` can be used.
+
+
 To Do
 -----
 

@@ -6,7 +6,6 @@ import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Query;
 import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.utils.PropertyReader;
-import de.odysseus.el.ExpressionFactoryImpl;
 import de.odysseus.el.util.SimpleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +17,22 @@ import javax.jcr.*;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     public static final Logger logger = LoggerFactory.getLogger(NodeObjectMapperImpl.class);
 
     private final Injector injector;
+    private final ExpressionFactory expressionFactory;
 
     @Inject
-    public NodeObjectMapperImpl(Injector injector) {
+    public NodeObjectMapperImpl(Injector injector, ExpressionFactory expressionFactory) {
         this.injector = injector;
+        this.expressionFactory = expressionFactory;
     }
 
     @Override
@@ -58,6 +62,8 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
         objectCache.put(cacheKey, object);
 
+        SimpleContext context = null;
+
         while (objectClass != Object.class) {
             for (java.lang.reflect.Field field : objectClass.getDeclaredFields()) {
                 field.setAccessible(true);
@@ -67,9 +73,15 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                 } else if (objectNode.hasNode(fieldName)) {
                     mapNode(field, object, objectNode.getNode(fieldName), objectCache);
                 } else if (field.isAnnotationPresent(Query.class)) {
-                    mapQuery(field, object, objectNode, objectCache);
+                    if (context == null) {
+                        context = initContext(object, objectNode);
+                    }
+                    mapQuery(field, object, objectNode, context, objectCache);
                 } else if (field.isAnnotationPresent(Value.class)) {
-                    mapValue(field, object, objectNode);
+                    if (context == null) {
+                        context = initContext(object, objectNode);
+                    }
+                    mapValue(field, object, context);
                 } else if (field.isAnnotationPresent(Collection.class)) {
                     mapChildren(field, object, objectNode, objectCache);
                 }
@@ -77,6 +89,13 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
             objectClass = objectClass.getSuperclass();
             objectNode = getParentNode(objectNode);
         }
+    }
+
+    private SimpleContext initContext(Object object, Node objectNode) {
+        SimpleContext context = new SimpleContext();
+        context.setVariable("node", expressionFactory.createValueExpression(objectNode, objectNode.getClass()));
+        context.setVariable("this", expressionFactory.createValueExpression(object, object.getClass()));
+        return context;
     }
 
     private void mapProperty(java.lang.reflect.Field field,
@@ -140,26 +159,18 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
 
     private void mapValue(java.lang.reflect.Field field,
                           Object object,
-                          Node objectNode)
+                          SimpleContext context)
             throws IllegalAccessException {
 
         String expression = field.getAnnotation(Value.class).value();
-        Properties properties = new Properties();
-        properties.setProperty("javax.el.methodInvocations", "true");
-
-        ExpressionFactory factory = new ExpressionFactoryImpl(properties);
-        SimpleContext context = new SimpleContext();
-        context.setVariable("node", factory.createValueExpression(objectNode, objectNode.getClass()));
-        context.setVariable("this", factory.createValueExpression(object, object.getClass()));
-
-        ValueExpression valueExpression =
-                factory.createValueExpression(context, expression, String.class);
+        ValueExpression valueExpression = expressionFactory.createValueExpression(context, expression, String.class);
         field.set(object, valueExpression.getValue(context));
     }
 
     private void mapQuery(java.lang.reflect.Field field,
                           Object object,
                           Node objectNode,
+                          SimpleContext context,
                           Map<String, Object> objectCache)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
@@ -169,16 +180,7 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         Class<?> itemSuperclass = field.getType().getComponentType();
 
         String expression = field.getAnnotation(Query.class).value();
-        Properties properties = new Properties();
-        properties.setProperty("javax.el.methodInvocations", "true");
-
-        ExpressionFactory factory = new ExpressionFactoryImpl(properties);
-        SimpleContext context = new SimpleContext();
-        context.setVariable("node", factory.createValueExpression(objectNode, objectNode.getClass()));
-        context.setVariable("this", factory.createValueExpression(object, object.getClass()));
-
-        ValueExpression valueExpression =
-                factory.createValueExpression(context, expression, String.class);
+        ValueExpression valueExpression = expressionFactory.createValueExpression(context, expression, String.class);
         String interpolatedExpression = (String) valueExpression.getValue(context);
 
         Session session = objectNode.getSession();

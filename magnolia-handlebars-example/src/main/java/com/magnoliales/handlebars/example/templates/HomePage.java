@@ -17,7 +17,7 @@ public class HomePage {
     @Value("${node.path}")
     private String path;
 
-    @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2 }")
+    @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2, maxLength : 100 }")
     private String title;
 
     @Field(definition = TextFieldDefinition.class)

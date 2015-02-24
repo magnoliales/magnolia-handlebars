@@ -24,6 +24,11 @@
             <implementation>com.magnoliales.handlebars.ui.dialogs.AnnotatedDialogDefinitionFactoryImpl</implementation>
             <scope>singleton</scope>
         </component>
+        <component>
+            <type>javax.el.ExpressionFactory</type>
+            <implementation>de.odysseus.el.ExpressionFactoryImpl</implementation>
+            <scope>singleton</scope>
+        </component>
     </components>
     <dependencies>
         <dependency>
