@@ -4,11 +4,15 @@ import com.google.inject.Injector;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Processable;
 import com.magnoliales.handlebars.ui.dialogs.transformers.HierarchicalValueTransformer;
+import com.magnoliales.handlebars.ui.dialogs.transformers.TypedMultiValueTransformer;
 import com.magnoliales.handlebars.utils.FieldDefinitionFactory;
 import info.magnolia.ui.form.definition.ConfiguredFormDefinition;
 import info.magnolia.ui.form.definition.ConfiguredTabDefinition;
+import info.magnolia.ui.form.field.definition.CompositeFieldDefinition;
 import info.magnolia.ui.form.field.definition.ConfiguredFieldDefinition;
 import info.magnolia.ui.form.field.definition.FieldDefinition;
+import info.magnolia.ui.form.field.definition.MultiValueFieldDefinition;
+import info.magnolia.ui.form.field.transformer.composite.NoOpCompositeTransformer;
 import net.minidev.json.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +74,7 @@ public abstract class Processor {
                 if (!fields.containsKey(scope)) {
                     fields.put(scope, new ArrayList<FieldDefinition>());
                 }
-                fields.get(scope).add(getFieldDefinition(type, field.getName(), fieldNamespace));
+                fields.get(scope).add(getFieldDefinition(type, field, fieldNamespace));
             } else if (!field.getType().isPrimitive()) {
                 if (getProcessableAnnotation(field.getType()) == null) {
                     String newScope = scope.equals("main") ? field.getName() : scope;
@@ -84,33 +88,59 @@ public abstract class Processor {
     protected void validate(Class<?> type) {
     }
 
-    protected FieldDefinition getFieldDefinition(Class<?> type, String fieldName, String fieldNamespace) {
-        Field field = getFieldAnnotation(type, fieldName);
+    protected ConfiguredFieldDefinition getFieldDefinition(Class<?> type,
+                                                           java.lang.reflect.Field fieldObject,
+                                                           String fieldNamespace) {
+
+        Field field = getFieldAnnotation(type, fieldObject.getName());
         ConfiguredFieldDefinition definition;
 
         Class<? extends ConfiguredFieldDefinition> definitionClass = field.definition();
         Class<? extends FieldDefinitionFactory> factoryClass = field.factory();
-        if (definitionClass != ConfiguredFieldDefinition.class
-                && factoryClass != FieldDefinitionFactory.class) {
-            throw new RuntimeException("Please use either 'factory' or 'definition' for field " + fieldName);
-        }
-        if (factoryClass != FieldDefinitionFactory.class) {
+        if (definitionClass != ConfiguredFieldDefinition.class && factoryClass != FieldDefinitionFactory.class) {
+            throw new RuntimeException("The field '" + fieldObject.getName() + "' of class '"
+                    + type.getName() + "' have both factory and definition set");
+        } else if (definitionClass == ConfiguredFieldDefinition.class && factoryClass == FieldDefinitionFactory.class) {
+            definition = readFieldDefinition(fieldObject);
+        } else if (factoryClass != FieldDefinitionFactory.class) {
             FieldDefinitionFactory factory = injector.getInstance(factoryClass);
             injector.injectMembers(factory);
             definition = factory.getInstance();
+            definition.setTransformerClass(HierarchicalValueTransformer.class);
         } else {
             definition = injector.getInstance(definitionClass);
             injector.injectMembers(definition);
+            definition.setTransformerClass(HierarchicalValueTransformer.class);
         }
-
-        definition.setName(fieldNamespace + fieldName);
-        if (definition.getTransformerClass() != null) {
-            throw new RuntimeException("The field " + fieldName + " of class "
-                    + type.getName() + " cannot have a transformer");
-        }
-        definition.setTransformerClass(HierarchicalValueTransformer.class);
         JSONValue.parse(field.settings(), definition);
+        definition.setName(fieldNamespace + fieldObject.getName());
+
         return definition;
+    }
+
+    private ConfiguredFieldDefinition readFieldDefinition(java.lang.reflect.Field field) {
+        if (field.getType().isArray()) {
+            MultiValueFieldDefinition fieldDefinition = new MultiValueFieldDefinition();
+            fieldDefinition.setName(field.getName());
+            fieldDefinition.setField(readCompositeFieldDefinition(field.getType().getComponentType(), field.getName()));
+            fieldDefinition.setTransformerClass(TypedMultiValueTransformer.class);
+            return fieldDefinition;
+        } else {
+            return readCompositeFieldDefinition(field.getType(), field.getName());
+        }
+    }
+
+    private CompositeFieldDefinition readCompositeFieldDefinition(Class<?> type, String name) {
+        CompositeFieldDefinition compositeFieldDefinition = new CompositeFieldDefinition();
+        for (java.lang.reflect.Field field : type.getDeclaredFields()) {
+            ConfiguredFieldDefinition itemDefinition = getFieldDefinition(type, field, "");
+            itemDefinition.setLabel("");
+            itemDefinition.setTransformerClass(null);
+            compositeFieldDefinition.addField(itemDefinition);
+        }
+        compositeFieldDefinition.setName(name);
+        compositeFieldDefinition.setTransformerClass(NoOpCompositeTransformer.class);
+        return compositeFieldDefinition;
     }
 
     protected Field getFieldAnnotation(Class<?> type, String fieldName) {

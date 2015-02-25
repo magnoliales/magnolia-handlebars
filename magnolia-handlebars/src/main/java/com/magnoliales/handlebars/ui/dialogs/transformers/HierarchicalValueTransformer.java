@@ -12,6 +12,7 @@ import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -33,7 +34,7 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
         try {
             Property itemClassProperty = relatedFormItem.getItemProperty(NodeObjectMapper.CLASS_PROPERTY);
             this.itemClass = Class.forName(itemClassProperty.toString());
-            this.item = getItem((JcrNodeAdapter) relatedFormItem, path);
+            this.item = descendToItem((JcrNodeAdapter) relatedFormItem, path);
         } catch (RepositoryException | ClassNotFoundException | NoSuchFieldException e) {
             logger.error("Cannot initialize transformer for property {} of node {}",
                     definition.getName(), relatedFormItem);
@@ -46,35 +47,45 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
         @SuppressWarnings("unchecked")
         Property<T> property = item.getItemProperty(propertyName);
         if (property == null) {
-            property = new DefaultProperty<T>(type, null);
+            property = new DefaultProperty<>(type, null);
             item.addItemProperty(propertyName, property);
         }
         return property;
     }
 
-    private Item getItem(JcrNodeAdapter item, String[] path) throws RepositoryException, NoSuchFieldException {
-        Class<?> currentClass = itemClass;
-        for (int i = 0; i < path.length - 1; i++) {
-            currentClass = currentClass.getDeclaredField(path[i]).getType();
-            JcrNodeAdapter childItem = (JcrNodeAdapter) item.getChild(path[i]);
-            if (childItem == null) {
-                Node node = item.getJcrItem();
-                Node childNode = null;
-                if (node.hasNode(path[i])) {
-                    childNode = node.getNode(path[i]);
-                }
-                if (childNode != null) {
-                    childItem = new JcrNodeAdapter(childNode);
-                } else {
-                    childItem = new JcrNewNodeAdapter(item.getJcrItem(), NodeTypes.ContentNode.NAME, path[i]);
-                    DefaultProperty<String> property = new DefaultProperty<>(String.class, currentClass.getName());
+    private JcrNodeAdapter getChild(JcrNodeAdapter item,
+                                    String relPath,
+                                    @Nullable String className) throws RepositoryException {
+
+        JcrNodeAdapter childItem = (JcrNodeAdapter) item.getChild(relPath);
+        if (childItem == null) {
+            Node node = item.getJcrItem();
+            Node childNode = null;
+            if (node.hasNode(relPath)) {
+                childNode = node.getNode(relPath);
+            }
+            if (childNode != null) {
+                childItem = new JcrNodeAdapter(childNode);
+            } else {
+                childItem = new JcrNewNodeAdapter(item.getJcrItem(), NodeTypes.ContentNode.NAME, relPath);
+                if (className != null) {
+                    DefaultProperty<String> property = new DefaultProperty<>(String.class, className);
                     childItem.addItemProperty(NodeObjectMapper.CLASS_PROPERTY, property);
                 }
             }
-            item.addChild(childItem);
-            childItem.setParent(item);
-            item = childItem;
         }
-        return item;
+        item.addChild(childItem);
+        childItem.setParent(item);
+        return childItem;
+    }
+
+    private Item descendToItem(JcrNodeAdapter item, String[] path) throws RepositoryException, NoSuchFieldException {
+        Class<?> currentClass = itemClass;
+        JcrNodeAdapter currentItem = item;
+        for (int i = 0; i < path.length - 1; i++) {
+            currentClass = currentClass.getDeclaredField(path[i]).getType();
+            currentItem = getChild(currentItem, path[i], currentClass.getName());
+        }
+        return currentItem;
     }
 }

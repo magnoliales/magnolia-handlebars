@@ -158,10 +158,14 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
                          Node subNode)
             throws ClassNotFoundException, RepositoryException, IllegalAccessException {
 
-        Class<?> subObjectClass = field.getType();
-        Object subObject = createBareObject(subObjectClass);
-        map(subObjectClass, subObject, subNode);
-        field.set(object, subObject);
+        if (field.getType().isArray()) {
+            mapChildren(field, object, subNode);
+        } else {
+            Class<?> subObjectClass = field.getType();
+            Object subObject = createBareObject(subObjectClass);
+            map(subObjectClass, subObject, subNode);
+            field.set(object, subObject);
+        }
     }
 
     private void mapValue(java.lang.reflect.Field field,

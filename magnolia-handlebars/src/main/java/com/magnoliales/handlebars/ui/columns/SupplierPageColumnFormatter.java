@@ -31,7 +31,11 @@ public class SupplierPageColumnFormatter extends AbstractColumnFormatter<Abstrac
             try {
                 Session session = ((JcrNodeAdapter) item).getJcrItem().getSession();
                 Node supplierPage = session.getNodeByIdentifier(property.toString());
-                return supplierPage.getProperty("title").getString();
+                if (supplierPage.hasProperty("title")) {
+                    return supplierPage.getProperty("title").getString();
+                } else {
+                    return supplierPage.getPath();
+                }
             } catch (RepositoryException e) {
                 logger.error("Cannot fetch supplier page", e);
             }

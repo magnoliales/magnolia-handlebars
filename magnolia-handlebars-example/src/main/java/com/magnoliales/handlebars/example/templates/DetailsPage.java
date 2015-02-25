@@ -4,6 +4,7 @@ import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
+import com.magnoliales.handlebars.example.templates.embedded.Link;
 import info.magnolia.ui.form.field.definition.TextFieldDefinition;
 
 @Page(templateScript = "details-page", parents = { Page.Root.class, HomePage.class })
@@ -20,6 +21,9 @@ public class DetailsPage extends AbstractDetailsPage {
 
     private Awards award;
 
+    @Field
+    private Link[] links;
+
     public String getPath() {
         return path;
     }
@@ -32,5 +36,9 @@ public class DetailsPage extends AbstractDetailsPage {
     @Override
     public String getTitle() {
         return title;
+    }
+
+    public Link[] getLinks() {
+        return links;
     }
 }

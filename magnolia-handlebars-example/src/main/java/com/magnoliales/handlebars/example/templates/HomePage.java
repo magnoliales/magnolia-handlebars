@@ -5,6 +5,7 @@ import com.magnoliales.handlebars.annotations.Page;
 import com.magnoliales.handlebars.annotations.Query;
 import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
+import com.magnoliales.handlebars.example.templates.areas.Menu;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
 import com.magnoliales.handlebars.utils.dam.AssetReader;
 import com.magnoliales.handlebars.utils.dam.AssetLinkFieldDefinitionFactory;
@@ -32,6 +33,8 @@ public class HomePage {
 
     private Awards awards;
 
+    private Menu menu;
+
     @Query("SELECT * FROM [mgnl:page] AS page WHERE CONTAINS(page.*, '\"${parameters.query}\"~10')")
     private DetailsPage[] children;
 
@@ -52,6 +55,10 @@ public class HomePage {
 
     public Meta getMeta() {
         return meta;
+    }
+
+    public Menu getMenu() {
+        return menu;
     }
 
     public Asset getHeroImage() {

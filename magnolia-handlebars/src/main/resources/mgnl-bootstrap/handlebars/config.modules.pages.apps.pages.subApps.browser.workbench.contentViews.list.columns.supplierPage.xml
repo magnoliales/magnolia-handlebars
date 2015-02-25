@@ -46,7 +46,7 @@
     <sv:value>superuser</sv:value>
   </sv:property>
   <sv:property sv:name="propertyName" sv:type="String">
-    <sv:value>mgnl:supplierPage</sv:value>
+    <sv:value>handlebars:parent</sv:value>
   </sv:property>
   <sv:property sv:name="sortable" sv:type="String">
     <sv:value>true</sv:value>

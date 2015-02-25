@@ -1,9 +1,17 @@
 {{#block "body"}}
     {{#partial "body"}}
+        {{{area name="menu"}}}
         <p>
             This is detailed content
         </p>
     {{/partial}}
+
+    <ul>
+        {{#each links}}
+            <li>{{caption}}</li>
+        {{/each}}
+    </ul>
+
 {{/block}}
 
 {{> home-page}}
