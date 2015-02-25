@@ -1,6 +1,7 @@
 package com.magnoliales.handlebars.ui.dialogs.processors;
 
 import com.google.inject.Injector;
+import com.magnoliales.handlebars.annotations.Composite;
 import com.magnoliales.handlebars.annotations.Field;
 import com.magnoliales.handlebars.annotations.Processable;
 import com.magnoliales.handlebars.ui.dialogs.transformers.HierarchicalValueTransformer;
@@ -100,7 +101,10 @@ public abstract class Processor {
         if (definitionClass != ConfiguredFieldDefinition.class && factoryClass != FieldDefinitionFactory.class) {
             throw new RuntimeException("The field '" + fieldObject.getName() + "' of class '"
                     + type.getName() + "' have both factory and definition set");
-        } else if (definitionClass == ConfiguredFieldDefinition.class && factoryClass == FieldDefinitionFactory.class) {
+        } else if (fieldObject.getType().isArray()
+                && fieldObject.getType().getComponentType().isAnnotationPresent(Composite.class)) {
+            // @todo need to run validator on composite to make sure it has the proper structure
+            // @todo in general every annotation should be annotated with a validator
             definition = readFieldDefinition(fieldObject);
         } else if (factoryClass != FieldDefinitionFactory.class) {
             FieldDefinitionFactory factory = injector.getInstance(factoryClass);
