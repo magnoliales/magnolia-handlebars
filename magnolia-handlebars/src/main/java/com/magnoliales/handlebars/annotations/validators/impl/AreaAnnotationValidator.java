@@ -12,7 +12,12 @@ public class AreaAnnotationValidator implements TypeAnnotationValidator {
     @Override
     public void validate(Class<?> annotatedClass) {
         if (!Modifier.isFinal(annotatedClass.getModifiers())) {
-            throw new IllegalAnnotationException("Area class '" + annotatedClass.getName() + "' needs to be final");
+            throw new IllegalAnnotationException("Area class '"
+                    + annotatedClass.getName() + "' needs to be final");
+        }
+        if (annotatedClass.getSuperclass() != Object.class) {
+            throw new IllegalAnnotationException("Area class '"
+                    + annotatedClass.getName() + "' cannot extend another class");
         }
     }
 }

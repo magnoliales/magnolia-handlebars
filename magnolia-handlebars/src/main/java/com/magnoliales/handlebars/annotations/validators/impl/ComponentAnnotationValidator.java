@@ -12,7 +12,12 @@ public class ComponentAnnotationValidator implements TypeAnnotationValidator {
     @Override
     public void validate(Class<?> annotatedClass) throws IllegalAnnotationException {
         if (!Modifier.isFinal(annotatedClass.getModifiers())) {
-            throw new IllegalAnnotationException("Component class '" + annotatedClass.getName() + "' needs to be final");
+            throw new IllegalAnnotationException("Component class '"
+                    + annotatedClass.getName() + "' needs to be final");
+        }
+        if (annotatedClass.getSuperclass() != Object.class) {
+            throw new IllegalAnnotationException("Component class '"
+                    + annotatedClass.getName() + "' cannot extend another class");
         }
     }
 }
