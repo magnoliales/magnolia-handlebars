@@ -11,6 +11,5 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Processable(processor = AreaProcessor.class)
 public @interface Area {
-
     String templateScript();
 }
