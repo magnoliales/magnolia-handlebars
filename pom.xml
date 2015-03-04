@@ -5,7 +5,7 @@
     <groupId>com.magnoliales</groupId>
     <artifactId>magnolia-handlebars-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.9-SNAPSHOT</version>
 
     <contributors>
         <contributor>
