@@ -12,13 +12,6 @@
     <artifactId>magnolia-handlebars-helpers</artifactId>
     <packaging>jar</packaging>
 
-    <scm>
-        <url>https://github.com/magnoliales/magnolia-handlebars</url>
-        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
-        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
     <build>
         <plugins>
             <plugin>

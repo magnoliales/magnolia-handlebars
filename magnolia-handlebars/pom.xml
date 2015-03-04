@@ -8,15 +8,7 @@
         <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>magnolia-handlebars</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
-
-    <scm>
-        <url>https://github.com/magnoliales/magnolia-handlebars</url>
-        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
-        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
 
     <build>
         <plugins>
