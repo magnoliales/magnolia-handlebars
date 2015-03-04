@@ -7,24 +7,19 @@
     <parent>
         <groupId>com.magnoliales</groupId>
         <artifactId>magnolia-handlebars-parent</artifactId>
-        <version>1.0.0</version>
+            <version>1.0.0</version>
     </parent>
     <artifactId>magnolia-handlebars-helpers</artifactId>
-    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <scm>
         <url>https://github.com/magnoliales/magnolia-handlebars</url>
-
         <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
         <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
-
         <tag>HEAD</tag>
-
     </scm>
 
     <build>
-        <finalName>$\{project.artifactId}-$\{project.version}-r$\{buildNumber}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
