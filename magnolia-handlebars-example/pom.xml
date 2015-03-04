@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.magnoliales</groupId>
         <artifactId>magnolia-handlebars-parent</artifactId>
-        <version>1.0.9</version>
+        <version>1.0.10-SNAPSHOT</version>
     </parent>
     <artifactId>magnolia-handlebars-example</artifactId>
     <packaging>war</packaging>
