@@ -12,16 +12,6 @@
     <artifactId>magnolia-handlebars-example</artifactId>
     <packaging>war</packaging>
 
-    <scm>
-        <url>https://github.com/magnoliales/magnolia-handlebars</url>
-
-        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
-        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
-
-        <tag>HEAD</tag>
-
-    </scm>
-
     <build>
         <plugins>
             <!-- delete repository on clean -->
