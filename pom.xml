@@ -5,7 +5,7 @@
     <groupId>com.magnoliales</groupId>
     <artifactId>magnolia-handlebars-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
 
     <contributors>
         <contributor>
@@ -26,7 +26,7 @@
         <url>https://github.com/magnoliales/magnolia-handlebars</url>
         <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
         <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
-        <tag>magnolia-handlebars-parent-1.0.5</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
