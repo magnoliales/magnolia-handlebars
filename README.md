@@ -12,7 +12,7 @@ Below is a simple example which shows how easy it is to create a robust class wh
 
 This example page has a title, image and description.
 
-```
+```java
 @Page(templateScript = "example-page")
 public class ExamplePage {
 
@@ -40,7 +40,7 @@ public class ExamplePage {
 
 ```
 
-```
+```html
 <div>
     <h1>{{title}}</h1>
     <p>{{description}}</p>
