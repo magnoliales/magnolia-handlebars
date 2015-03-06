@@ -7,6 +7,7 @@ import com.magnoliales.handlebars.annotations.Value;
 import com.magnoliales.handlebars.example.templates.areas.Awards;
 import com.magnoliales.handlebars.example.templates.areas.Menu;
 import com.magnoliales.handlebars.example.templates.embedded.Meta;
+import com.magnoliales.handlebars.mapper.Delayed;
 import com.magnoliales.handlebars.utils.dam.AssetReader;
 import com.magnoliales.handlebars.utils.dam.AssetLinkFieldDefinitionFactory;
 import com.magnoliales.handlebars.utils.pages.PageLinkFieldDefinitionFactory;
@@ -36,7 +37,7 @@ public class HomePage {
     private Menu menu;
 
     @Query("SELECT * FROM [mgnl:page] AS page WHERE CONTAINS(page.*, '\"${parameters.query}\"~10')")
-    private DetailsPage[] children;
+    private Delayed<DetailsPage[]> children;
 
     @Field(factory = PageLinkFieldDefinitionFactory.class, reader = PageReader.class)
     private Object page;
@@ -66,6 +67,6 @@ public class HomePage {
     }
 
     public DetailsPage[] getChildren() {
-        return children;
+        return children.get();
     }
 }

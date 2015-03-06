@@ -19,6 +19,7 @@ import javax.jcr.*;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,38 +179,73 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         field.set(object, valueExpression.getValue(context));
     }
 
-    private void mapQuery(java.lang.reflect.Field field,
+    private void mapQuery(final java.lang.reflect.Field field,
                           Object object,
-                          Node objectNode,
-                          SimpleContext context)
+                          final Node objectNode,
+                          final SimpleContext context)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
-        if (!field.getType().isArray()) {
-            throw new RepositoryException("Non array type is annotated with query");
+
+        Delayed delayed = new DelayedCache() {
+            @Override
+            public Object init() throws Exception {
+                String expression = field.getAnnotation(Query.class).value();
+                ValueExpression valueExpression = expressionFactory.createValueExpression(context, expression, String.class);
+                String interpolatedExpression = (String) valueExpression.getValue(context);
+
+                Session session = objectNode.getSession();
+                QueryManager queryManager = session.getWorkspace().getQueryManager();
+                QueryResult result = queryManager
+                        .createQuery(interpolatedExpression, javax.jcr.query.Query.JCR_SQL2).execute();
+                Class<?> itemSuperclass = getItemType(field);
+                return readArray(itemSuperclass, result.getNodes());
+            }
+        };
+        if (isDelayed(field)) {
+            field.set(object, delayed);
+        } else {
+            field.set(object, delayed.get());
         }
-        Class<?> itemSuperclass = field.getType().getComponentType();
-
-        String expression = field.getAnnotation(Query.class).value();
-        ValueExpression valueExpression = expressionFactory.createValueExpression(context, expression, String.class);
-        String interpolatedExpression = (String) valueExpression.getValue(context);
-
-        Session session = objectNode.getSession();
-        QueryManager queryManager = session.getWorkspace().getQueryManager();
-        QueryResult result = queryManager
-                .createQuery(interpolatedExpression, javax.jcr.query.Query.JCR_SQL2).execute();
-        field.set(object, readArray(itemSuperclass, result.getNodes()));
     }
 
-    private void mapChildren(java.lang.reflect.Field field,
+    private Class<?> getItemType(java.lang.reflect.Field field) {
+        Class<?> contentType;
+        if (isDelayed(field)) {
+            contentType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+        } else {
+            contentType = field.getType();
+        }
+        if (contentType.isArray()) {
+            return contentType.getComponentType();
+        } else {
+            throw new RuntimeException("Collection of items need to be mapped to arrays or delayed arrays");
+        }
+    }
+
+    private boolean isDelayed(java.lang.reflect.Field field) {
+        return Delayed.class.isAssignableFrom(field.getType());
+    }
+
+    private void mapChildren(final java.lang.reflect.Field field,
                              Object object,
-                             Node objectNode)
+                             final Node objectNode)
             throws RepositoryException, ClassNotFoundException, IllegalAccessException {
 
         if (!field.getType().isArray()) {
             throw new RepositoryException("Non array type is annotated with collection");
         }
-        Class<?> itemSuperclass = field.getType().getComponentType();
-        field.set(object, readArray(itemSuperclass, objectNode.getNodes()));
+        Delayed delayed = new DelayedCache() {
+            @Override
+            protected Object init() throws Exception {
+                Class<?> itemSuperclass = getItemType(field);
+                return readArray(itemSuperclass, objectNode.getNodes());
+            }
+        };
+        if (isDelayed(field)) {
+            field.set(object, delayed);
+        } else {
+            field.set(object, delayed.get());
+        }
     }
 
     private Object createBareObject(Class<?> objectClass)

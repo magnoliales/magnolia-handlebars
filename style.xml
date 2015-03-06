@@ -91,7 +91,9 @@
         <module name="CovariantEquals"/>
         <module name="ModifiedControlVariable"/>
         <module name="StringLiteralEquality"/>
+        <!--
         <module name="IllegalCatch"/>
+        -->
         <module name="PackageDeclaration"/>
         <module name="DeclarationOrder"/>
         <!--
