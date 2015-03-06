@@ -4,3 +4,4 @@ derby.log
 .runtime/
 keypair.properties
 target/
+magnolia-handlebars-example/overlays/*
