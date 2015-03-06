@@ -1,12 +1,12 @@
 # magnolia-handlebars
 
-magnolia-handlebars is a Magnolia module which aims to simplify the the creation of Magnolia page defintions, dialog definitions, data models and templating models. This is achieved via simple yet powerful annotations.
+magnolia-handlebars is a Magnolia module which aims to simplify the the creation of Magnolia page defintions, dialog definitions, data models and templating models. This is achieved via simple yet powerful annotations. magnolia-handlebars also enables page content inheritance.
 
 The templating language of choice for this project is handlebars over the traditional Magnolia templating language, freemarker. The aim is to keep templates as clean, simple, logic free and reusable as possible.
 
 magnolia-handlebars was inspired by the Blossom module, but without the heavy requirements of Spring, and integrated directly into Magnoila to enable Magnolia's standard dependency injection model. 
 
-Born from a need of developers requiring a single point of definition for data models, dialog definitions and templates models, reducing redundant code, duplication and non strictly typed properties.
+Born from a need of developers requiring a single point of definition for data models, dialog definitions and templates models, reducing redundant code, duplication and non strictly typed properties.   
 
 Below is a simple example which shows how easy it is to create a robust class which defines the data model to be used via java code, the template model to be used via handlebars templates and the dialog defintion required by the default Magnolia Pages app. 
 
@@ -49,6 +49,7 @@ public class ExamplePage {
 ```
 
 ![Example Page Dialog](https://github.com/magnoliales/magnolia-handlebars/raw/development/docs/images/example-page-dialog.png)
+
 
 
 
@@ -364,7 +365,71 @@ In `menu.hbs` the components must be rendered using the `{{component}}` helper.
 ```
 
 
-## Inheritance
+## Page Inheritance
+
+Pages can inherit content from others pages. When a page inherits content a supplier page must be specified. This is the page from which contains the content that is inherited. This is chosen by the editor on page creation within the Magnolia pages app.
+
+The advantage of page inheritance is that common content, such as headers, menus, footers does not have to be duplicated, and that page templates only need to contain the deltas / differences from the parent page and not the entire page structure.  
+
+### Simple inheritance
+
+To setup page inheritance the page class must extend another page class
+
+```java
+@Page(templateScript = "blog-page")
+public class BlogPage extends HomePage {
+
+    @Field(definition = TextFieldDefinition.class)
+    private String author;
+
+    @Field(definition = RichTextFieldDefinition.class)
+    private String blog;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getBlog() {
+        return blog;
+    }
+}
+```
+
+A `BlogPage` will inherit all content from `HomePage`, as well as having its own `author` and `blog` fields. 
+
+To inherit the html markup from home-page.hbs the blog-page.hbs must extend home-page. It can then override any blocks defined in the home-page. The examples below shows both home-page.hbs and blog-page.hbs.
+
+home-page.hbs
+  
+```html
+<html>
+    <head>
+        {{{init}}}
+        <title>{{title}}</title>
+    </head>
+    <body>
+        {{#block "content"}}
+            <div>This is the default homepage content</div>
+        {{/block}}
+    </body>
+</html>
+```
+
+blog-page.hbs
+
+```html
+{{#block "content"}}
+    {{#partial "content"}}
+        <div>{{blog}}</div>
+        <div>{{author}}</div>
+    {{/partial}}
+{{/block}}
+{{> home-page}}
+```
+
+In this example the blog page will have exactly the same markup as the home page, except that the block marked 'content' will be replaced with the blog and the author
+
+### Overriding inherited content
 
 @todo
 
