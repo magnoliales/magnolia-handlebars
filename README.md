@@ -12,6 +12,7 @@ Declares the class as a page that can be created through the Magnolia Pages app.
 ```java
 @Page(templateScript = "home-page")
 public class HomePage {
+
 }
 ```
 
@@ -22,6 +23,7 @@ To restrict where a page template is available to editors specify `parents` . Th
 ```java
 @Page(templateScript = "sub-home-page", parents = HomePage.class)
 public class SubHomePage {
+
 }
 ```
 
@@ -32,6 +34,7 @@ If only one instance of the page should ever be created, use the singleton param
 ```java
 @Page(templateScript = "home-page", singleton = true)
 public class HomePage {
+
 }
 ```
 
@@ -44,6 +47,7 @@ Fields should always be `private` class members.
 ```java
 @Page(templateScript = "home-page")
 public class HomePage {
+
     @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2, maxLength : 100 }")
     private String title;
 
@@ -61,6 +65,7 @@ The `settings` JSON is parsed and then mapped to the new instance of the `defini
 ```java
 @Page(templateScript = "home-page")
 public class HomePage {
+
     @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2, maxLength : 100 }")
     private String title;
 
@@ -77,6 +82,7 @@ If the page extends another page and the configuration for the field should be t
 ```java
 @Page(templateScript = "campaign-home-page")
 public class CampaignHomePage extends HomePage {
+    
     @Field(inherits = true)
     private String title;
 
@@ -93,6 +99,7 @@ The `reader` property can be set as a class which extends `PropertyReader`. The 
 ```java
 @Page(templateScript = "home-page")
 public class HomePage {
+    
     @Field(factory = AssetLinkFieldDefinitionFactory.class, reader = AssetReader.class)
     private Asset image;
 
@@ -114,6 +121,7 @@ as implemented by JUEL to interpolate values. The following variables are define
 The following example will store the JCR node path to `path` , and  @todo - query `children`
 
 ```java
+@Page(templateScript = "home-page")
 public class HomePage {
 
     @Value("${node.path}")
@@ -199,6 +207,7 @@ Areas support the same @Field annotations as Pages. @todo - Value and query supp
 ```java
 @Area(templateScript = "areas/menu")
 public final class Menu {
+
     @Field(definition = TextFieldDefinition.class)
     private String title;
 
@@ -223,6 +232,7 @@ Components support the same @Field annotations as Pages. @todo - Value and query
 ```java
 @Component(templateScript = "components/menu-item")
 public final class MenuItem {
+
     @Field(definition = TextFieldDefinition.class)
     private String title;
 }
@@ -236,6 +246,7 @@ To add an area to a page add a private member of the area class. In this example
 ```java
 @Page(templateScript = "home-page")
 public class HomePage {
+
     private Menu menu;
 
     public Menu getMenu() {
@@ -247,6 +258,7 @@ public class HomePage {
 ```java
 @Area(templateScript = "areas/menu")
 public final class Menu {
+
 }
 ```
 
@@ -281,6 +293,7 @@ public final class Menu {
 ```java
 @Component(templateScript = "components/menu-item")
 public final class MenuItem {
+
     @Field(definition = TextFieldDefinition.class)
     private String title;
 
@@ -293,13 +306,11 @@ public final class MenuItem {
 In `menu.hbs` the components must be rendered using the `{{component}}` helper.
 
 ```html
-<html>
 <ul>
     {{#each menuItems}}
         <li>{{{component}}}</li>
     {{/each}}
 </ul>
-</html>
 ```
 
 
