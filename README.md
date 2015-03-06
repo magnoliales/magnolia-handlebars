@@ -1,6 +1,56 @@
 # magnolia-handlebars
 
-Handlebars rendering for Magnolia CMS
+magnolia-handlebars is a Magnolia module which aims to simplify the the creation of Magnolia page defintions, dialog definitions, data models and templating models. This is achieved via simple yet powerful annotations.
+
+The templating language of choice for this project is handlebars over the traditional Magnolia templating language, freemarker. The aim is to keep templates as clean, simple, logic free and reusable as possible.
+
+magnolia-handlebars was inspired by the Blossom module, but without the heavy requirements of Spring, and integrated directly into Magnoila to enable Magnolia's standard dependency injection model. 
+
+Born from a need of developers requiring a single point of definition for data models, dialog definitions and templates models, reducing redundant code, duplication and non strictly typed properties.
+
+Below is a simple example which shows how easy it is to create a robust class which defines the data model to be used via java code, the template model to be used via handlebars templates and the dialog defintion required by the default Magnolia Pages app. 
+
+This example page has a title, image and description.
+
+```
+@Page(templateScript = "example-page")
+public class ExamplePage {
+
+    @Field(definition = TextFieldDefinition.class)
+    private String title;
+    
+    @Field(definition = TextFieldDefinition.class, settings = "{ rows : 2, maxLength : 100 }")
+    private String description;
+
+    @Field(factory = AssetLinkFieldDefinitionFactory.class, reader = AssetReader.class)
+    private Asset image;
+  
+    public String getTitle() {
+        return title;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public Asset getImage() {
+        return image;
+    }
+}
+
+```
+
+```
+<div>
+    <h1>{{title}}</h1>
+    <p>{{description}}</p>
+    <img src={{image.link}} alt="{{image.caption}}">
+</div>
+```
+
+![Example Page Dialog](https://github.com/magnoliales/magnolia-handlebars/raw/development/docs/images/example-page-dialog.png)
+
+
 
 ## Pages
 
