@@ -561,3 +561,5 @@ To Do
 - Put all interfaces and super classes into mixin set of all nodes created by magnolia
 - Test references and reference resolution
 - Add parent resolution
+- Add checker for annotations on startup
+- Bind node & mapped object together, create bean resolver that can handle this composite object
