@@ -431,7 +431,36 @@ In this example the blog page will have exactly the same markup as the home page
 
 ### Overriding inherited content
 
-@todo
+To override inherited content, for example setting a new title, add a private member to the child class, and override the parent getter. The following example shows how to override the `title` field so that an editor will have to enter a new title for each blog page. Notice the @Field annotation which specifies that the same field configuration should be used as was defined in `HomePage`. It is perfectly valid to change this configuration if required.
+
+```java
+@Page(templateScript = "blog-page")
+public class BlogPage extends HomePage {
+
+    @Field(inherits = true)
+    private String title;
+
+    @Field(definition = TextFieldDefinition.class)
+    private String author;
+
+    @Field(definition = RichTextFieldDefinition.class)
+    private String blog;
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getBlog() {
+        return blog;
+    }
+
+}
+```
 
 
 ## Template Helpers
