@@ -160,6 +160,44 @@ public class HomePage {
 }
 ```
 
+### @Composite
+ 
+Composite fields can be defined using the `@Composite`. Composite fields are fields which contain more than one field, https://documentation.magnolia-cms.com/display/DOCS/Composite. Magnolia handlebars allows multivalue fields to be composite fields. Below is an example allowing multiple links in a `MenuItem`. Each link is made up of a url and a title.
+  
+```java
+@Component(templateScript = "components/menu-item")
+public final class MenuItem {
+
+    @Field
+    private Link[] links;
+
+    public Link[] getLinks() {
+        return links;
+    }
+}
+```  
+
+```java
+@Composite
+public class Link {
+
+    @Field(definition = TextFieldDefinition.class)
+    private String title;
+
+    @Field(definition = TextFieldDefinition.class)
+    private String url;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+}
+```
+  
+
 ### @Value @Query
 
 The `@Query` and `@Value` annotations accept use JSR-245 (http://download.oracle.com/otndocs/jcp/jsp-2.1-fr-eval-spec-oth-JSpec/)
@@ -592,3 +630,5 @@ To Do
 - Add parent resolution
 - Add checker for annotations on startup
 - Bind node & mapped object together, create bean resolver that can handle this composite object
+- Lock inherited areas
+
