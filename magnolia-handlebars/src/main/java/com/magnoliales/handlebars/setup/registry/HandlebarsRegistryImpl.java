@@ -20,6 +20,8 @@ import info.magnolia.ui.dialog.registry.DialogDefinitionProvider;
 import info.magnolia.ui.dialog.registry.DialogDefinitionRegistry;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.query.Row;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.*;
 
 public class HandlebarsRegistryImpl implements HandlebarsRegistry {
@@ -44,6 +47,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
     private TemplateDefinitionRegistry templateDefinitionRegistry;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
     private SimpleTranslator translator;
+    private Reflections reflections;
 
     @Inject
     public HandlebarsRegistryImpl(AnnotatedDialogDefinitionFactory annotatedDialogDefinitionFactory,
@@ -62,11 +66,12 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
             throw new IllegalStateException("Handlebars registry is already initialized");
         }
         Set<Class<?>> pageClasses = new HashSet<>();
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
         for (String namespace : namespaces) {
-            logger.info("Processing the namespace '{}'", namespace);
-            Reflections reflections = new Reflections(namespace);
-            pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class, true));
+            configurationBuilder.addUrls(ClasspathHelper.forPackage(namespace));
         }
+        reflections = new Reflections(configurationBuilder);
+        pageClasses.addAll(reflections.getTypesAnnotatedWith(Page.class, true));
         processDefinitions(pageClasses, new HashMap<Class<?>, TemplateDefinition>());
         initialized = true;
     }
@@ -127,7 +132,16 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 for (Field areaField : pageField.getType().getDeclaredFields()) {
                     if (areaField.getType().isArray()) {
                         Class<?> componentClass = areaField.getType().getComponentType();
-                        if (componentClass.isAnnotationPresent(Component.class)) {
+                        if (componentClass.isInterface()){
+                            for(Class<?> clazz: reflections.getSubTypesOf(componentClass)) {
+                                if (clazz.isAnnotationPresent(Component.class)) {
+                                    components.add(clazz);
+                                    HandlebarsComponentDefinition componentDefinition = new HandlebarsComponentDefinition(clazz, translator);
+                                    templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
+                                    processedDefinitions.put(clazz, componentDefinition);
+                                }
+                            }
+                        } else if (componentClass.isAnnotationPresent(Component.class)) {
                             components.add(componentClass);
                             HandlebarsComponentDefinition componentDefinition = new HandlebarsComponentDefinition(componentClass, translator);
                             templateDefinitionRegistry.register(new HandlebarsTemplateDefinitionProvider(componentDefinition));
