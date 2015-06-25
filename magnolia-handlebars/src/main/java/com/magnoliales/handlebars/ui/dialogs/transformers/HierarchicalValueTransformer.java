@@ -21,13 +21,13 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
     private static final Logger logger = LoggerFactory.getLogger(HierarchicalValueTransformer.class);
 
     private final Item item;
-    private final String propertyName;
     private final Class<?> itemClass;
 
     public HierarchicalValueTransformer(Item relatedFormItem,
                                         ConfiguredFieldDefinition definition,
                                         Class<Object> type) {
         super(relatedFormItem, definition, type);
+        String[] path = definePropertyName().split("\\.");
         try {
             Property itemClassProperty = relatedFormItem.getItemProperty(NodeObjectMapper.CLASS_PROPERTY);
             this.itemClass = Class.forName(itemClassProperty.toString());
