@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.magnoliales</groupId>
     <artifactId>magnolia-handlebars-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <contributors>
         <contributor>
@@ -19,6 +18,13 @@
             <email>danny.marsland@gmail.com</email>
         </contributor>
     </contributors>
+
+    <scm>
+        <url>https://github.com/magnoliales/magnolia-handlebars</url>
+        <connection>scm:git:git://github.com/magnoliales/magnolia-handlebars</connection>
+        <developerConnection>scm:git:git@github.com:magnoliales/magnolia-handlebars</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <version.magnolia>5.3.5</version.magnolia>
@@ -36,17 +42,11 @@
         <version.juel>2.2.7</version.juel>
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>magnolia-handlebars</module>
+        <module>magnolia-handlebars-example</module>
+        <module>magnolia-handlebars-helpers</module>
+    </modules>
 
     <profiles>
         <profile>
@@ -73,12 +73,32 @@
                     <id>artifactory.eo.snapshots</id>
                     <url>http://artifactory.eo.intern.etecture.de/artifactory/libs-snapshot-local</url>
                 </snapshotRepository>
+                <repository>
+                    <id>artifactory.eo.releases</id>
+                    <url>http://artifactory.eo.intern.etecture.de/artifactory/libs-release-local</url>
+                </repository>
             </distributionManagement>
         </profile>
         <profile>
             <id>sonatype</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.0</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <git-SHA-1>${buildNumber}</git-SHA-1>
+                                    <version>${buildNumber}</version>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -119,6 +139,30 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>buildnumber-maven-plugin</artifactId>
+                        <version>1.3</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>create</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <doCheck>true</doCheck>
+                            <doUpdate>true</doUpdate>
+                            <format>Build: #{0} ({1,date})</format>
+
+                            <items>
+                                <item>buildNumber\d*</item>
+                                <item>timestamp</item>
+                            </items>
+
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
             <modules>
@@ -133,6 +177,23 @@
             </distributionManagement>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <!--<plugin>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<source>1.7</source>-->
+                    <!--<target>1.7</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.1</version>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
