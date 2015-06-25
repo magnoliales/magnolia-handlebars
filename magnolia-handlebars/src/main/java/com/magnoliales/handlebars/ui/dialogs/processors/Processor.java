@@ -117,6 +117,9 @@ public abstract class Processor {
             definition.setTransformerClass(HierarchicalValueTransformer.class);
         }
         JSONValue.parse(field.settings(), definition);
+        if (field.i18n()) {
+            definition.setI18n(true);
+        }
         definition.setName(fieldNamespace + fieldObject.getName());
 
         return definition;

@@ -28,9 +28,6 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
                                         ConfiguredFieldDefinition definition,
                                         Class<Object> type) {
         super(relatedFormItem, definition, type);
-
-        String[] path = definition.getName().split("\\.");
-        this.propertyName = path[path.length - 1];
         try {
             Property itemClassProperty = relatedFormItem.getItemProperty(NodeObjectMapper.CLASS_PROPERTY);
             this.itemClass = Class.forName(itemClassProperty.toString());
@@ -42,9 +39,16 @@ public class HierarchicalValueTransformer extends BasicTransformer<Object> {
         }
     }
 
+    // this deals with items such as meta.facebook.title and returns title
+    protected String getPropertyName() {
+        String[] path = definePropertyName().split("\\.");
+        return path[path.length - 1];
+    }
+
     @Override
     protected <T> Property<T> getOrCreateProperty(Class<T> type) {
         @SuppressWarnings("unchecked")
+        String propertyName = getPropertyName();
         Property<T> property = item.getItemProperty(propertyName);
         if (property == null) {
             property = new DefaultProperty<>(type, null);

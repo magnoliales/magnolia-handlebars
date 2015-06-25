@@ -16,5 +16,6 @@ public @interface Field {
     Class<? extends FieldDefinitionFactory> factory() default FieldDefinitionFactory.class;
     String settings() default "";
     boolean inherits() default false;
+    boolean i18n() default false;
     Class<? extends PropertyReader> reader() default PropertyReader.class;
 }
