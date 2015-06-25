@@ -112,7 +112,7 @@ public class HandlebarsRegistryImpl implements HandlebarsRegistry {
                 pageDefinition = new HandlebarsPageDefinition(pageClass, translator, areas);
             }
 
-            for (DialogDefinitionProvider provider : annotatedDialogDefinitionFactory.discoverDialogProviders(pageClass)) {
+            for (DialogDefinitionProvider provider : annotatedDialogDefinitionFactory.discoverDialogProviders(pageClass, reflections)) {
                 dialogDefinitionRegistry.register(provider);
             }
 

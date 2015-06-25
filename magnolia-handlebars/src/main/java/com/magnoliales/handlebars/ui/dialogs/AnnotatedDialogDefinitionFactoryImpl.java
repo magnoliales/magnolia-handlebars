@@ -1,12 +1,16 @@
 package com.magnoliales.handlebars.ui.dialogs;
 
 import com.google.inject.Injector;
+import com.magnoliales.handlebars.annotations.Component;
+import com.magnoliales.handlebars.rendering.definition.HandlebarsComponentDefinition;
+import com.magnoliales.handlebars.rendering.definition.HandlebarsTemplateDefinitionProvider;
 import com.magnoliales.handlebars.ui.dialogs.processors.Processor;
 import info.magnolia.ui.admincentral.dialog.action.CancelDialogActionDefinition;
 import info.magnolia.ui.admincentral.dialog.action.SaveDialogActionDefinition;
 import info.magnolia.ui.api.action.ActionDefinition;
 import info.magnolia.ui.dialog.definition.ConfiguredFormDialogDefinition;
 import info.magnolia.ui.dialog.registry.DialogDefinitionProvider;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,12 +30,12 @@ public class AnnotatedDialogDefinitionFactoryImpl implements AnnotatedDialogDefi
     }
 
     @Override
-    public List<DialogDefinitionProvider> discoverDialogProviders(Class<?> type) {
+    public List<DialogDefinitionProvider> discoverDialogProviders(Class<?> type, Reflections reflections) {
 
         List<DialogDefinitionProvider> providers = new ArrayList<>();
         Set<Class<?>> processedTypes = new HashSet<>();
 
-        for (Map.Entry<Class<?>, Processor> entry : getProcessors(type, processedTypes).entrySet()) {
+        for (Map.Entry<Class<?>, Processor> entry : getProcessors(type, processedTypes, reflections).entrySet()) {
 
             ConfiguredFormDialogDefinition dialog = new ConfiguredFormDialogDefinition();
             dialog.setId("dialogs." + entry.getKey().getName());
@@ -63,7 +67,7 @@ public class AnnotatedDialogDefinitionFactoryImpl implements AnnotatedDialogDefi
         return actionDefinition;
     }
 
-    private Map<Class<?>, Processor> getProcessors(Class<?> type, Set<Class<?>> processedTypes) {
+    private Map<Class<?>, Processor> getProcessors(Class<?> type, Set<Class<?>> processedTypes, Reflections reflections) {
         Map<Class<?>, Processor> processors = new HashMap<>();
         Processor processor = Processor.getInstance(type, injector);
         if (processor != null) {
@@ -79,10 +83,19 @@ public class AnnotatedDialogDefinitionFactoryImpl implements AnnotatedDialogDefi
             } else {
                 subType = field.getType();
             }
+
             if (!processedTypes.contains(subType)) {
                 processedTypes.add(subType);
-                processors.putAll(getProcessors(subType, processedTypes));
+                processors.putAll(getProcessors(subType, processedTypes, reflections));
+                if (subType.isInterface()) {
+                    for(Class<?> clazz: reflections.getSubTypesOf(subType)) {
+                        processedTypes.add(clazz);
+                        processors.putAll(getProcessors(clazz, processedTypes, reflections));
+                    }
+                }
             }
+
+
         }
         return processors;
     }
