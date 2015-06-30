@@ -13,7 +13,10 @@ import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import com.google.inject.Injector;
 import com.magnoliales.handlebars.mapper.NodeObjectMapper;
+import com.magnoliales.handlebars.model.ModelRequiresInitialisation;
+import info.magnolia.cms.util.RequestDispatchUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
@@ -89,7 +92,17 @@ public class HandlebarsRenderer extends AbstractRenderer {
         try {
             logger.info("Rendering node '{}' with template '{}'", node.getPath(), templateScript);
             NodeObjectMapper mapper = injector.getInstance(NodeObjectMapper.class);
-            combinedContext = Context.newBuilder(mapper.map(node))
+            Object model = mapper.map(node);
+
+            if (model instanceof ModelRequiresInitialisation) {
+                String action = ((ModelRequiresInitialisation) model).initialise();
+                final WebContext webContext = MgnlContext.getWebContext();
+                if (RequestDispatchUtil.dispatch(action, webContext.getRequest(), webContext.getResponse())) {
+                    return;
+                }
+            }
+
+            combinedContext = Context.newBuilder(model)
                     .combine(CURRENT_NODE_PROPERTY, node)
                     .resolver(JavaBeanValueResolver.INSTANCE, MapValueResolver.INSTANCE)
                     .build();

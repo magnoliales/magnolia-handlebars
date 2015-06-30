@@ -9,6 +9,7 @@ import com.magnoliales.handlebars.utils.PropertyReader;
 import de.odysseus.el.util.SimpleContext;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.repository.RepositoryConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,12 +190,15 @@ public class NodeObjectMapperImpl implements NodeObjectMapper {
         Delayed delayed = new DelayedCache() {
             @Override
             public Object init() throws Exception {
-                String expression = field.getAnnotation(Query.class).value();
+                Query queryAnnotation = field.getAnnotation(Query.class);
+                String expression = queryAnnotation.value();
+                String repository = queryAnnotation.repository();
+
                 ValueExpression valueExpression = expressionFactory.createValueExpression(context, expression, String.class);
                 String interpolatedExpression = (String) valueExpression.getValue(context);
-
-                Session session = objectNode.getSession();
+                Session session = repository.equals("") ? objectNode.getSession() : MgnlContext.getJCRSession(repository);
                 QueryManager queryManager = session.getWorkspace().getQueryManager();
+                logger.debug(interpolatedExpression);
                 QueryResult result = queryManager
                         .createQuery(interpolatedExpression, javax.jcr.query.Query.JCR_SQL2).execute();
                 Class<?> itemSuperclass = getItemType(field);
